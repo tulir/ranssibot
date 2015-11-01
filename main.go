@@ -13,7 +13,10 @@ import (
 	"time"
 )
 
-var timetable = make([]string, 9)
+var timetable = [26][9]string{}
+var today = 5
+
+//var timetable = make([]string, 9)
 
 func main() {
 	md := new(telebot.SendOptions)
@@ -25,13 +28,16 @@ func main() {
 	// Connect to Telegram
 	bot, err := telebot.NewBot("132300126:AAHps1NPAj9Y7qTBbDGlGsyuMGoMtk__Qa8")
 	if err != nil {
-		log.Printf("Error connecting to Telegram!\n")
+		log.Printf("Error connecting to Telegram!\n" + err.Error())
 		return
 	}
 
 	messages := make(chan telebot.Message)
 	bot.Listen(messages, 1*time.Second)
 
+	log.Printf("Connected to Telegram!")
+
+MainLoop:
 	for message := range messages {
 		if !contains(whitelist, message.Sender.ID) {
 			bot.SendMessage(message.Chat, "Et ole Päivölän Lukujärjestysbotin whitelistillä. "+
@@ -43,30 +49,39 @@ func main() {
 		log.Printf(message.Sender.FirstName + " is spamming me with " + message.Text)
 		if strings.HasPrefix(message.Text, "Mui.") {
 			bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
-		} else if strings.HasPrefix(message.Text, "/today") {
+		} else if strings.HasPrefix(message.Text, "/timetable") {
 			args := strings.Split(message.Text, " ")
 			if len(args) > 1 {
+				day := today
+				if len(args) > 2 {
+					shift, err := strconv.Atoi(args[2])
+					if err != nil {
+						bot.SendMessage(message.Chat, "I couldn't parse an integer from \"_"+args[2]+"_\"", md)
+						continue MainLoop
+					}
+					day += shift
+				}
 				if strings.EqualFold(args[1], "ventit") {
 					bot.SendMessage(message.Chat,
-						"Aamu: "+timetable[0]+
-							"\nIP1: "+timetable[1]+
-							"\nIP2: "+timetable[2]+
-							"\n"+"Ilta: "+timetable[3],
+						"Aamu: "+timetable[day][0]+
+							"\nIP1: "+timetable[day][1]+
+							"\nIP2: "+timetable[day][2]+
+							"\n"+"Ilta: "+timetable[day][3],
 						md)
-					bot.SendMessage(message.Chat, "Muuta: "+timetable[4], md)
+					bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
 				} else if strings.EqualFold(args[1], "neliöt") {
 					bot.SendMessage(message.Chat,
-						"Aamu: "+timetable[5]+
-							"\nIP1: "+timetable[6]+
-							"\nIP2: "+timetable[7]+
-							"\n"+"Ilta: "+timetable[8],
+						"Aamu: "+timetable[day][5]+
+							"\nIP1: "+timetable[day][6]+
+							"\nIP2: "+timetable[day][7]+
+							"\n"+"Ilta: "+timetable[day][8],
 						md)
-					bot.SendMessage(message.Chat, "Muuta: "+timetable[4], md)
+					bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
 				} else {
-					bot.SendMessage(message.Chat, "*Usage:* /today <neliöt/ventit>", md)
+					bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> [day offset]", md)
 				}
 			} else {
-				bot.SendMessage(message.Chat, "*Usage:* /today <neliöt/ventit>", md)
+				bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> [day offset]", md)
 			}
 		} else if message.Text == "/update" {
 			updateTimes()
@@ -91,44 +106,51 @@ func updateTimes() {
 		return
 	}
 
-	today := findTodaysTimetables(doc)
-	if today != nil {
-		entry := today.FirstChild.NextSibling
-		for i := 0; i < 9; i++ {
-			entry = entry.NextSibling
-			if entry == nil {
+	ttnode := findSpan("tr", "class", "header", doc)
+	if ttnode != nil {
+		dayentry := ttnode
+		for day := 0; ; day++ {
+			if dayentry.NextSibling == nil || dayentry.NextSibling.NextSibling == nil || dayentry.NextSibling.NextSibling.FirstChild == nil {
 				break
 			}
+			dayentry = dayentry.NextSibling.NextSibling
+			//println(render(dayentry))
+			entry := dayentry.FirstChild.NextSibling
+			for lesson := 0; lesson < 9; lesson++ {
+				entry = entry.NextSibling.NextSibling
+				if entry == nil {
+					break
+				}
 
-			if entry.FirstChild != nil {
-				if entry.FirstChild.Type == html.TextNode {
-					timetable[i] = entry.FirstChild.Data
-				} else if entry.FirstChild.Type == html.ElementNode {
-					if entry.FirstChild.FirstChild != nil {
-						if entry.FirstChild.FirstChild.Type == html.TextNode {
-							timetable[i] = entry.FirstChild.FirstChild.Data
+				if entry.FirstChild != nil {
+					if entry.FirstChild.Type == html.TextNode {
+						timetable[day][lesson] = entry.FirstChild.Data
+					} else if entry.FirstChild.Type == html.ElementNode {
+						if entry.FirstChild.FirstChild != nil {
+							if entry.FirstChild.FirstChild.Type == html.TextNode {
+								timetable[day][lesson] = entry.FirstChild.FirstChild.Data
+							}
 						}
 					}
+				} else {
+					timetable[day][lesson] = "tyhjää"
 				}
-			} else if entry.Type == html.ElementNode {
-				timetable[i] = "tyhjää"
-			} else {
-				i--
 			}
+			print("\n")
 		}
 	}
 }
 
-func findTodaysTimetables(node *html.Node) *html.Node {
-	if node.Type == html.ElementNode && node.Data == "tr" {
+func findSpan(typ string, key string, val string, node *html.Node) *html.Node {
+	if node.Type == html.ElementNode && node.Data == typ {
 		for _, attr := range node.Attr {
-			if attr.Key == "class" && attr.Val == "today" {
+			if attr.Key == key && attr.Val == val {
 				return node
 			}
 		}
 	}
 	for c := node.FirstChild; c != nil; c = c.NextSibling {
-		x := findTodaysTimetables(c)
+		x := findSpan(typ, key, val, c)
 		if x != nil {
 			return x
 		}
