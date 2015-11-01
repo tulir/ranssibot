@@ -15,6 +15,7 @@ import (
 
 var timetable = [26][9]string{}
 var today = 5
+var lastupdate = timestamp()
 
 //var timetable = make([]string, 9)
 
@@ -37,6 +38,8 @@ func main() {
 
 	log.Printf("Connected to Telegram!")
 
+	updateTimes()
+
 MainLoop:
 	for message := range messages {
 		if !contains(whitelist, message.Sender.ID) {
@@ -44,12 +47,16 @@ MainLoop:
 				"Voit tökkiä Tuliria päästäksesi whitelistille.\n"+
 				"Telegram-käyttäjäsi ID on "+strconv.Itoa(message.Sender.ID), nil)
 			bot.SendMessage(message.Chat, "", nil)
-			continue
+			continue MainLoop
 		}
 		log.Printf(message.Sender.FirstName + " is spamming me with " + message.Text)
 		if strings.HasPrefix(message.Text, "Mui.") {
 			bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
 		} else if strings.HasPrefix(message.Text, "/timetable") {
+			if timestamp() > lastupdate+600 {
+				bot.SendMessage(message.Chat, "Updating cached timetables...", md)
+				updateTimes()
+			}
 			args := strings.Split(message.Text, " ")
 			if len(args) > 1 {
 				day := today
@@ -60,6 +67,10 @@ MainLoop:
 						continue MainLoop
 					}
 					day += shift
+					if day < 0 || day >= len(timetable) {
+						bot.SendMessage(message.Chat, "I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.", md)
+						continue MainLoop
+					}
 				}
 				if strings.EqualFold(args[1], "ventit") {
 					bot.SendMessage(message.Chat,
@@ -96,6 +107,10 @@ func render(node *html.Node) string {
 	buf := new(bytes.Buffer)
 	html.Render(buf, node)
 	return buf.String()
+}
+
+func timestamp() int64 {
+	return int64(time.Now().Unix())
 }
 
 func updateTimes() {
