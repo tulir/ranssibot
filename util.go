@@ -37,3 +37,21 @@ func render(node *html.Node) string {
 	html.Render(buf, node)
 	return buf.String()
 }
+
+// Find a html element of the given type with the given key-value attribute from the given node
+func findSpan(typ string, key string, val string, node *html.Node) *html.Node {
+	if node.Type == html.ElementNode && node.Data == typ {
+		for _, attr := range node.Attr {
+			if attr.Key == key && attr.Val == val {
+				return node
+			}
+		}
+	}
+	for c := node.FirstChild; c != nil; c = c.NextSibling {
+		x := findSpan(typ, key, val, c)
+		if x != nil {
+			return x
+		}
+	}
+	return nil
+}

@@ -90,7 +90,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 					"Aamu: "+timetable[day][0]+
 						"\nIP1: "+timetable[day][1]+
 						"\nIP2: "+timetable[day][2]+
-						"\n"+"Ilta: "+timetable[day][3],
+						"\nIlta: "+timetable[day][3],
 					md)
 				bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
 			} else if strings.EqualFold(args[1], "neliöt") {
@@ -98,14 +98,14 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 					"Aamu: "+timetable[day][5]+
 						"\nIP1: "+timetable[day][6]+
 						"\nIP2: "+timetable[day][7]+
-						"\n"+"Ilta: "+timetable[day][8],
+						"\nIlta: "+timetable[day][8],
 					md)
 				bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
 			} else {
-				bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> [day offset]", md)
+				bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> <day offset>", md)
 			}
 		} else {
-			bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> [day offset]", md)
+			bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> <day offset>", md)
 		}
 	} else if message.Text == "/update" {
 		updateTimes()
@@ -194,24 +194,6 @@ func updateTimes() {
 		log.Printf("Error updating timetables: Failed to find timetable table header node!")
 		lastupdate = 0
 	}
-}
-
-// Find a html element of the given type with the given key-value attribute from the given node
-func findSpan(typ string, key string, val string, node *html.Node) *html.Node {
-	if node.Type == html.ElementNode && node.Data == typ {
-		for _, attr := range node.Attr {
-			if attr.Key == key && attr.Val == val {
-				return node
-			}
-		}
-	}
-	for c := node.FirstChild; c != nil; c = c.NextSibling {
-		x := findSpan(typ, key, val, c)
-		if x != nil {
-			return x
-		}
-	}
-	return nil
 }
 
 // Load the whitelist from file
