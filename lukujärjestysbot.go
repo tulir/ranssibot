@@ -86,26 +86,20 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 				}
 			}
 			if strings.EqualFold(args[1], "ventit") {
-				bot.SendMessage(message.Chat,
-					"Aamu: "+timetable[day][0]+
-						"\nIP1: "+timetable[day][1]+
-						"\nIP2: "+timetable[day][2]+
-						"\nIlta: "+timetable[day][3],
-					md)
-				bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
+				sendTimetableFirstYear(day, bot, message)
+				sendTimetableOther(day, bot, message)
 			} else if strings.EqualFold(args[1], "neliöt") {
-				bot.SendMessage(message.Chat,
-					"Aamu: "+timetable[day][5]+
-						"\nIP1: "+timetable[day][6]+
-						"\nIP2: "+timetable[day][7]+
-						"\nIlta: "+timetable[day][8],
-					md)
-				bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
+				sendTimetableSecondYear(day, bot, message)
+				sendTimetableOther(day, bot, message)
 			} else {
 				bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> <day offset>", md)
 			}
 		} else {
-			bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> <day offset>", md)
+			bot.SendMessage(message.Chat, "Ventit:", md)
+			sendTimetableFirstYear(today, bot, message)
+			bot.SendMessage(message.Chat, "Neliöt:", md)
+			sendTimetableSecondYear(today, bot, message)
+			sendTimetableOther(today, bot, message)
 		}
 	} else if message.Text == "/update" {
 		updateTimes()
@@ -113,6 +107,28 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, "Komentoa ei tunnistettu.", nil)
 	}
+}
+
+func sendTimetableSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
+	bot.SendMessage(message.Chat,
+		"Aamu: "+timetable[day][5]+
+			"\nIP1: "+timetable[day][6]+
+			"\nIP2: "+timetable[day][7]+
+			"\nIlta: "+timetable[day][8],
+		md)
+}
+
+func sendTimetableFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
+	bot.SendMessage(message.Chat,
+		"Aamu: "+timetable[day][0]+
+			"\nIP1: "+timetable[day][1]+
+			"\nIP2: "+timetable[day][2]+
+			"\nIlta: "+timetable[day][3],
+		md)
+}
+
+func sendTimetableOther(day int, bot *telebot.Bot, message telebot.Message) {
+	bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
 }
 
 // Get the current UNIX timestamp
