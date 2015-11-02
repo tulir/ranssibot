@@ -188,9 +188,11 @@ func updateTimes() {
 				}
 			}
 		}
+		lastupdate = timestamp()
 	} else {
 		// Node not found, print error
 		log.Printf("Error updating timetables: Failed to find timetable table header node!")
+		lastupdate = 0
 	}
 }
 
