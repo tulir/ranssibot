@@ -219,7 +219,7 @@ func loadWhitelist() []int {
 	// Check if there was an error
 	if err != nil {
 		// Error, print message and use hardcoded whitelist.
-		log.Printf("Failed to load whitelist: %s; Using hardcoded version", err)
+		log.Printf(translate("whitelist.load.failed", err))
 		return []int{
 			84359547,  /* Tulir */
 			67147746,  /* Ege   */
@@ -231,7 +231,7 @@ func loadWhitelist() []int {
 		}
 	}
 	// No error, parse the data
-	log.Printf("Loading whitelist...")
+	log.Println(translate("whitelist.loading"))
 	// Split the file string to an array of lines
 	wlraw := strings.Split(string(wldata), "\n")
 	// Make the whitelist array
@@ -250,12 +250,12 @@ func loadWhitelist() []int {
 		if converr == nil {
 			// No errors, add the UID to the whitelist
 			whitelist[i] = id
-			log.Printf("Added %s (ID %s) to the whitelist.", entry[1], entry[0])
+			log.Println(translate("whitelist.add.success", entry[1], entry[0]))
 		} else {
 			// Error occured, print message
-			log.Printf("Failed to parse %s: %s", wlraw[i], err)
+			log.Println(translate("whitelist.add.failed", wlraw[i], err.Error()))
 		}
 	}
-	log.Printf("Finished loading whitelist")
+	log.Println(translate("whitelist.load.success"))
 	return whitelist
 }
