@@ -15,20 +15,7 @@ type Date struct {
 
 // DateToString ...
 func DateToString(date Date) string {
-	dayStr := strconv.Itoa(date.Day)
-	if len(dayStr) == 1 {
-		dayStr = "0" + dayStr
-	}
-	monthStr := strconv.Itoa(date.Month)
-	if len(monthStr) == 1 {
-		monthStr = "0" + monthStr
-	}
-	yearStr := strconv.Itoa(date.Year)
-	if len(yearStr) == 1 {
-		yearStr = "0" + yearStr
-	}
-
-	return dayStr + "." + monthStr + "." + yearStr
+	return strconv.Itoa(date.Day) + "." + strconv.Itoa(date.Month) + "." + strconv.Itoa(date.Year)
 }
 
 // StringToDate ...

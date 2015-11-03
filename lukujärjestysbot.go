@@ -75,41 +75,46 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 				}
 			}
 			if strings.EqualFold(args[1], "ventit") {
-				sendFirstYearStandalone(day, bot, message)
+				sendFirstYear(day, bot, message)
 			} else if strings.EqualFold(args[1], "neliöt") {
-				sendSecondYearStandalone(day, bot, message)
-			} else if strings.EqualFold(args[1], "all") {
-				sendBothYears(day, bot, message)
+				sendSecondYear(day, bot, message)
 			} else {
 				bot.SendMessage(message.Chat, translate("timetable.usage"), md)
 			}
 		} else {
 			year := getYeargroupIndex(message.Sender.ID)
 			if year == 1 {
-				sendFirstYearStandalone(today, bot, message)
+				sendFirstYear(today, bot, message)
 			} else if year == 2 {
-				sendSecondYearStandalone(today, bot, message)
+				sendSecondYear(today, bot, message)
 			} else {
 				bot.SendMessage(message.Chat, translate("timetable.noyeargroup"), md)
 			}
 		}
-	} else if message.Text == "/settime" {
+	} else if strings.HasPrefix(message.Text, "/settime") {
 		if len(args) > 3 {
 			lessonID, err := strconv.Atoi(args[2])
 			if err != nil {
 				bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.integer"), args[2]), md)
 			}
-			time, err := StringToTime(args[3])
+			dayShift, err := strconv.Atoi(args[3])
 			if err != nil {
-				bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.time"), args[2]), md)
+				bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.integer"), args[3]), md)
+			}
+			time, err := StringToTime(args[4])
+			if err != nil {
+				bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.time"), args[4]), md)
 			}
 			if args[1] == "ventit" {
-				firstyear[0][lessonID].Time = time
+				firstyear[today+dayShift][lessonID].Time = time
 			} else if args[1] == "neliöt" {
-				secondyear[0][lessonID].Time = time
+				secondyear[today+dayShift][lessonID].Time = time
 			} else if args[1] == "other" {
-				other[0].Time = time
+				other[today+dayShift].Time = time
+			} else {
+				return
 			}
+			bot.SendMessage(message.Chat, fmt.Sprintf(translate("settime.success"), args[1], lessonID, dayShift, TimeToString(time)), md)
 		} else {
 			bot.SendMessage(message.Chat, translate("settime.usage"), md)
 		}

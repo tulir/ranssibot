@@ -135,26 +135,17 @@ func updateTimes() {
 	}
 }
 
-func sendFirstYearStandalone(day int, bot *telebot.Bot, message telebot.Message) {
+func sendFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
 		fmt.Sprintf(translate("timetable.generic"),
 			firstyear[day][0].Subject, firstyear[day][1].Subject, firstyear[day][2].Subject, firstyear[day][3].Subject,
-			DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(translate("timetable.other"), other[day].Subject),
-		md)
+			DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(translate("timetable.other"), other[day].Subject), md)
 }
 
-func sendSecondYearStandalone(day int, bot *telebot.Bot, message telebot.Message) {
+func sendSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
 		fmt.Sprintf(translate("timetable.generic"),
 			secondyear[day][0].Subject, secondyear[day][1].Subject, secondyear[day][2].Subject, secondyear[day][3].Subject,
 			DateToString(secondyear[day][0].Date))+"\n"+fmt.Sprintf(translate("timetable.other"), other[day].Subject),
 		md)
-}
-
-func sendBothYears(day int, bot *telebot.Bot, message telebot.Message) {
-	bot.SendMessage(message.Chat, translate("timetable.firstyear")+fmt.Sprintf(translate("timetable.generic"),
-		firstyear[day][0].Subject, firstyear[day][1].Subject, firstyear[day][2].Subject, firstyear[day][3].Subject), md)
-	bot.SendMessage(message.Chat, translate("timetable.secondyear")+fmt.Sprintf(translate("timetable.generic"),
-		secondyear[day][0].Subject, secondyear[day][1].Subject, secondyear[day][2].Subject, secondyear[day][3].Subject), md)
-	bot.SendMessage(message.Chat, fmt.Sprintf(translate("timetable.other"), other[day].Subject), md)
 }

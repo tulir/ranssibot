@@ -3,6 +3,7 @@ telegram.connection.success=Connected to Telegram!
 telegram.commandreceived=%[1]s (%[2]d) sent command: %[3]s
 
 error.parse.integer=I couldn't parse an integer from "_%[1]s_"
+error.parse.time=I couldn't parse a time from "_%[1]s_"
 error.commandnotfound=Command not found.
 
 whitelist.loading=Loading whitelist...
@@ -12,15 +13,14 @@ whitelist.add.success=Added %[1]s (ID %[2]d) to the whitelist.
 whitelist.add.fail=Failed to parse %[1]s: %[2]s
 whitelist.notwhitelisted=Et ole Päivölän Lukujärjestysbotin whitelistillä. Voit tökkiä Tuliria päästäksesi whitelistille.<br>Telegram-käyttäjäsi ID on %[1]d
 
-timetable.usage=*Usage:* /timetable <ventit/neliöt/all> <day offset>
+timetable.usage=*Usage:* /timetable <ventit/neliöt> <day offset>
 timetable.nodata=I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.
 timetable.update.success=Updating cached timetables...
 timetable.update.failed=Error updating timetables: Failed to find timetable table header node!
 timetable.generic=*Lukujärjestys %[5]s*<br>Aamu: %[1]s<br>IP1: %[2]s<br>IP2: %[3]s<br>Ilta: %[4]s
-timetable.firstyear=*Ventit %[5]s:*<br>
-timetable.secondyear=*Neliöt %[5]s:*<br>
 timetable.other=Muuta: %[1]s
 timetable.empty=tyhjää
 timetable.noyeargroup=I'm afraid I don't know which year you're on.
 
-settime.usage=*Usage:* /settime <ventit/neliöt> <lesson id> <new time>
+settime.usage=*Usage:* /settime <ventit/neliöt> <day shift> <lesson id> <new time>
+settime.success=Successfully set time for lesson #%[2]d for %[1]s in %[3]d days to %[4]s

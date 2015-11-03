@@ -77,7 +77,7 @@ func loadWhitelist() {
 		// Convert the permission level string to an integer
 		perms, converr3 := strconv.Atoi(entry[3])
 		// Make sure the conversion didn't fail
-		if converr1 == nil && converr2 == nil && converr3 != nil {
+		if converr1 == nil && converr2 == nil && converr3 == nil {
 			// No errors, add the UID to the whitelist
 			whitelist[i] = User{uid, entry[1], year, perms}
 			log.Printf(translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].UID)
