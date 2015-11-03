@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -31,10 +30,10 @@ func loadLanguage() {
 	}
 }
 
-func translate(key string, args ...string) string {
+func translate(key string) string {
 	value, exists := lang[key]
 	if exists {
-		return fmt.Sprintf(value, args)
+		return strings.Replace(value, "<br>", "\n", -1)
 	}
 	return key
 }

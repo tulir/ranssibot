@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
-	"io/ioutil"
 	"log"
 	"strconv"
 	"strings"
@@ -19,30 +19,29 @@ var today = 5
 // The last time the timetable cache was updated
 var lastupdate = timestamp()
 
-// List of UIDs that are allowed to use the bot
-var whitelist []int
-
 // The markdown send options
 var md *telebot.SendOptions
 
 func main() {
+	loadLanguage()
+
 	md = new(telebot.SendOptions)
 	md.ParseMode = telebot.ModeMarkdown
 
 	// Load the whitelist
-	whitelist = loadWhitelist()
+	loadWhitelist()
 
 	// Connect to Telegram
 	bot, err := telebot.NewBot("132300126:AAHps1NPAj9Y7qTBbDGlGsyuMGoMtk__Qa8")
 	if err != nil {
-		log.Printf("Error connecting to Telegram: %s", err)
+		log.Printf(translate("telegram.connection.failed"), err)
 		return
 	}
 	messages := make(chan telebot.Message)
 	// Enable message listener
 	bot.Listen(messages, 1*time.Second)
 	// Print "connected" message
-	log.Printf("Connected to Telegram!")
+	log.Printf(translate("telegram.connection.success"))
 
 	// Update timetables
 	updateTimes()
@@ -55,14 +54,12 @@ func main() {
 
 // Handle a command
 func handleCommand(bot *telebot.Bot, message telebot.Message) {
-	if !contains(whitelist, message.Sender.ID) {
-		bot.SendMessage(message.Chat, "Et ole Päivölän Lukujärjestysbotin whitelistillä. "+
-			"Voit tökkiä Tuliria päästäksesi whitelistille.\n"+
-			"Telegram-käyttäjäsi ID on "+strconv.Itoa(message.Sender.ID), nil)
+	if !isWhitelisted(message.Sender.ID) {
+		bot.SendMessage(message.Chat, fmt.Sprintf(translate("whitelist.notwhitelisted"), message.Sender.ID), nil)
 		bot.SendMessage(message.Chat, "", nil)
 		return
 	}
-	log.Printf("%s (%d) sent command: %s", message.Sender.Username, message.Sender.ID, message.Text)
+	log.Printf(translate("telegram.commandreceived"), message.Sender.Username, message.Sender.ID, message.Text)
 	if strings.HasPrefix(message.Text, "Mui.") {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
 	} else if strings.HasPrefix(message.Text, "/timetable") {
@@ -76,59 +73,41 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 			if len(args) > 2 {
 				shift, err := strconv.Atoi(args[2])
 				if err != nil {
-					bot.SendMessage(message.Chat, "I couldn't parse an integer from \"_"+args[2]+"_\"", md)
+					bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.integer"), args[2]), md)
 					return
 				}
 				day += shift
 				if day < 0 || day >= len(timetable) {
-					bot.SendMessage(message.Chat, "I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.", md)
+					bot.SendMessage(message.Chat, translate("timetable.nodata"), md)
 					return
 				}
 			}
 			if strings.EqualFold(args[1], "ventit") {
-				sendTimetableFirstYear(day, bot, message)
-				sendTimetableOther(day, bot, message)
+				bot.SendMessage(message.Chat,
+					fmt.Sprintf(translate("timetable.generic"), timetable[day][0], timetable[day][1], timetable[day][2], timetable[day][3])+
+						"\n"+fmt.Sprintf(translate("timetable.other"), timetable[day][4]),
+					md)
 			} else if strings.EqualFold(args[1], "neliöt") {
-				sendTimetableSecondYear(day, bot, message)
-				sendTimetableOther(day, bot, message)
+				bot.SendMessage(message.Chat,
+					fmt.Sprintf(translate("timetable.generic"), timetable[day][5], timetable[day][6], timetable[day][7], timetable[day][8])+
+						"\n"+fmt.Sprintf(translate("timetable.other"), timetable[day][4]),
+					md)
 			} else {
-				bot.SendMessage(message.Chat, "*Usage:* /timetable <neliöt/ventit> <day offset>", md)
+				bot.SendMessage(message.Chat, translate("timetable.usage"), md)
 			}
 		} else {
-			bot.SendMessage(message.Chat, "Ventit:", md)
-			sendTimetableFirstYear(today, bot, message)
-			bot.SendMessage(message.Chat, "Neliöt:", md)
-			sendTimetableSecondYear(today, bot, message)
-			sendTimetableOther(today, bot, message)
+			bot.SendMessage(message.Chat, translate("timetable.firstyear")+fmt.Sprintf(translate("timetable.generic"),
+				timetable[today][0], timetable[today][1], timetable[today][2], timetable[today][3]), md)
+			bot.SendMessage(message.Chat, translate("timetable.secondyear")+fmt.Sprintf(translate("timetable.generic"),
+				timetable[today][5], timetable[today][6], timetable[today][7], timetable[today][8]), md)
+			bot.SendMessage(message.Chat, fmt.Sprintf(translate("timetable.other"), timetable[today][4]), md)
 		}
 	} else if message.Text == "/update" {
 		updateTimes()
-		bot.SendMessage(message.Chat, "Updated timetables successfully", nil)
+		bot.SendMessage(message.Chat, translate("timetable.update.success"), md)
 	} else if strings.HasPrefix(message.Text, "/") {
-		bot.SendMessage(message.Chat, "Komentoa ei tunnistettu.", nil)
+		bot.SendMessage(message.Chat, translate("error.commandnotfound"), md)
 	}
-}
-
-func sendTimetableSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
-	bot.SendMessage(message.Chat,
-		"Aamu: "+timetable[day][5]+
-			"\nIP1: "+timetable[day][6]+
-			"\nIP2: "+timetable[day][7]+
-			"\nIlta: "+timetable[day][8],
-		md)
-}
-
-func sendTimetableFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
-	bot.SendMessage(message.Chat,
-		"Aamu: "+timetable[day][0]+
-			"\nIP1: "+timetable[day][1]+
-			"\nIP2: "+timetable[day][2]+
-			"\nIlta: "+timetable[day][3],
-		md)
-}
-
-func sendTimetableOther(day int, bot *telebot.Bot, message telebot.Message) {
-	bot.SendMessage(message.Chat, "Muuta: "+timetable[day][4], md)
 }
 
 // Get the current UNIX timestamp
@@ -207,55 +186,7 @@ func updateTimes() {
 		lastupdate = timestamp()
 	} else {
 		// Node not found, print error
-		log.Printf("Error updating timetables: Failed to find timetable table header node!")
+		log.Printf(translate("timetable.update.failed"))
 		lastupdate = 0
 	}
-}
-
-// Load the whitelist from file
-func loadWhitelist() []int {
-	// Read the file
-	wldata, err := ioutil.ReadFile("whitelist.txt")
-	// Check if there was an error
-	if err != nil {
-		// Error, print message and use hardcoded whitelist.
-		log.Printf(translate("whitelist.load.failed", err))
-		return []int{
-			84359547,  /* Tulir */
-			67147746,  /* Ege   */
-			128602828, /* Max   */
-			124500539, /* Galax */
-			54580303,  /* Antti */
-			115187137, /* Å     */
-
-		}
-	}
-	// No error, parse the data
-	log.Println(translate("whitelist.loading"))
-	// Split the file string to an array of lines
-	wlraw := strings.Split(string(wldata), "\n")
-	// Make the whitelist array
-	whitelist := make([]int, len(wlraw), cap(wlraw))
-	// Loop through the lines from the file
-	for i := 0; i < len(wlraw); i++ {
-		// Make sure the line is not empty
-		if len(wlraw[i]) == 0 {
-			continue
-		}
-		// Split the entry to UID and name
-		entry := strings.Split(wlraw[i], "-")
-		// Convert the UID string to an integer
-		id, converr := strconv.Atoi(entry[0])
-		// Make sure the conversion didn't fail
-		if converr == nil {
-			// No errors, add the UID to the whitelist
-			whitelist[i] = id
-			log.Println(translate("whitelist.add.success", entry[1], entry[0]))
-		} else {
-			// Error occured, print message
-			log.Println(translate("whitelist.add.failed", wlraw[i], err.Error()))
-		}
-	}
-	log.Println(translate("whitelist.load.success"))
-	return whitelist
 }

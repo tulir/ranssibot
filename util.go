@@ -7,16 +7,6 @@ import (
 	"net/http"
 )
 
-// Check if the given integer array contains the given integer.
-func contains(list []int, i int) bool {
-	for _, ii := range list {
-		if ii == i {
-			return true
-		}
-	}
-	return false
-}
-
 // Perform a HTTP GET request on the given URL
 func httpGet(url string) string {
 	response, err := http.Get(url)
