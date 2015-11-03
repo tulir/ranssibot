@@ -9,9 +9,10 @@ import (
 
 // User struct that is used for whitelisted user entries
 type User struct {
-	UID  int
-	Name string
-	Year int
+	UID             int
+	Name            string
+	Year            int
+	PermissionLevel int
 }
 
 var whitelist []User
@@ -34,6 +35,15 @@ func getYeargroupIndex(uid int) int {
 	return 0
 }
 
+func getPermissionLevel(uid int) int {
+	for _, e := range whitelist {
+		if e.UID == uid {
+			return e.PermissionLevel
+		}
+	}
+	return 0
+}
+
 // Load the whitelist from file
 func loadWhitelist() {
 	// Read the file
@@ -43,12 +53,7 @@ func loadWhitelist() {
 		// Error, print message and use hardcoded whitelist.
 		log.Printf(translate("whitelist.load.failed"), err)
 		whitelist = []User{
-			User{84359547, "Tulir", 21},
-			User{67147746, "Ege", 21},
-			User{128602828, "Max", 21},
-			User{124500539, "Galax", 21},
-			User{54580303, "Antti", 21},
-			User{115187137, "Å", 21},
+			User{84359547, "Tulir", 21, 9001},
 		}
 	}
 	// No error, parse the data
@@ -67,12 +72,14 @@ func loadWhitelist() {
 		entry := strings.Split(wlraw[i], "|")
 		// Convert the UID string to an integer
 		uid, converr1 := strconv.Atoi(entry[0])
-		// Convert the yeargroup index string to an integer
+		// Convert the year string to an integer
 		year, converr2 := strconv.Atoi(entry[2])
+		// Convert the permission level string to an integer
+		perms, converr3 := strconv.Atoi(entry[3])
 		// Make sure the conversion didn't fail
-		if converr1 == nil && converr2 == nil {
+		if converr1 == nil && converr2 == nil && converr3 != nil {
 			// No errors, add the UID to the whitelist
-			whitelist[i] = User{uid, entry[1], year}
+			whitelist[i] = User{uid, entry[1], year, perms}
 			log.Printf(translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].UID)
 		} else {
 			// Error occured, print message
