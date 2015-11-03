@@ -9,9 +9,9 @@ import (
 
 // User struct that is used for whitelisted user entries
 type User struct {
-	UID       int
-	Name      string
-	Yeargroup int
+	UID  int
+	Name string
+	Year int
 }
 
 var whitelist []User
@@ -23,6 +23,15 @@ func isWhitelisted(uid int) bool {
 		}
 	}
 	return false
+}
+
+func getYeargroupIndex(uid int) int {
+	for _, e := range whitelist {
+		if e.UID == uid {
+			return e.Year
+		}
+	}
+	return 0
 }
 
 // Load the whitelist from file
@@ -59,12 +68,12 @@ func loadWhitelist() {
 		// Convert the UID string to an integer
 		uid, converr1 := strconv.Atoi(entry[0])
 		// Convert the yeargroup index string to an integer
-		ygindex, converr2 := strconv.Atoi(entry[2])
+		year, converr2 := strconv.Atoi(entry[2])
 		// Make sure the conversion didn't fail
 		if converr1 == nil && converr2 == nil {
 			// No errors, add the UID to the whitelist
-			whitelist[i] = User{uid, entry[1], ygindex}
-			log.Printf(translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].Yeargroup)
+			whitelist[i] = User{uid, entry[1], year}
+			log.Printf(translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].UID)
 		} else {
 			// Error occured, print message
 			log.Printf(translate("whitelist.add.failed"), wlraw[i], err)
