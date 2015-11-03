@@ -17,7 +17,7 @@ type User struct {
 var whitelist []User
 
 func isWhitelisted(uid int) bool {
-	for i, e := range whitelist {
+	for _, e := range whitelist {
 		if e.UID == uid {
 			return true
 		}
