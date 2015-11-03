@@ -9,50 +9,6 @@ import (
 	"strings"
 )
 
-// Date ...
-type Date struct {
-	Year  int
-	Month int
-	Day   int
-}
-
-// DateToString ...
-func DateToString(date Date) string {
-	dayStr := strconv.Itoa(date.Day)
-	if len(dayStr) == 1 {
-		dayStr = "0" + dayStr
-	}
-	monthStr := strconv.Itoa(date.Month)
-	if len(monthStr) == 1 {
-		monthStr = "0" + monthStr
-	}
-	yearStr := strconv.Itoa(date.Year)
-	if len(yearStr) == 1 {
-		yearStr = "0" + yearStr
-	}
-
-	return dayStr + "." + monthStr + "." + yearStr
-}
-
-// Time ...
-type Time struct {
-	Hours   int
-	Minutes int
-}
-
-// TimeToString ...
-func TimeToString(time Time) string {
-	hourStr := strconv.Itoa(time.Hours)
-	if len(hourStr) == 1 {
-		hourStr = "0" + hourStr
-	}
-	minStr := strconv.Itoa(time.Minutes)
-	if len(minStr) == 1 {
-		minStr = "0" + minStr
-	}
-	return hourStr + ":" + minStr
-}
-
 // TimetableLesson is a struct that contains the data for a lesson in a timetable
 type TimetableLesson struct {
 	Subject  string

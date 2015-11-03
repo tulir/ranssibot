@@ -51,6 +51,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		bot.SendMessage(message.Chat, fmt.Sprintf(translate("whitelist.notwhitelisted"), message.Sender.ID), nil)
 		return
 	}
+	args := strings.Split(message.Text, " ")
 	log.Printf(translate("telegram.commandreceived"), message.Sender.Username, message.Sender.ID, message.Text)
 	if strings.HasPrefix(message.Text, "Mui.") || message.Text == "/start" {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
@@ -59,7 +60,6 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 			bot.SendMessage(message.Chat, "Updating cached timetables...", md)
 			updateTimes()
 		}
-		args := strings.Split(message.Text, " ")
 		if len(args) > 1 {
 			day := today
 			if len(args) > 2 {
@@ -92,6 +92,26 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 			} else {
 				bot.SendMessage(message.Chat, translate("timetable.noyeargroup"), md)
 			}
+		}
+	} else if message.Text == "/settime" {
+		if len(args) > 3 {
+			lessonID, err := strconv.Atoi(args[2])
+			if err != nil {
+				bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.integer"), args[2]), md)
+			}
+			time, err := StringToTime(args[3])
+			if err != nil {
+				bot.SendMessage(message.Chat, fmt.Sprintf(translate("error.parse.time"), args[2]), md)
+			}
+			if args[1] == "ventit" {
+				firstyear[0][lessonID].Time = time
+			} else if args[1] == "neliöt" {
+				secondyear[0][lessonID].Time = time
+			} else if args[1] == "other" {
+				other[0].Time = time
+			}
+		} else {
+			bot.SendMessage(message.Chat, translate("settime.usage"), md)
 		}
 	} else if message.Text == "/update" {
 		updateTimes()

@@ -22,3 +22,5 @@ timetable.secondyear=*Neliöt %[5]s:*<br>
 timetable.other=Muuta: %[1]s
 timetable.empty=tyhjää
 timetable.noyeargroup=I'm afraid I don't know which year you're on.
+
+settime.usage=*Usage:* /settime <ventit/neliöt> <lesson id> <new time>
