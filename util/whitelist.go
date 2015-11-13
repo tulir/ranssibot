@@ -1,8 +1,9 @@
-package main
+package util
 
 import (
 	"io/ioutil"
 	"log"
+	"maunium.net/ranssibot/lang"
 	"strconv"
 	"strings"
 )
@@ -17,7 +18,8 @@ type User struct {
 
 var whitelist []User
 
-func isWhitelisted(uid int) bool {
+// IsWhitelisted ...
+func IsWhitelisted(uid int) bool {
 	for _, e := range whitelist {
 		if e.UID == uid {
 			return true
@@ -26,7 +28,8 @@ func isWhitelisted(uid int) bool {
 	return false
 }
 
-func getYeargroupIndex(uid int) int {
+// GetYeargroupIndex ...
+func GetYeargroupIndex(uid int) int {
 	for _, e := range whitelist {
 		if e.UID == uid {
 			return e.Year
@@ -35,7 +38,8 @@ func getYeargroupIndex(uid int) int {
 	return 0
 }
 
-func getPermissionLevel(uid int) int {
+// GetPermissionLevel ...
+func GetPermissionLevel(uid int) int {
 	for _, e := range whitelist {
 		if e.UID == uid {
 			return e.PermissionLevel
@@ -44,20 +48,20 @@ func getPermissionLevel(uid int) int {
 	return 0
 }
 
-// Load the whitelist from file
-func loadWhitelist() {
+// LoadWhitelist loads the whitelist from file
+func LoadWhitelist() {
 	// Read the file
 	wldata, err := ioutil.ReadFile("whitelist.txt")
 	// Check if there was an error
 	if err != nil {
 		// Error, print message and use hardcoded whitelist.
-		log.Printf(translate("whitelist.load.failed"), err)
+		log.Printf(lang.Translate("whitelist.load.failed"), err)
 		whitelist = []User{
 			User{84359547, "Tulir", 21, 9001},
 		}
 	}
 	// No error, parse the data
-	log.Printf(translate("whitelist.loading"))
+	log.Printf(lang.Translate("whitelist.loading"))
 	// Split the file string to an array of lines
 	wlraw := strings.Split(string(wldata), "\n")
 	// Make the whitelist array
@@ -80,11 +84,11 @@ func loadWhitelist() {
 		if converr1 == nil && converr2 == nil && converr3 == nil {
 			// No errors, add the UID to the whitelist
 			whitelist[i] = User{uid, entry[1], year, perms}
-			log.Printf(translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].UID)
+			log.Printf(lang.Translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].UID)
 		} else {
 			// Error occured, print message
-			log.Printf(translate("whitelist.add.failed"), wlraw[i], err)
+			log.Printf(lang.Translate("whitelist.add.failed"), wlraw[i], err)
 		}
 	}
-	log.Printf(translate("whitelist.load.success"))
+	log.Printf(lang.Translate("whitelist.load.success"))
 }

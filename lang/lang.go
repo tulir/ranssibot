@@ -1,4 +1,4 @@
-package main
+package lang
 
 import (
 	"io/ioutil"
@@ -8,7 +8,8 @@ import (
 
 var lang = make(map[string]string)
 
-func loadLanguage() {
+// Load loads the language from file.
+func Load() {
 	// Read the file
 	langdata, err := ioutil.ReadFile("ljbot.lang")
 	// Check if there was an error
@@ -30,7 +31,8 @@ func loadLanguage() {
 	}
 }
 
-func translate(key string) string {
+// Translate translates the given key.
+func Translate(key string) string {
 	value, exists := lang[key]
 	if exists {
 		return strings.Replace(value, "<br>", "\n", -1)

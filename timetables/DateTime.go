@@ -1,9 +1,10 @@
-package main
+package timetables
 
 import (
 	"errors"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Date ...
@@ -58,4 +59,9 @@ func StringToTime(str string) (Time, error) {
 		return Time{hour, minute}, nil
 	}
 	return Time{0, 0}, errors.New("Failed to parse time")
+}
+
+// Timestamp gets the current UNIX timestamp
+func Timestamp() int64 {
+	return int64(time.Now().Unix())
 }

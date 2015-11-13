@@ -1,10 +1,13 @@
-package main
+package timetables
 
 import (
+	"./"
 	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"log"
+	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/util"
 	"strconv"
 	"strings"
 )
@@ -21,13 +24,55 @@ var firstyear = [26][4]TimetableLesson{}
 var secondyear = [26][4]TimetableLesson{}
 var other = [26]TimetableLesson{}
 
+// The day ID for today
+var today = 5
+
 // The last time the timetable cache was updated
-var lastupdate = timestamp()
+var lastupdate = Timestamp()
+
+// HandleCommand handles a /timetable command
+func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
+	if Timestamp() > lastupdate+600 {
+		bot.SendMessage(message.Chat, "Updating cached timetables...", util.Markdown)
+		Update()
+	}
+	if len(args) > 1 {
+		day := today
+		if len(args) > 2 {
+			shift, err := strconv.Atoi(args[2])
+			if err != nil {
+				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[2]), util.Markdown)
+				return
+			}
+			day += shift
+			if day < 0 || day >= len(other) {
+				bot.SendMessage(message.Chat, lang.Translate("timetable.nodata"), util.Markdown)
+				return
+			}
+		}
+		if strings.EqualFold(args[1], "ventit") {
+			sendFirstYear(day, bot, message)
+		} else if strings.EqualFold(args[1], "neliöt") {
+			sendSecondYear(day, bot, message)
+		} else {
+			bot.SendMessage(message.Chat, lang.Translate("timetable.usage"), util.Markdown)
+		}
+	} else {
+		year := util.GetYeargroupIndex(message.Sender.ID)
+		if year == 1 {
+			sendFirstYear(today, bot, message)
+		} else if year == 2 {
+			sendSecondYear(today, bot, message)
+		} else {
+			bot.SendMessage(message.Chat, lang.Translate("timetable.noyeargroup"), util.Markdown)
+		}
+	}
+}
 
 // Update the timetables from http://ranssi.paivola.fi/lj.php
-func updateTimes() {
+func Update() {
 	// Get the timetable page and convert the string to a reader
-	reader := strings.NewReader(httpGet("http://ranssi.paivola.fi/lj.php"))
+	reader := strings.NewReader(util.HTTPGet("http://ranssi.paivola.fi/lj.php"))
 	// Parse the HTML from the reader
 	doc, err := html.Parse(reader)
 	// Check if there was an error
@@ -39,7 +84,7 @@ func updateTimes() {
 	}
 
 	// Find the timetable table header node
-	ttnode := findSpan("tr", "class", "header", doc)
+	ttnode := util.FindSpan("tr", "class", "header", doc)
 	// Check if the node was found
 	if ttnode != nil {
 		dayentry := ttnode
@@ -64,13 +109,12 @@ func updateTimes() {
 			datemonth, err2 := strconv.Atoi(dateraw[1])
 			// Parse the year from the date
 			dateyear, err3 := strconv.Atoi(dateraw[2])
-			var date Date
 			// If no errors came in parsing, create a Date struct from the parsed data
 			// If there were errors, set the date to 1.1.1970
 			if err1 == nil && err2 == nil && err3 == nil {
-				date = Date{dateyear, datemonth, dateday}
+				date = timetables.Date{dateyear, datemonth, dateday}
 			} else {
-				date = Date{1970, 1, 1}
+				date = timetables.Date{1970, 1, 1}
 			}
 			// Get the first lesson node in the day node
 			entry := dayentry.FirstChild.NextSibling
@@ -127,25 +171,26 @@ func updateTimes() {
 				}
 			}
 		}
-		lastupdate = timestamp()
+		lastupdate = Timestamp()
 	} else {
 		// Node not found, print error
-		log.Printf(translate("timetable.update.failed"))
+		log.Printf(lang.Translate("timetable.update.failed"))
 		lastupdate = 0
 	}
 }
 
 func sendFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
-		fmt.Sprintf(translate("timetable.generic"),
+		fmt.Sprintf(lang.Translate("timetable.generic"),
 			firstyear[day][0].Subject, firstyear[day][1].Subject, firstyear[day][2].Subject, firstyear[day][3].Subject,
-			DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(translate("timetable.other"), other[day].Subject), md)
+			DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
+		util.Markdown)
 }
 
 func sendSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
-		fmt.Sprintf(translate("timetable.generic"),
+		fmt.Sprintf(lang.Translate("timetable.generic"),
 			secondyear[day][0].Subject, secondyear[day][1].Subject, secondyear[day][2].Subject, secondyear[day][3].Subject,
-			DateToString(secondyear[day][0].Date))+"\n"+fmt.Sprintf(translate("timetable.other"), other[day].Subject),
-		md)
+			DateToString(secondyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
+		util.Markdown)
 }
