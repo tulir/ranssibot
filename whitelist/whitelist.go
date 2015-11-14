@@ -1,4 +1,4 @@
-package util
+package whitelist
 
 import (
 	"io/ioutil"
@@ -18,7 +18,7 @@ type User struct {
 
 var whitelist []User
 
-// IsWhitelisted ...
+// IsWhitelisted checks if the user with the given UID has been whitelisted.
 func IsWhitelisted(uid int) bool {
 	for _, e := range whitelist {
 		if e.UID == uid {
@@ -28,7 +28,7 @@ func IsWhitelisted(uid int) bool {
 	return false
 }
 
-// GetYeargroupIndex ...
+// GetYeargroupIndex gets the yeargroup index of the user using the given UID.
 func GetYeargroupIndex(uid int) int {
 	for _, e := range whitelist {
 		if e.UID == uid {
@@ -38,7 +38,7 @@ func GetYeargroupIndex(uid int) int {
 	return 0
 }
 
-// GetPermissionLevel ...
+// GetPermissionLevel gets the permission level of the user with the given UID.
 func GetPermissionLevel(uid int) int {
 	for _, e := range whitelist {
 		if e.UID == uid {
@@ -48,8 +48,8 @@ func GetPermissionLevel(uid int) int {
 	return 0
 }
 
-// LoadWhitelist loads the whitelist from file
-func LoadWhitelist() {
+// Load loads the whitelist from file
+func Load() {
 	// Read the file
 	wldata, err := ioutil.ReadFile("whitelist.txt")
 	// Check if there was an error

@@ -7,21 +7,18 @@ import (
 	"maunium.net/ranssibot/lang"
 	"maunium.net/ranssibot/timetables"
 	"maunium.net/ranssibot/util"
-	"strconv"
+	"maunium.net/ranssibot/whitelist"
 	"strings"
 	"time"
 )
 
 func main() {
 	lang.Load()
-
 	util.Init()
-
-	// Load the whitelist
-	loadWhitelist()
+	whitelist.Load()
 
 	// Connect to Telegram
-	bot, err := telebot.NewBot("170943030:AAE8O_pJ2nHeWCTDTHOBD3Wy-ryFmNkxOOQ")
+	bot, err := telebot.NewBot("151651579:AAErjEHJw1bNs-iWlchFwHiroULpbha_Wz8")
 	if err != nil {
 		log.Printf(lang.Translate("telegram.connection.failed"), err)
 		return
@@ -43,7 +40,7 @@ func main() {
 
 // Handle a command
 func handleCommand(bot *telebot.Bot, message telebot.Message) {
-	if !isWhitelisted(message.Sender.ID) {
+	if !whitelist.IsWhitelisted(message.Sender.ID) {
 		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("whitelist.notwhitelisted"), message.Sender.ID), nil)
 		return
 	}
@@ -54,7 +51,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	} else if strings.HasPrefix(message.Text, "/timetable") {
 		timetables.HandleCommand(bot, message, args)
 	} else if strings.HasPrefix(message.Text, "/settime") {
-		if len(args) > 3 {
+		/*if len(args) > 3 {
 			lessonID, err := strconv.Atoi(args[2])
 			if err != nil {
 				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[2]), util.Markdown)
@@ -63,7 +60,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 			if err != nil {
 				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[3]), util.Markdown)
 			}
-			time, err := StringToTime(args[4])
+			time, err := timetables.StringToTime(args[4])
 			if err != nil {
 				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.time"), args[4]), util.Markdown)
 			}
@@ -79,9 +76,9 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("settime.success"), args[1], lessonID, dayShift, TimeToString(time)), util.Markdown)
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("settime.usage"), util.Markdown)
-		}
+		}*/
 	} else if message.Text == "/update" {
-		updateTimes()
+		timetables.Update()
 		bot.SendMessage(message.Chat, lang.Translate("timetable.update.success"), util.Markdown)
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)

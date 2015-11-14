@@ -21,14 +21,43 @@ func Load() {
 	log.Printf("Loading language...")
 	// Split the file string to an array of lines
 	langraw := strings.Split(string(langdata), "\n")
+	var appendTo string
+
 	for i := 0; i < len(langraw); i++ {
 		// Make sure the line is not empty
 		if len(langraw[i]) == 0 || strings.HasPrefix(langraw[i], "#") {
 			continue
 		}
-		entry := strings.Split(langraw[i], "=")
-		lang[entry[0]] = entry[1]
+		if len(appendTo) != 0 {
+			entry := langraw[i]
+			entry = strings.TrimSpace(entry)
+			if strings.HasSuffix(entry, "\\") {
+				entry = trimSuffix(entry, "\\")
+			} else {
+				appendTo = ""
+			}
+			if len(lang[appendTo]) == 0 {
+				lang[appendTo] = entry
+			} else {
+				lang[appendTo] = lang[appendTo] + "\n" + entry
+			}
+		} else {
+			entry := strings.Split(langraw[i], "=")
+			entry[1] = strings.TrimSpace(entry[1])
+			if strings.HasSuffix(entry[1], "\\") {
+				entry[1] = trimSuffix(entry[1], "\\")
+				appendTo = entry[0]
+			}
+			lang[entry[0]] = entry[1]
+		}
 	}
+}
+
+func trimSuffix(s, suffix string) string {
+	if strings.HasSuffix(s, suffix) {
+		s = s[:len(s)-len(suffix)]
+	}
+	return s
 }
 
 // Translate translates the given key.

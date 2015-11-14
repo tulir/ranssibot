@@ -1,13 +1,13 @@
 package timetables
 
 import (
-	"./"
 	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"log"
 	"maunium.net/ranssibot/lang"
 	"maunium.net/ranssibot/util"
+	"maunium.net/ranssibot/whitelist"
 	"strconv"
 	"strings"
 )
@@ -58,7 +58,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 			bot.SendMessage(message.Chat, lang.Translate("timetable.usage"), util.Markdown)
 		}
 	} else {
-		year := util.GetYeargroupIndex(message.Sender.ID)
+		year := whitelist.GetYeargroupIndex(message.Sender.ID)
 		if year == 1 {
 			sendFirstYear(today, bot, message)
 		} else if year == 2 {
@@ -99,6 +99,7 @@ func Update() {
 			// Get the first day node
 			dayentry = dayentry.NextSibling.NextSibling
 
+			var date Date
 			// Get the date of this day
 			dateraw := strings.Split(dayentry.FirstChild.NextSibling.LastChild.Data, ".")
 			dateraw[0] = strings.Split(dateraw[0], "\n")[1]
@@ -112,9 +113,9 @@ func Update() {
 			// If no errors came in parsing, create a Date struct from the parsed data
 			// If there were errors, set the date to 1.1.1970
 			if err1 == nil && err2 == nil && err3 == nil {
-				date = timetables.Date{dateyear, datemonth, dateday}
+				date = Date{dateyear, datemonth, dateday}
 			} else {
-				date = timetables.Date{1970, 1, 1}
+				date = Date{1970, 1, 1}
 			}
 			// Get the first lesson node in the day node
 			entry := dayentry.FirstChild.NextSibling

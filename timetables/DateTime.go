@@ -7,19 +7,19 @@ import (
 	"time"
 )
 
-// Date ...
+// Date contains the year, month and day
 type Date struct {
 	Year  int
 	Month int
 	Day   int
 }
 
-// DateToString ...
+// DateToString converts a date to a string
 func DateToString(date Date) string {
 	return strconv.Itoa(date.Day) + "." + strconv.Itoa(date.Month) + "." + strconv.Itoa(date.Year)
 }
 
-// StringToDate ...
+// StringToDate converts a string to a date
 func StringToDate(str string) (Date, error) {
 	dateparts := strings.Split(str, ".")
 	day, err1 := strconv.Atoi(dateparts[0])
@@ -31,13 +31,13 @@ func StringToDate(str string) (Date, error) {
 	return Date{1970, 1, 1}, errors.New("Failed to parse date")
 }
 
-// Time ...
+// Time contains the hour and minutes
 type Time struct {
 	Hours   int
 	Minutes int
 }
 
-// TimeToString ...
+// TimeToString converts a time to a string
 func TimeToString(time Time) string {
 	hourStr := strconv.Itoa(time.Hours)
 	if len(hourStr) == 1 {
@@ -50,7 +50,7 @@ func TimeToString(time Time) string {
 	return hourStr + ":" + minStr
 }
 
-// StringToTime ...
+// StringToTime converts a string to a time
 func StringToTime(str string) (Time, error) {
 	timeparts := strings.Split(str, ":")
 	hour, err1 := strconv.Atoi(timeparts[0])
