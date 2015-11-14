@@ -32,6 +32,8 @@ func main() {
 	// Update timetables
 	timetables.Update()
 
+	bot.SendMessage(whitelist.GetRecipientByName("tulir"), "Ranssibot started up @ "+time.Now().Format("15:04:05 02.01.2006"), nil)
+
 	// Listen to messages
 	for message := range messages {
 		handleCommand(bot, message)
@@ -50,37 +52,15 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
 	} else if strings.HasPrefix(message.Text, "/timetable") {
 		timetables.HandleCommand(bot, message, args)
-	} else if strings.HasPrefix(message.Text, "/settime") {
-		/*if len(args) > 3 {
-			lessonID, err := strconv.Atoi(args[2])
-			if err != nil {
-				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[2]), util.Markdown)
-			}
-			dayShift, err := strconv.Atoi(args[3])
-			if err != nil {
-				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[3]), util.Markdown)
-			}
-			time, err := timetables.StringToTime(args[4])
-			if err != nil {
-				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.time"), args[4]), util.Markdown)
-			}
-			if args[1] == "ventit" {
-				firstyear[today+dayShift][lessonID].Time = time
-			} else if args[1] == "neliöt" {
-				secondyear[today+dayShift][lessonID].Time = time
-			} else if args[1] == "other" {
-				other[today+dayShift].Time = time
-			} else {
-				return
-			}
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("settime.success"), args[1], lessonID, dayShift, TimeToString(time)), util.Markdown)
-		} else {
-			bot.SendMessage(message.Chat, lang.Translate("settime.usage"), util.Markdown)
-		}*/
-	} else if message.Text == "/update" {
-		timetables.Update()
-		bot.SendMessage(message.Chat, lang.Translate("timetable.update.success"), util.Markdown)
+	} else if message.Text == "/spamme" {
+		go spam(message.Sender.ID, bot)
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}
+}
+
+func spam(uid int, bot *telebot.Bot) {
+	bot.SendMessage(whitelist.GetRecipientByUID(uid), "OK! I'll spam you in 5 seconds.", nil)
+	time.Sleep(5 * time.Second)
+	bot.SendMessage(whitelist.GetRecipientByUID(uid), "Here's the spam you requested!", nil)
 }
