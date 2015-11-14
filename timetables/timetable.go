@@ -1,6 +1,7 @@
 package timetables
 
 import (
+	"errors"
 	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
@@ -16,8 +17,8 @@ import (
 type TimetableLesson struct {
 	Subject  string
 	TimeName string
-	Date     Date
-	Time     Time
+	Date     util.Date
+	Time     util.Time
 }
 
 var firstyear = [26][4]TimetableLesson{}
@@ -28,45 +29,96 @@ var other = [26]TimetableLesson{}
 var today = 5
 
 // The last time the timetable cache was updated
-var lastupdate = Timestamp()
+var lastupdate = util.Timestamp()
 
 // HandleCommand handles a /timetable command
 func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
-	if Timestamp() > lastupdate+600 {
+	if util.Timestamp() > lastupdate+600 {
 		bot.SendMessage(message.Chat, "Updating cached timetables...", util.Markdown)
 		Update()
 	}
-	if len(args) > 1 {
-		day := today
-		if len(args) > 2 {
-			shift, err := strconv.Atoi(args[2])
-			if err != nil {
-				bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[2]), util.Markdown)
-				return
-			}
-			day += shift
-			if day < 0 || day >= len(other) {
-				bot.SendMessage(message.Chat, lang.Translate("timetable.nodata"), util.Markdown)
-				return
-			}
+
+	// SetTime code
+	/*if len(args) > 3 {
+		lessonID, err := strconv.Atoi(args[2])
+		if err != nil {
+			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[2]), util.Markdown)
 		}
-		if strings.EqualFold(args[1], "ventit") {
-			sendFirstYear(day, bot, message)
-		} else if strings.EqualFold(args[1], "neliöt") {
-			sendSecondYear(day, bot, message)
+		dayShift, err := strconv.Atoi(args[3])
+		if err != nil {
+			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[3]), util.Markdown)
+		}
+		time, err := timetables.StringToTime(args[4])
+		if err != nil {
+			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.time"), args[4]), util.Markdown)
+		}
+		if args[1] == "ventit" {
+			firstyear[today+dayShift][lessonID].Time = time
+		} else if args[1] == "neliöt" {
+			secondyear[today+dayShift][lessonID].Time = time
+		} else if args[1] == "other" {
+			other[today+dayShift].Time = time
+		} else {
+			return
+		}
+		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("settime.success"), args[1], lessonID, dayShift, TimeToString(time)), util.Markdown)
+	} else {
+		bot.SendMessage(message.Chat, lang.Translate("settime.usage"), util.Markdown)
+	}*/
+
+	day := today
+	year := whitelist.GetYeargroupIndex(message.Sender.ID)
+	if len(args) == 2 {
+		if strings.EqualFold(args[1], lang.Translate("timetable.year.first")) {
+			year = 1
+		} else if strings.EqualFold(args[1], lang.Translate("timetable.year.second")) {
+			year = 2
+		} else if args[1] == "update" {
+			Update()
+			bot.SendMessage(message.Chat, lang.Translate("timetable.update.success"), util.Markdown)
+		} else {
+			dayNew, err := shift(day, args[1], 0, len(other), bot, message)
+			if err != nil {
+				return
+			}
+			day = dayNew
+		}
+	} else if len(args) == 3 {
+		if strings.EqualFold(args[1], lang.Translate("timetable.year.first")) {
+			year = 1
+		} else if strings.EqualFold(args[1], lang.Translate("timetable.year.second")) {
+			year = 2
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("timetable.usage"), util.Markdown)
 		}
-	} else {
-		year := whitelist.GetYeargroupIndex(message.Sender.ID)
-		if year == 1 {
-			sendFirstYear(today, bot, message)
-		} else if year == 2 {
-			sendSecondYear(today, bot, message)
-		} else {
-			bot.SendMessage(message.Chat, lang.Translate("timetable.noyeargroup"), util.Markdown)
+		dayNew, err := shift(day, args[2], 0, len(other), bot, message)
+		if err != nil {
+			return
 		}
+		day = dayNew
 	}
+
+	if year == 1 {
+		sendFirstYear(day, bot, message)
+	} else if year == 2 {
+		sendSecondYear(day, bot, message)
+	} else {
+		bot.SendMessage(message.Chat, lang.Translate("timetable.noyeargroup"), util.Markdown)
+	}
+}
+
+func shift(toShift int, shiftBy string, min, max int, bot *telebot.Bot, message telebot.Message) (int, error) {
+	shift, err := strconv.Atoi(shiftBy)
+	if err == nil {
+		toShift += shift
+		if toShift < min || toShift > max {
+			bot.SendMessage(message.Chat, lang.Translate("timetable.nodata"), util.Markdown)
+			return -9999, errors.New("OOB")
+		}
+		return toShift, nil
+	}
+	bot.SendMessage(message.Chat, lang.Translate("timetable.usage"), util.Markdown)
+	return -9999, errors.New("PARSEINT")
 }
 
 // Update the timetables from http://ranssi.paivola.fi/lj.php
@@ -99,7 +151,7 @@ func Update() {
 			// Get the first day node
 			dayentry = dayentry.NextSibling.NextSibling
 
-			var date Date
+			var date util.Date
 			// Get the date of this day
 			dateraw := strings.Split(dayentry.FirstChild.NextSibling.LastChild.Data, ".")
 			dateraw[0] = strings.Split(dateraw[0], "\n")[1]
@@ -113,9 +165,9 @@ func Update() {
 			// If no errors came in parsing, create a Date struct from the parsed data
 			// If there were errors, set the date to 1.1.1970
 			if err1 == nil && err2 == nil && err3 == nil {
-				date = Date{dateyear, datemonth, dateday}
+				date = util.Date{Year: dateyear, Month: datemonth, Day: dateday}
 			} else {
-				date = Date{1970, 1, 1}
+				date = util.Date{Year: 1970, Month: 1, Day: 1}
 			}
 			// Get the first lesson node in the day node
 			entry := dayentry.FirstChild.NextSibling
@@ -152,27 +204,27 @@ func Update() {
 				// Save the parsed data to the correct location.
 				switch lesson {
 				case 0:
-					firstyear[day][0] = TimetableLesson{data, "Aamu", date, Time{9, 0}}
+					firstyear[day][0] = TimetableLesson{data, "Aamu", date, util.Time{Hours: 9, Minutes: 0}}
 				case 1:
-					firstyear[day][1] = TimetableLesson{data, "IP1", date, Time{12, 15}}
+					firstyear[day][1] = TimetableLesson{data, "IP1", date, util.Time{Hours: 12, Minutes: 15}}
 				case 2:
-					firstyear[day][2] = TimetableLesson{data, "IP2", date, Time{15, 0}}
+					firstyear[day][2] = TimetableLesson{data, "IP2", date, util.Time{Hours: 15, Minutes: 0}}
 				case 3:
-					firstyear[day][3] = TimetableLesson{data, "Ilta", date, Time{19, 0}}
+					firstyear[day][3] = TimetableLesson{data, "Ilta", date, util.Time{Hours: 19, Minutes: 0}}
 				case 4:
-					other[day] = TimetableLesson{data, "Muuta", date, Time{0, 0}}
+					other[day] = TimetableLesson{data, "Muuta", date, util.Time{Hours: 0, Minutes: 0}}
 				case 5:
-					secondyear[day][0] = TimetableLesson{data, "Aamu", date, Time{9, 0}}
+					secondyear[day][0] = TimetableLesson{data, "Aamu", date, util.Time{Hours: 9, Minutes: 0}}
 				case 6:
-					secondyear[day][1] = TimetableLesson{data, "IP1", date, Time{12, 15}}
+					secondyear[day][1] = TimetableLesson{data, "IP1", date, util.Time{Hours: 12, Minutes: 15}}
 				case 7:
-					secondyear[day][2] = TimetableLesson{data, "IP2", date, Time{15, 0}}
+					secondyear[day][2] = TimetableLesson{data, "IP2", date, util.Time{Hours: 15, Minutes: 0}}
 				case 8:
-					secondyear[day][3] = TimetableLesson{data, "Ilta", date, Time{19, 0}}
+					secondyear[day][3] = TimetableLesson{data, "Ilta", date, util.Time{Hours: 19, Minutes: 0}}
 				}
 			}
 		}
-		lastupdate = Timestamp()
+		lastupdate = util.Timestamp()
 	} else {
 		// Node not found, print error
 		log.Printf(lang.Translate("timetable.update.failed"))
@@ -184,7 +236,7 @@ func sendFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
 		fmt.Sprintf(lang.Translate("timetable.generic"),
 			firstyear[day][0].Subject, firstyear[day][1].Subject, firstyear[day][2].Subject, firstyear[day][3].Subject,
-			DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
+			util.DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
 		util.Markdown)
 }
 
@@ -192,6 +244,6 @@ func sendSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
 		fmt.Sprintf(lang.Translate("timetable.generic"),
 			secondyear[day][0].Subject, secondyear[day][1].Subject, secondyear[day][2].Subject, secondyear[day][3].Subject,
-			DateToString(secondyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
+			util.DateToString(secondyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
 		util.Markdown)
 }
