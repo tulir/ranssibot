@@ -1,4 +1,4 @@
-package timetables
+package util
 
 import (
 	"errors"
