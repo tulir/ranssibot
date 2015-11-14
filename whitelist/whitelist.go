@@ -48,6 +48,36 @@ func GetPermissionLevel(uid int) int {
 	return 0
 }
 
+// GetUID gets the UID matching the given name.
+func GetUID(name string) int {
+	for _, e := range whitelist {
+		if strings.EqualFold(name, e.Name) {
+			return e.UID
+		}
+	}
+	return 0
+}
+
+// GetRecipientByUID gets a Recipient-type interface of the given UID.
+func GetRecipientByUID(uid int) SimpleUser {
+	return SimpleUser{uid}
+}
+
+// GetRecipientByName gets a Recipient-type interface of the given name.
+func GetRecipientByName(name string) SimpleUser {
+	return SimpleUser{GetUID(name)}
+}
+
+// SimpleUser ...
+type SimpleUser struct {
+	uid int
+}
+
+// Destination ...
+func (user SimpleUser) Destination() int {
+	return user.uid
+}
+
 // Load loads the whitelist from file
 func Load() {
 	// Read the file
