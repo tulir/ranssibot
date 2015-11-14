@@ -1,11 +1,3 @@
-telegram.connection.failed=Error connecting to Telegram: %[1]s
-telegram.connection.success=Connected to Telegram!
-telegram.commandreceived=%[1]s (%[2]d) sent command: %[3]s
-
-error.parse.integer=I couldn't parse an integer from "_%[1]s_"
-error.parse.time=I couldn't parse a time from "_%[1]s_"
-error.commandnotfound=Command not found.
-
 whitelist.loading=Loading whitelist...
 whitelist.load.success=Successfully loaded whitelist from file!
 whitelist.load.failed=Failed to load whitelist: %[1]s; Using hardcoded version
@@ -15,7 +7,15 @@ whitelist.notwhitelisted=\
 Et ole Päivölän Lukujärjestysbotin whitelistillä. Voit tökkiä Tuliria päästäksesi whitelistille. \
 Telegram-käyttäjäsi ID on %[1]d
 
-timetable.usage=*Usage:* /timetable <ventit/neliöt> <day offset>
+telegram.connection.failed=Error connecting to Telegram: %[1]s
+telegram.connection.success=Connected to Telegram!
+telegram.commandreceived=%[1]s (%[2]d) sent command: %[3]s
+
+error.parse.integer=I couldn't parse an integer from "_%[1]s_"
+error.parse.time=I couldn't parse a time from "_%[1]s_"
+error.commandnotfound=Command not found.
+
+timetable.usage=*Usage:* /timetable <ventit/neliöt/day offset> \[day offset]
 timetable.nodata=I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.
 timetable.update.success=Updating cached timetables...
 timetable.update.failed=Error updating timetables: Failed to find timetable table header node!
@@ -27,6 +27,9 @@ timetable.generic=*Lukujärjestys %[5]s* \
 timetable.other=`Muuta: %[1]s`
 timetable.empty=tyhjää
 timetable.noyeargroup=I'm afraid I don't know which year you're on.
+# These should NOT be translated.
+timetable.year.first=ventit
+timetable.year.second=neliöt
 
 settime.usage=*Usage:* /settime <ventit/neliöt> <day shift> <lesson id> <new time>
 settime.success=Successfully set time for lesson #%[2]d for %[1]s in %[3]d days to %[4]s
