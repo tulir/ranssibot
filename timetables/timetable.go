@@ -73,7 +73,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 			year = 1
 		} else if strings.EqualFold(args[1], lang.Translate("timetable.year.second")) {
 			year = 2
-		} else if args[1] == "update" {
+		} else if strings.EqualFold(args[1], "update") {
 			Update()
 			bot.SendMessage(message.Chat, lang.Translate("timetable.update.success"), util.Markdown)
 		} else {
