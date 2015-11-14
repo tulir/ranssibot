@@ -31,15 +31,16 @@ func Load() {
 		if len(appendTo) != 0 {
 			entry := langraw[i]
 			entry = strings.TrimSpace(entry)
+			appendToCache := appendTo
 			if strings.HasSuffix(entry, "\\") {
 				entry = trimSuffix(entry, "\\")
 			} else {
 				appendTo = ""
 			}
-			if len(lang[appendTo]) == 0 {
-				lang[appendTo] = entry
+			if len(lang[appendToCache]) == 0 {
+				lang[appendToCache] = entry
 			} else {
-				lang[appendTo] = lang[appendTo] + "\n" + entry
+				lang[appendToCache] += "\n" + entry
 			}
 		} else {
 			entry := strings.Split(langraw[i], "=")
