@@ -5,6 +5,7 @@ import (
 	"github.com/tucnak/telebot"
 	"log"
 	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/laundry"
 	"maunium.net/ranssibot/timetables"
 	"maunium.net/ranssibot/util"
 	"maunium.net/ranssibot/whitelist"
@@ -13,6 +14,10 @@ import (
 )
 
 func main() {
+	laundry.NotifierTick()
+	if true {
+		return
+	}
 	lang.Load()
 	util.Init()
 	whitelist.Load()
