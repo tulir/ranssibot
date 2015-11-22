@@ -5,7 +5,8 @@ import (
 	"github.com/tucnak/telebot"
 	"log"
 	"maunium.net/ranssibot/lang"
-	"maunium.net/ranssibot/laundry"
+	//"maunium.net/ranssibot/laundry"
+	"maunium.net/ranssibot/posts"
 	"maunium.net/ranssibot/timetables"
 	"maunium.net/ranssibot/util"
 	"maunium.net/ranssibot/whitelist"
@@ -14,10 +15,6 @@ import (
 )
 
 func main() {
-	laundry.NotifierTick()
-	if true {
-		return
-	}
 	lang.Load()
 	util.Init()
 	whitelist.Load()
@@ -36,6 +33,9 @@ func main() {
 
 	// Update timetables
 	timetables.Update()
+
+	//go laundry.NotifierTick()
+	go posts.Loop(bot)
 
 	bot.SendMessage(whitelist.GetRecipientByName("tulir"), "Ranssibot started up @ "+time.Now().Format("15:04:05 02.01.2006"), nil)
 
@@ -57,15 +57,9 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
 	} else if strings.HasPrefix(message.Text, "/timetable") {
 		timetables.HandleCommand(bot, message, args)
-	} else if message.Text == "/spamme" {
-		go spam(message.Sender.ID, bot)
+	} else if strings.HasPrefix(message.Text, "/posts") {
+		posts.HandleCommand(bot, message, args)
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}
-}
-
-func spam(uid int, bot *telebot.Bot) {
-	bot.SendMessage(whitelist.GetRecipientByUID(uid), "OK! I'll spam you in 5 seconds.", nil)
-	time.Sleep(5 * time.Second)
-	bot.SendMessage(whitelist.GetRecipientByUID(uid), "Here's the spam you requested!", nil)
 }

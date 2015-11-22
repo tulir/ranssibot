@@ -16,6 +16,8 @@ type User struct {
 	PermissionLevel int
 }
 
+const whitelistFile = "data/whitelist"
+
 var whitelist []User
 
 // IsWhitelisted checks if the user with the given UID has been whitelisted.
@@ -81,7 +83,7 @@ func (user SimpleUser) Destination() int {
 // Load loads the whitelist from file
 func Load() {
 	// Read the file
-	wldata, err := ioutil.ReadFile("whitelist.txt")
+	wldata, err := ioutil.ReadFile(whitelistFile)
 	// Check if there was an error
 	if err != nil {
 		// Error, print message and use hardcoded whitelist.
