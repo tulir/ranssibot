@@ -42,7 +42,7 @@ func Loop(bot *telebot.Bot) {
 				bot.SendMessage(whitelist.GetRecipientByUID(uid), fmt.Sprintf(lang.Translate("posts.new"), topic, lastRead), util.Markdown)
 			}
 
-			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0644)
+			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)
 			time.Sleep(10 * time.Second)
 		} else {
 			time.Sleep(1 * time.Minute)
@@ -89,7 +89,7 @@ func writeSubs() {
 	for _, uid := range subs {
 		s += strconv.Itoa(uid) + "\n"
 	}
-	ioutil.WriteFile(postsubs, []byte(s), 0644)
+	ioutil.WriteFile(postsubs, []byte(s), 0700)
 }
 
 func spam(id int, message string) error {
