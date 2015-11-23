@@ -2,7 +2,7 @@ package whitelist
 
 import (
 	"io/ioutil"
-	"maunium.net/ranssibot/log"
+	log "maunium.net/ranssibot/maulog"
 	"strconv"
 	"strings"
 )

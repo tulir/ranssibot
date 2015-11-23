@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/tucnak/telebot"
 	"maunium.net/ranssibot/lang"
-	"maunium.net/ranssibot/log"
+	log "maunium.net/ranssibot/maulog"
 	//"maunium.net/ranssibot/laundry"
 	flag "github.com/ogier/pflag"
 	"maunium.net/ranssibot/posts"

@@ -1,4 +1,4 @@
-package log
+package maulog
 
 import (
 	"bufio"
@@ -42,6 +42,16 @@ func init() {
 		panic(os.ErrInvalid)
 	}
 	writer = bufio.NewWriter(file)
+}
+
+// Printf ...
+func Printf(message string, args ...interface{}) {
+	Infof(message, args...)
+}
+
+// Println ...
+func Println(args ...interface{}) {
+	Infoln(args...)
 }
 
 // Infof ...

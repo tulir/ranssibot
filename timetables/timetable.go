@@ -6,7 +6,7 @@ import (
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"maunium.net/ranssibot/lang"
-	"maunium.net/ranssibot/log"
+	log "maunium.net/ranssibot/maulog"
 	"maunium.net/ranssibot/util"
 	"maunium.net/ranssibot/whitelist"
 	"strconv"
