@@ -51,13 +51,20 @@ func Loop(bot *telebot.Bot) {
 }
 
 // Subscribe the given UID to the notification list.
-func subscribe(uid int) {
+func subscribe(uid int) bool {
+	if isSubscribed(uid) {
+		return false
+	}
 	subs = append(subs, uid)
 	writeSubs()
+	return true
 }
 
 // Unsubscribe the given UID from the notification list.
-func unsubscribe(uid int) {
+func unsubscribe(uid int) bool {
+	if !isSubscribed(uid) {
+		return false
+	}
 	for i, subuid := range subs {
 		if subuid == uid {
 			subs[i] = subs[len(subs)-1]
@@ -65,6 +72,16 @@ func unsubscribe(uid int) {
 		}
 	}
 	writeSubs()
+	return true
+}
+
+func isSubscribed(uid int) bool {
+	for _, id := range subs {
+		if id == uid {
+			return true
+		}
+	}
+	return false
 }
 
 // Read the UIDs that are subscribed to the notification list.
@@ -125,11 +142,17 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	}
 
 	if strings.EqualFold(args[1], "subscribe") || strings.EqualFold(args[1], "sub") {
-		subscribe(message.Chat.ID)
-		bot.SendMessage(message.Chat, lang.Translate("posts.subscribed"), util.Markdown)
+		if subscribe(message.Chat.ID) {
+			bot.SendMessage(message.Chat, lang.Translate("posts.subscribed"), util.Markdown)
+		} else {
+			bot.SendMessage(message.Chat, lang.Translate("posts.alreadysubscribed"), util.Markdown)
+		}
 	} else if strings.EqualFold(args[1], "unsubscribe") || strings.EqualFold(args[1], "unsub") {
-		unsubscribe(message.Chat.ID)
-		bot.SendMessage(message.Chat, lang.Translate("posts.unsubscribed"), util.Markdown)
+		if unsubscribe(message.Chat.ID) {
+			bot.SendMessage(message.Chat, lang.Translate("posts.unsubscribed"), util.Markdown)
+		} else {
+			bot.SendMessage(message.Chat, lang.Translate("posts.notsubscribed"), util.Markdown)
+		}
 	} else if strings.EqualFold(args[1], "get") || strings.EqualFold(args[1], "read") {
 		if len(args) < 3 {
 			bot.SendMessage(message.Chat, lang.Translate("posts.read.usage"), util.Markdown)

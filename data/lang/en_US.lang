@@ -33,6 +33,9 @@ timetable.year.second=neliöt
 
 posts.subscribed=You have subscribed to the Ranssibot post notification list.
 posts.unsubscribed=You have unsubscribed from the Ranssibot post notification list.
+posts.notsubscribed=You weren't subscribed to the Ranssibot post notification list!
+posts.alreadysubscribed=You are already subscribed to the Ranssibot post notification list!
+
 posts.new=*[Post Notifier]* \
 There is a new Ranssi post titled `%[1]s` (Post ID: %[2]d) \
 Click on the following link to read it: http://ranssi.paivola.fi/story.php?id=%[2]d
