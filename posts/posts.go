@@ -36,7 +36,7 @@ func Loop(bot *telebot.Bot) {
 
 		node := getPost(lastRead)
 		if node != nil {
-			topic := strings.TrimSpace(node.FirstChild.NextSibling.FirstChild.Data)
+			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
 			for _, uid := range subs {
 				bot.SendMessage(whitelist.GetRecipientByUID(uid), fmt.Sprintf(lang.Translate("posts.new"), topic, lastRead), util.Markdown)
@@ -109,7 +109,7 @@ func spam(id int, message string) error {
 
 // Get the content of the Ranssi post with the given ID.
 func getPost(id int) *html.Node {
-	data := util.HTTPGet("http://ranssi.paivola.fi/story.php?id=" + strconv.Itoa(id))
+	data := util.HTTPGetMin("http://ranssi.paivola.fi/story.php?id=" + strconv.Itoa(id))
 	if string(data) != "ID:tä ei ole olemassa." {
 		doc, _ := html.Parse(strings.NewReader(data))
 		return util.FindSpan("div", "id", "story", doc)
@@ -131,7 +131,46 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 		unsubscribe(message.Chat.ID)
 		bot.SendMessage(message.Chat, lang.Translate("posts.unsubscribed"), util.Markdown)
 	} else if strings.EqualFold(args[1], "get") || strings.EqualFold(args[1], "read") {
-		bot.SendMessage(message.Chat, "*Error:* Reading Ranssi posts has not yet been implemented", util.Markdown)
+		if len(args) < 3 {
+			bot.SendMessage(message.Chat, lang.Translate("posts.read.usage"), util.Markdown)
+			return
+		}
+
+		id, err := strconv.Atoi(args[2])
+		if err != nil {
+			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), err), util.Markdown)
+			return
+		}
+		post := getPost(id)
+		if post == nil {
+			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.notfound"), id), util.Markdown)
+			return
+		}
+		post = post.FirstChild
+
+		title := strings.TrimSpace(post.FirstChild.Data)
+		body := ""
+		bodyNode := post.NextSibling.FirstChild
+		prevbr := false
+		for {
+			bodyNode = bodyNode.NextSibling
+			if bodyNode == nil {
+				break
+			}
+			if bodyNode.Data == "br" {
+				if !prevbr {
+					body += "\n"
+					prevbr = true
+					continue
+				}
+			} else {
+				body += bodyNode.Data
+			}
+			prevbr = false
+		}
+		body = strings.TrimSpace(body)
+
+		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.read"), id, title, body), util.Markdown)
 	} else if strings.EqualFold(args[1], "comment") || strings.EqualFold(args[1], "message") || strings.EqualFold(args[1], "spam") {
 		if len(args) < 4 {
 			bot.SendMessage(message.Chat, lang.Translate("posts.spam.usage"), util.Markdown)
@@ -146,7 +185,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 
 		data := util.HTTPGet("http://ranssi.paivola.fi/story.php?id=" + strconv.Itoa(id))
 		if string(data) == "ID:tä ei ole olemassa." {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.spam.notfound"), id), util.Markdown)
+			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.notfound"), id), util.Markdown)
 			return
 		}
 		doc, _ := html.Parse(strings.NewReader(data))

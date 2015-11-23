@@ -37,8 +37,12 @@ posts.new=*[Post Notifier]* \
 There is a new Ranssi post titled `%[1]s` (Post ID: %[2]d) \
 Click on the following link to read it: http://ranssi.paivola.fi/story.php?id=%[2]d
 
+posts.notfound=Couldn't find a Ranssi post with the ID %[1]d!
+
+posts.read=*%[2]s* \
+%[3]s
+
 posts.spam.usage=*Usage:* /posts comment <id> <message>
-posts.spam.notfound=Couldn't find a Ranssi post with the ID %[1]d!
 posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza list!
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s

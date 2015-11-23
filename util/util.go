@@ -2,8 +2,11 @@ package util
 
 import (
 	"bytes"
+	"github.com/tdewolff/minify"
+	mhtml "github.com/tdewolff/minify/html"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -29,6 +32,23 @@ func HTTPGet(url string) string {
 		return ""
 	}
 	return string(contents)
+}
+
+// HTTPGetMin performs a HTTP GET request on the given URL and minifies the output
+func HTTPGetMin(url string) string {
+	response, err := http.Get(url)
+	if err != nil {
+		return ""
+	}
+	defer response.Body.Close()
+	var b bytes.Buffer
+
+	minifyh(response.Body, &b)
+	return b.String()
+}
+
+func minifyh(reader io.Reader, writer io.Writer) {
+	mhtml.Minify(minify.New(), writer, reader, nil)
 }
 
 // Render renders the given HTML node to a string
