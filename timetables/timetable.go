@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
-	"log"
 	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/log"
 	"maunium.net/ranssibot/util"
 	"maunium.net/ranssibot/whitelist"
 	"strconv"
@@ -130,7 +130,7 @@ func Update() {
 	// Check if there was an error
 	if err != nil {
 		// Print the error
-		log.Printf("%s", err)
+		log.Errorf("Failed to update timetable cache: %s", err)
 		// Return
 		return
 	}
@@ -227,7 +227,7 @@ func Update() {
 		lastupdate = util.Timestamp()
 	} else {
 		// Node not found, print error
-		log.Printf(lang.Translate("timetable.update.failed"))
+		log.Errorf("Error updating timetables: Failed to find timetable table header node!")
 		lastupdate = 0
 	}
 }

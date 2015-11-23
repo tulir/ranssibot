@@ -14,8 +14,7 @@ import (
 // Markdown contains the SendOptions for markdown messages
 var Markdown *telebot.SendOptions
 
-// Init initializes things
-func Init() {
+func init() {
 	Markdown = new(telebot.SendOptions)
 	Markdown.ParseMode = telebot.ModeMarkdown
 }

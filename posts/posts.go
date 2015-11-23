@@ -6,8 +6,8 @@ import (
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"io/ioutil"
-	"log"
 	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/log"
 	"maunium.net/ranssibot/util"
 	"maunium.net/ranssibot/whitelist"
 	"net/http"
@@ -27,10 +27,10 @@ func Loop(bot *telebot.Bot) {
 	readSubs()
 	for {
 		lrData, _ := ioutil.ReadFile(lastreadpost)
-		lastRead, _ := strconv.Atoi(strings.Split(string(lrData), "\n")[0])
-		if lastRead == 0 {
-			log.Println("Failed to find index of last read Ranssi post.")
-			return
+		lastRead, err := strconv.Atoi(strings.Split(string(lrData), "\n")[0])
+		if lastRead == 0 || err != nil {
+			log.Fatalf("Failed to find index of last read Ranssi post.")
+			panic(err)
 		}
 		lastRead++
 
@@ -94,7 +94,7 @@ func readSubs() {
 			if err == nil {
 				subs = append(subs, uid)
 			} else {
-				log.Println("Failed to parse subscription entry for " + str)
+				log.Warnf("Failed to parse subscription entry %[1]s", str)
 			}
 		}
 	}
@@ -112,13 +112,13 @@ func writeSubs() {
 func spam(id int, message string) error {
 	resp, err := http.PostForm("http://ranssi.paivola.fi/story.php?id="+strconv.Itoa(id), url.Values{"comment": {message}})
 	if err != nil {
-		log.Println("Error posting message \"" + message + "\" to the Ranssi post with ID " + strconv.Itoa(id) + ":\n" + err.Error())
+		log.Errorf("Error posting message \"%[1]s\" to the Ranssi post with ID %[2]d:\n%[3]s", message, id, err)
 		return errors.New("Failed to post message")
 	}
 	defer resp.Body.Close()
 	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println("Failed to read response: " + err.Error())
+		log.Errorf("Failed to read response: %[1]s", err)
 		return errors.New("Failed to read response")
 	}
 	return nil

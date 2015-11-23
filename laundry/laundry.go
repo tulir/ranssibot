@@ -3,8 +3,8 @@ package laundry
 import (
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
-	"log"
 	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/log"
 	"maunium.net/ranssibot/util"
 	"strings"
 	"time"
@@ -30,7 +30,7 @@ func NotifierTick() {
 	// Check if there was an error
 	if err != nil {
 		// Print the error
-		log.Printf("%s", err)
+		log.Errorf("Failed to read laundry lists: %s", err)
 		// Return
 		return
 	}

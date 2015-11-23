@@ -2,8 +2,7 @@ package whitelist
 
 import (
 	"io/ioutil"
-	"log"
-	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/log"
 	"strconv"
 	"strings"
 )
@@ -80,20 +79,19 @@ func (user SimpleUser) Destination() int {
 	return user.uid
 }
 
-// Load loads the whitelist from file
-func Load() {
+func init() {
 	// Read the file
 	wldata, err := ioutil.ReadFile(whitelistFile)
 	// Check if there was an error
 	if err != nil {
 		// Error, print message and use hardcoded whitelist.
-		log.Printf(lang.Translate("whitelist.load.failed"), err)
+		log.Errorf("Failed to load whitelist: %[1]s; Using hardcoded version", err)
 		whitelist = []User{
 			User{84359547, "Tulir", 21, 9001},
 		}
 	}
 	// No error, parse the data
-	log.Printf(lang.Translate("whitelist.loading"))
+	log.Infof("Reading whitelist data...")
 	// Split the file string to an array of lines
 	wlraw := strings.Split(string(wldata), "\n")
 	// Make the whitelist array
@@ -116,11 +114,11 @@ func Load() {
 		if converr1 == nil && converr2 == nil && converr3 == nil {
 			// No errors, add the UID to the whitelist
 			whitelist[i] = User{uid, entry[1], year, perms}
-			log.Printf(lang.Translate("whitelist.add.success"), whitelist[i].Name, whitelist[i].UID)
+			log.Infof("Added %[1]s (ID %[2]d) to the whitelist.", whitelist[i].Name, whitelist[i].UID)
 		} else {
 			// Error occured, print message
-			log.Printf(lang.Translate("whitelist.add.failed"), wlraw[i], err)
+			log.Errorf("Failed to parse %[1]s: %[2]s", wlraw[i], err)
 		}
 	}
-	log.Printf(lang.Translate("whitelist.load.success"))
+	log.Infof("Successfully loaded whitelist from file!")
 }

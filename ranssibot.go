@@ -3,33 +3,45 @@ package main
 import (
 	"fmt"
 	"github.com/tucnak/telebot"
-	"log"
 	"maunium.net/ranssibot/lang"
+	"maunium.net/ranssibot/log"
 	//"maunium.net/ranssibot/laundry"
+	flag "github.com/ogier/pflag"
 	"maunium.net/ranssibot/posts"
 	"maunium.net/ranssibot/timetables"
 	"maunium.net/ranssibot/util"
 	"maunium.net/ranssibot/whitelist"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 )
 
-func main() {
-	lang.Load()
-	util.Init()
-	whitelist.Load()
+func init() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		log.Infof("Ranssibot interrupted. Cleaning up and exiting...")
+		log.Shutdown()
+		os.Exit(1)
+	}()
+	flag.Parse()
+}
 
+func main() {
 	// Connect to Telegram
 	bot, err := telebot.NewBot("151651579:AAErjEHJw1bNs-iWlchFwHiroULpbha_Wz8")
 	if err != nil {
-		log.Printf(lang.Translate("telegram.connection.failed"), err)
+		log.Fatalf("Error connecting to Telegram: %[1]s", err)
 		return
 	}
 	messages := make(chan telebot.Message)
 	// Enable message listener
 	bot.Listen(messages, 1*time.Second)
 	// Print "connected" message
-	log.Printf(lang.Translate("telegram.connection.success"))
+	log.Infof("Successfully connected to Telegram!")
 
 	// Update timetables
 	timetables.Update()
@@ -37,7 +49,9 @@ func main() {
 	//go laundry.NotifierTick()
 	go posts.Loop(bot)
 
-	bot.SendMessage(whitelist.GetRecipientByName("tulir"), "Ranssibot started up @ "+time.Now().Format("15:04:05 02.01.2006"), nil)
+	startup := fmt.Sprintf("Ranssibot started up @ %s", time.Now().Format("15:04:05 02.01.2006"))
+	bot.SendMessage(whitelist.GetRecipientByName("tulir"), startup, nil)
+	log.Infof(startup)
 
 	// Listen to messages
 	for message := range messages {
@@ -53,9 +67,9 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	}
 	args := strings.Split(message.Text, " ")
 	if message.Chat.IsGroupChat() {
-		log.Printf(lang.Translate("telegram.commandreceived.group"), message.Sender.Username, message.Sender.ID, message.Chat.Title, message.Chat.ID, message.Text)
+		log.Infof("%[1]s (%[2]d) @ %[3]s (%[4]d) sent command: %[3]s", message.Sender.Username, message.Sender.ID, message.Chat.Title, message.Chat.ID, message.Text)
 	} else {
-		log.Printf(lang.Translate("telegram.commandreceived.personal"), message.Sender.Username, message.Sender.ID, message.Text)
+		log.Infof("%[1]s (%[2]d) sent command: %[3]s", message.Sender.Username, message.Sender.ID, message.Text)
 	}
 	if strings.HasPrefix(message.Text, "Mui.") || message.Text == "/start" {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)

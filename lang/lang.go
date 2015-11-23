@@ -2,23 +2,23 @@ package lang
 
 import (
 	"io/ioutil"
-	"log"
+	"maunium.net/ranssibot/log"
 	"strings"
 )
 
 var lang = make(map[string]string)
 
-// Load loads the language from file.
-func Load() {
+func init() {
 	// Read the file
 	langdata, err := ioutil.ReadFile("data/lang/en_US.lang")
 	// Check if there was an error
 	if err != nil {
 		// Error, print message.
 		log.Fatalf("Failed to load language: %s", err)
+		panic(err)
 	}
 	// No error, parse the data
-	log.Printf("Loading language...")
+	log.Infof("Reading language data...")
 	// Split the file string to an array of lines
 	langraw := strings.Split(string(langdata), "\n")
 	var appendTo string
