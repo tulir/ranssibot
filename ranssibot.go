@@ -52,7 +52,11 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		return
 	}
 	args := strings.Split(message.Text, " ")
-	log.Printf(lang.Translate("telegram.commandreceived"), message.Sender.Username, message.Sender.ID, message.Text)
+	if message.Chat.IsGroupChat() {
+		log.Printf(lang.Translate("telegram.commandreceived.group"), message.Sender.Username, message.Sender.ID, message.Chat.Title, message.Chat.ID, message.Text)
+	} else {
+		log.Printf(lang.Translate("telegram.commandreceived.personal"), message.Sender.Username, message.Sender.ID, message.Text)
+	}
 	if strings.HasPrefix(message.Text, "Mui.") || message.Text == "/start" {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
 	} else if strings.HasPrefix(message.Text, "/timetable") {

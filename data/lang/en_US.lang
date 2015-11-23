@@ -9,7 +9,8 @@ Telegram-käyttäjäsi ID on %[1]d
 
 telegram.connection.failed=Error connecting to Telegram: %[1]s
 telegram.connection.success=Connected to Telegram!
-telegram.commandreceived=%[1]s (%[2]d) sent command: %[3]s
+telegram.commandreceived.personal=%[1]s (%[2]d) sent command: %[3]s
+telegram.commandreceived.group=%[1]s (%[2]d) @ %[3]s (%[4]d) sent command: %[3]s
 
 error.parse.integer=I couldn't parse an integer from "_%[1]s_"
 error.parse.time=I couldn't parse a time from "_%[1]s_"
