@@ -176,7 +176,6 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 		bodyNode := post.NextSibling.FirstChild
 		prevbr := false
 		for {
-			bodyNode = bodyNode.NextSibling
 			if bodyNode == nil {
 				break
 			}
@@ -190,8 +189,9 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 				body += bodyNode.Data
 			}
 			prevbr = false
+			bodyNode = bodyNode.NextSibling
+			body = strings.TrimSpace(body)
 		}
-		body = strings.TrimSpace(body)
 
 		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.read"), id, title, body), util.Markdown)
 	} else if strings.EqualFold(args[1], "comment") || strings.EqualFold(args[1], "message") || strings.EqualFold(args[1], "spam") {
