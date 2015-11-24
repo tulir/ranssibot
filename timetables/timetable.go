@@ -98,6 +98,11 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 		day = dayNew
 	}
 
+	if day < 0 || day >= len(other) {
+		bot.SendMessage(message.Chat, lang.Translate("timetable.nodata"), util.Markdown)
+		return
+	}
+
 	if year == 1 {
 		sendFirstYear(day, bot, message)
 	} else if year == 2 {
@@ -200,7 +205,10 @@ func Update() {
 						}
 					}
 				}
-
+				lsn := ParseLesson(data)
+				if lsn != nil {
+					data = lsn.ToString()
+				}
 				// Save the parsed data to the correct location.
 				switch lesson {
 				case 0:
