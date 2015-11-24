@@ -1,6 +1,7 @@
 package lang
 
 import (
+	"fmt"
 	"io/ioutil"
 	log "maunium.net/maulogger"
 	"strings"
@@ -59,6 +60,11 @@ func trimSuffix(s, suffix string) string {
 		s = s[:len(s)-len(suffix)]
 	}
 	return s
+}
+
+// Translatef translates the given key and then formats the translated text with the given arguments.
+func Translatef(key string, args ...interface{}) string {
+	return fmt.Sprintf(Translate(key), args...)
 }
 
 // Translate translates the given key.
