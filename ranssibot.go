@@ -29,9 +29,7 @@ func init() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		log.Infof("Ranssibot interrupted. Cleaning up and exiting...")
-		log.Shutdown()
-		os.Exit(0)
+		Shutdown()
 	}()
 }
 
@@ -61,6 +59,8 @@ func main() {
 
 	bot.SendMessage(whitelist.GetRecipientByName("tulir"), startup, nil)
 	log.Infof(startup)
+
+	go listen(bot)
 
 	// Listen to messages
 	for message := range messages {
@@ -103,4 +103,11 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}
+}
+
+// Shutdown shuts down the Ranssibot.
+func Shutdown() {
+	log.Infof("Ranssibot cleaning up and exiting...")
+	log.Shutdown()
+	os.Exit(0)
 }
