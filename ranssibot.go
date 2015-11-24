@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/tucnak/telebot"
+	log "maunium.net/maulogger"
 	"maunium.net/ranssibot/lang"
-	log "maunium.net/ranssibot/maulog"
 	//"maunium.net/ranssibot/laundry"
 	flag "github.com/ogier/pflag"
 	"maunium.net/ranssibot/posts"

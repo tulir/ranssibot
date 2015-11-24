@@ -2,7 +2,7 @@ package lang
 
 import (
 	"io/ioutil"
-	log "maunium.net/ranssibot/maulog"
+	log "maunium.net/maulogger"
 	"strings"
 )
 

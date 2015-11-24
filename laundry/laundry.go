@@ -3,8 +3,8 @@ package laundry
 import (
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
+	log "maunium.net/maulogger"
 	"maunium.net/ranssibot/lang"
-	log "maunium.net/ranssibot/maulog"
 	"maunium.net/ranssibot/util"
 	"strings"
 	"time"
