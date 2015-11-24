@@ -18,21 +18,26 @@ import (
 	"time"
 )
 
+var token = flag.StringP("token", "t", "", "The Telegram bot token to use.")
+var debug = flag.BoolP("debug", "d", false, "Enable debug mode")
+var disableSafeShutdown = flag.Bool("no-safe-shutdown", true, "Disable Interrupt/SIGTERM catching and handling.")
+
 func init() {
+	flag.Parse()
+
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
 		log.Infof("Ranssibot interrupted. Cleaning up and exiting...")
 		log.Shutdown()
-		os.Exit(1)
+		os.Exit(0)
 	}()
-	flag.Parse()
 }
 
 func main() {
 	// Connect to Telegram
-	bot, err := telebot.NewBot("151651579:AAErjEHJw1bNs-iWlchFwHiroULpbha_Wz8")
+	bot, err := telebot.NewBot(*token)
 	if err != nil {
 		log.Fatalf("Error connecting to Telegram: %[1]s", err)
 		return
@@ -50,6 +55,10 @@ func main() {
 	go posts.Loop(bot)
 
 	startup := fmt.Sprintf("Ranssibot started up @ %s", time.Now().Format("15:04:05 02.01.2006"))
+	if *debug {
+		startup = startup + " in debug mode"
+	}
+
 	bot.SendMessage(whitelist.GetRecipientByName("tulir"), startup, nil)
 	log.Infof(startup)
 
