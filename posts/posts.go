@@ -2,7 +2,6 @@ package posts
 
 import (
 	"errors"
-	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"io/ioutil"
@@ -39,7 +38,7 @@ func Loop(bot *telebot.Bot) {
 			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
 			for _, uid := range subs {
-				bot.SendMessage(whitelist.GetRecipientByUID(uid), fmt.Sprintf(lang.Translate("posts.new"), topic, lastRead), util.Markdown)
+				bot.SendMessage(whitelist.GetRecipientByUID(uid), lang.Translatef("posts.new", topic, lastRead), util.Markdown)
 			}
 
 			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)
@@ -161,12 +160,12 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 
 		id, err := strconv.Atoi(args[2])
 		if err != nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), err), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translatef("error.parse.integer", err), util.Markdown)
 			return
 		}
 		post := getPost(id)
 		if post == nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.notfound"), id), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translatef("posts.notfound", id), util.Markdown)
 			return
 		}
 		post = post.FirstChild
@@ -193,7 +192,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 			body = strings.TrimSpace(body)
 		}
 
-		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.read"), id, title, body), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translatef("posts.read", id, title, body), util.Markdown)
 	} else if strings.EqualFold(args[1], "comment") || strings.EqualFold(args[1], "message") || strings.EqualFold(args[1], "spam") {
 		if len(args) < 4 {
 			bot.SendMessage(message.Chat, lang.Translate("posts.spam.usage"), util.Markdown)
@@ -202,18 +201,18 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 
 		id, err := strconv.Atoi(args[2])
 		if err != nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), err), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translatef("error.parse.integer", err), util.Markdown)
 			return
 		}
 
 		data := util.HTTPGet("http://ranssi.paivola.fi/story.php?id=" + strconv.Itoa(id))
 		if string(data) == "ID:tä ei ole olemassa." {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.notfound"), id), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translatef("posts.notfound", id), util.Markdown)
 			return
 		}
 		doc, _ := html.Parse(strings.NewReader(data))
 		if util.FindSpan("div", "id", "comments", doc) == nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.spam.nospamlist"), id), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translatef("posts.spam.nospamlist", id), util.Markdown)
 			return
 		}
 
@@ -226,7 +225,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 		if err != nil {
 			bot.SendMessage(message.Chat, err.Error(), nil)
 		}
-		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("posts.spam.sent"), id, msg), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translatef("posts.spam.sent", id, msg), util.Markdown)
 	} else {
 		bot.SendMessage(message.Chat, lang.Translate("posts.usage"), util.Markdown)
 	}

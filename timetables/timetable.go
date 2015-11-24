@@ -2,7 +2,6 @@ package timetables
 
 import (
 	"errors"
-	"fmt"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	log "maunium.net/maulogger"
@@ -242,16 +241,16 @@ func Update() {
 
 func sendFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
-		fmt.Sprintf(lang.Translate("timetable.generic"),
+		lang.Translatef("timetable.generic",
 			firstyear[day][0].Subject, firstyear[day][1].Subject, firstyear[day][2].Subject, firstyear[day][3].Subject,
-			util.DateToString(firstyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
+			util.DateToString(firstyear[day][0].Date))+"\n"+lang.Translatef("timetable.other", other[day].Subject),
 		util.Markdown)
 }
 
 func sendSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
 	bot.SendMessage(message.Chat,
-		fmt.Sprintf(lang.Translate("timetable.generic"),
+		lang.Translatef("timetable.generic",
 			secondyear[day][0].Subject, secondyear[day][1].Subject, secondyear[day][2].Subject, secondyear[day][3].Subject,
-			util.DateToString(secondyear[day][0].Date))+"\n"+fmt.Sprintf(lang.Translate("timetable.other"), other[day].Subject),
+			util.DateToString(secondyear[day][0].Date))+"\n"+lang.Translatef("timetable.other", other[day].Subject),
 		util.Markdown)
 }
