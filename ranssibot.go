@@ -71,7 +71,7 @@ func main() {
 // Handle a command
 func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	if !whitelist.IsWhitelisted(message.Sender.ID) {
-		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("whitelist.notwhitelisted"), message.Sender.ID), nil)
+		bot.SendMessage(message.Chat, lang.Translatef("whitelist.notwhitelisted", message.Sender.ID), util.Markdown)
 		return
 	}
 	args := strings.Split(message.Text, " ")
@@ -86,6 +86,20 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		timetables.HandleCommand(bot, message, args)
 	} else if strings.HasPrefix(message.Text, "/posts") {
 		posts.HandleCommand(bot, message, args)
+	} else if strings.HasPrefix(message.Text, "/help") {
+		if len(args) == 1 {
+			bot.SendMessage(message.Chat, lang.Translate("help"), util.Markdown)
+		} else if len(args) > 1 {
+			if strings.EqualFold(args[1], "timetable") {
+				bot.SendMessage(message.Chat, lang.Translate("help.timetable"), util.Markdown)
+			} else if strings.EqualFold(args[1], "posts") {
+				bot.SendMessage(message.Chat, lang.Translate("help.posts"), util.Markdown)
+			} else {
+				bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
+			}
+		} else {
+			bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
+		}
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}

@@ -9,7 +9,6 @@ error.commandnotfound=Command not found.
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
 
-timetable.usage=*Usage:* /timetable <ventit/neliöt/day offset> \[day offset]
 timetable.nodata=I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.
 timetable.update.success=Updating cached timetables...
 timetable.generic=*Lukujärjestys %[5]s* \
@@ -38,9 +37,23 @@ posts.notfound=Couldn't find a Ranssi post with the ID %[1]d!
 posts.read=*%[2]s* \
 %[3]s
 
-posts.spam.usage=*Usage:* /posts comment <id> <message>
 posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza list!
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
-posts.usage=*Usage:* /posts <subscribe/unsubscribe/read/comment> \[id] \[message]
+timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
+posts.spam.usage=*Usage:* `/posts comment <id> <message>`
+posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment> \[id] \[message]`
+help.usage=*Usage:* `/help \[command]`
+help=*Ranssibot Command List* \
+Use `/help <command>` for more specific help \
+`/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
+`/posts <subscribe/unsubscribe/read/comment> [id] [message]` - Ranssi post utilities.
+help.timetable=*Command /timetable help* \
+`/timetable ventit/neliöt [day offset]` - Get the timetable of the given year group. \
+`/timetable [day offset]` - Get the timetable of your own year group.
+help.posts=*Command /posts help* \
+`/posts subscribe` - Subscribe to the Ranssi post notification list. \
+`/posts unsubscribe` - Unsubscribe from the Ranssi post notification list. \
+`/posts read <id>` - Read the Ranssi post with the given ID. \
+`/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID.
