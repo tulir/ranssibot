@@ -6,6 +6,9 @@ error.parse.integer=I couldn't parse an integer from "_%[1]s_"
 error.parse.time=I couldn't parse a time from "_%[1]s_"
 error.commandnotfound=Command not found.
 
+lesson-format.coursed=%[1]s %[3]d %[4]d
+lesson-format.noncoursed=%[1]s
+
 timetable.usage=*Usage:* /timetable <ventit/neliöt/day offset> \[day offset]
 timetable.nodata=I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.
 timetable.update.success=Updating cached timetables...
