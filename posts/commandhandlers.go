@@ -25,7 +25,14 @@ func handleUnsubscribe(bot *telebot.Bot, message telebot.Message, args []string)
 }
 
 func handleNews(bot *telebot.Bot, message telebot.Message, args []string) {
-
+	if util.Timestamp()-lastupdate > 300 {
+		updateNews()
+	}
+	var entries string
+	for _, item := range news.Items {
+		entries += lang.Translatef("posts.latest.entry", item.Title, item.Link, item.Summary, item.Date.Format("15:04:05 02.01.2006")) + "\n"
+	}
+	bot.SendMessage(message.Chat, lang.Translatef("posts.latest", entries), util.Markdown)
 }
 
 func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {

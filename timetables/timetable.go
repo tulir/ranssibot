@@ -37,34 +37,6 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 		Update()
 	}
 
-	// SetTime code
-	/*if len(args) > 3 {
-		lessonID, err := strconv.Atoi(args[2])
-		if err != nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[2]), util.Markdown)
-		}
-		dayShift, err := strconv.Atoi(args[3])
-		if err != nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.integer"), args[3]), util.Markdown)
-		}
-		time, err := timetables.StringToTime(args[4])
-		if err != nil {
-			bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("error.parse.time"), args[4]), util.Markdown)
-		}
-		if args[1] == "ventit" {
-			firstyear[today+dayShift][lessonID].Time = time
-		} else if args[1] == "neliöt" {
-			secondyear[today+dayShift][lessonID].Time = time
-		} else if args[1] == "other" {
-			other[today+dayShift].Time = time
-		} else {
-			return
-		}
-		bot.SendMessage(message.Chat, fmt.Sprintf(lang.Translate("settime.success"), args[1], lessonID, dayShift, TimeToString(time)), util.Markdown)
-	} else {
-		bot.SendMessage(message.Chat, lang.Translate("settime.usage"), util.Markdown)
-	}*/
-
 	day := today
 	year := whitelist.GetYeargroupIndex(message.Sender.ID)
 	if len(args) == 2 {
@@ -127,10 +99,8 @@ func shift(toShift int, shiftBy string, min, max int, bot *telebot.Bot, message 
 
 // Update the timetables from http://ranssi.paivola.fi/lj.php
 func Update() {
-	// Get the timetable page and convert the string to a reader
-	reader := strings.NewReader(util.HTTPGet("http://ranssi.paivola.fi/lj.php"))
-	// Parse the HTML from the reader
-	doc, err := html.Parse(reader)
+	// Get timetable page
+	doc, err := util.HTTPGetAndParse("http://ranssi.paivola.fi/lj.php")
 	// Check if there was an error
 	if err != nil {
 		// Print the error

@@ -25,6 +25,12 @@ var disableSafeShutdown = flag.Bool("no-safe-shutdown", false, "Disable Interrup
 func init() {
 	flag.Parse()
 
+	log.PrintDebug = *debug
+	log.Fileformat = "logs/%[1]s-%[2]d.log"
+	log.Init()
+	lang.Init()
+	whitelist.Init()
+
 	if !*disableSafeShutdown {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)

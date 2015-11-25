@@ -79,7 +79,8 @@ func (user SimpleUser) Destination() int {
 	return user.uid
 }
 
-func init() {
+// Init ...
+func Init() {
 	// Read the file
 	wldata, err := ioutil.ReadFile(whitelistFile)
 	// Check if there was an error
@@ -114,11 +115,11 @@ func init() {
 		if converr1 == nil && converr2 == nil && converr3 == nil {
 			// No errors, add the UID to the whitelist
 			whitelist[i] = User{uid, entry[1], year, perms}
-			log.Infof("Added %[1]s (ID %[2]d) to the whitelist.", whitelist[i].Name, whitelist[i].UID)
+			log.Debugf("Added %[1]s (ID %[2]d) to the whitelist.", whitelist[i].Name, whitelist[i].UID)
 		} else {
 			// Error occured, print message
 			log.Errorf("Failed to parse %[1]s: %[2]s", wlraw[i], err)
 		}
 	}
-	log.Infof("Successfully loaded whitelist from file!")
+	log.Debugf("Successfully loaded whitelist from file!")
 }

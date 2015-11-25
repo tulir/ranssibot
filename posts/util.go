@@ -2,6 +2,7 @@ package posts
 
 import (
 	"errors"
+	"github.com/SlyMarbo/rss"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"io/ioutil"
@@ -20,6 +21,25 @@ const lastreadpost = "data/lastreadpost"
 const postsubs = "data/postsubs"
 
 var subs = []int{}
+
+var lastupdate int64
+var news *rss.Feed
+
+func init() {
+	var err error
+	news, err = rss.Fetch("http://ranssi.paivola.fi/rss.php")
+	if err != nil {
+		panic(err)
+	}
+	lastupdate = util.Timestamp()
+}
+
+func updateNews() {
+	err := news.Update()
+	if err != nil {
+		log.Errorf("Failed to update Ranssi News: %s", err)
+	}
+}
 
 // Loop is an infinite loop that checks for new Ranssi posts
 func Loop(bot *telebot.Bot) {

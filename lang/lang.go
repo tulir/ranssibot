@@ -9,7 +9,7 @@ import (
 
 var lang = make(map[string]string)
 
-func init() {
+func Init() {
 	// Read the file
 	langdata, err := ioutil.ReadFile("data/lang/en_US.lang")
 	// Check if there was an error

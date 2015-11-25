@@ -33,6 +33,29 @@ func HTTPGet(url string) string {
 	return string(contents)
 }
 
+// HTTPGetStream performs a HTTP GET request on the given URL and returns a io.Reader pointer
+func HTTPGetStream(url string) (io.Reader, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// HTTPGetAndParse performs a HTTP GET request on the given URL, parses the output and returns a html.Node pointer
+func HTTPGetAndParse(url string) (*html.Node, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	node, err := html.Parse(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
+
 // HTTPGetMin performs a HTTP GET request on the given URL and minifies the output
 func HTTPGetMin(url string) string {
 	response, err := http.Get(url)
@@ -44,6 +67,35 @@ func HTTPGetMin(url string) string {
 
 	minifyh(response.Body, &b)
 	return b.String()
+}
+
+// HTTPGetMinStream performs a HTTP GET request on the given URL, minifies the output and returns a io.Reader pointer
+func HTTPGetMinStream(url string) (io.Reader, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	var b bytes.Buffer
+	minifyh(response.Body, &b)
+	return &b, nil
+}
+
+// HTTPGetMinAndParse performs a HTTP GET request on the given URL, minifies and parses the output and returns a html.Node pointer
+func HTTPGetMinAndParse(url string) (*html.Node, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	var b bytes.Buffer
+	minifyh(response.Body, &b)
+
+	node, err := html.Parse(&b)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
 }
 
 func minifyh(reader io.Reader, writer io.Writer) {
@@ -60,6 +112,9 @@ func Render(node *html.Node) string {
 // FindSpan finds a html element of the given type with the given key-value attribute from the given node
 func FindSpan(typ string, key string, val string, node *html.Node) *html.Node {
 	if node.Type == html.ElementNode && node.Data == typ {
+		if key == "" && val == "" {
+			return node
+		}
 		for _, attr := range node.Attr {
 			if attr.Key == key && attr.Val == val {
 				return node
