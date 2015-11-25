@@ -10,7 +10,7 @@ import (
 // HandleCommand handles Ranssi post commands
 func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	if len(args) == 0 {
-		handleNews(bot, message, args[1:])
+		handleNews(bot, message, args)
 	} else if strings.EqualFold(args[0], "subscribe") || strings.EqualFold(args[0], "sub") {
 		handleSubscribe(bot, message, args[1:])
 	} else if strings.EqualFold(args[0], "unsubscribe") || strings.EqualFold(args[0], "unsub") {
