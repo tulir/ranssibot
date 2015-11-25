@@ -63,6 +63,7 @@ func Loop(bot *telebot.Bot) {
 
 			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)
 			time.Sleep(10 * time.Second)
+			updateNews()
 		} else {
 			time.Sleep(1 * time.Minute)
 		}
