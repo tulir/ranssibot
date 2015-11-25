@@ -52,9 +52,10 @@ func Loop(bot *telebot.Bot) {
 // Subscribe the given UID to the notification list.
 func subscribe(uid int) bool {
 	if isSubscribed(uid) {
+		log.Debugf("[Posts] %[1]d attempted to subscribe to the notification list, but was already subscribed", uid)
 		return false
 	}
-	log.Debugf("%[1]d successfully subscribed to the notifcation list", uid)
+	log.Debugf("[Posts] %[1]d successfully subscribed to the notifcation list", uid)
 	subs = append(subs, uid)
 	writeSubs()
 	return true
@@ -63,8 +64,10 @@ func subscribe(uid int) bool {
 // Unsubscribe the given UID from the notification list.
 func unsubscribe(uid int) bool {
 	if !isSubscribed(uid) {
+		log.Debugf("[Posts] %[1]d attempted to unsubscribe from the notification list, but was not subscribed", uid)
 		return false
 	}
+	log.Debugf("[Posts] %[1]d successfully unsubscribed from the notifcation list", uid)
 	for i, subuid := range subs {
 		if subuid == uid {
 			subs[i] = subs[len(subs)-1]
@@ -86,6 +89,7 @@ func isSubscribed(uid int) bool {
 
 // Read the UIDs that are subscribed to the notification list.
 func readSubs() {
+	log.Debugf("[Posts] Reading subscriptions...")
 	subsData, _ := ioutil.ReadFile(postsubs)
 	subsRaw := strings.Split(string(subsData), "\n")
 	for _, str := range subsRaw {
