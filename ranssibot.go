@@ -20,20 +20,23 @@ import (
 
 var token = flag.StringP("token", "t", "", "The Telegram bot token to use.")
 var debug = flag.BoolP("debug", "d", false, "Enable debug mode")
-var disableSafeShutdown = flag.Bool("no-safe-shutdown", true, "Disable Interrupt/SIGTERM catching and handling.")
+var disableSafeShutdown = flag.Bool("no-safe-shutdown", false, "Disable Interrupt/SIGTERM catching and handling.")
 
 func init() {
 	flag.Parse()
 
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
-		Shutdown()
-	}()
+	if !*disableSafeShutdown {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<-c
+			Shutdown()
+		}()
+	}
 }
 
 func main() {
+	start := util.TimestampMS()
 	// Connect to Telegram
 	bot, err := telebot.NewBot(*token)
 	if err != nil {
@@ -51,16 +54,17 @@ func main() {
 
 	//go laundry.NotifierTick()
 	go posts.Loop(bot)
+	go listen(bot)
 
-	startup := fmt.Sprintf("Ranssibot started up @ %s", time.Now().Format("15:04:05 02.01.2006"))
+	var startup string
 	if *debug {
-		startup = startup + " in debug mode"
+		startup = fmt.Sprintf("Ranssibot started up in %[1]dms @ %[2]s (Debug mode)", util.TimestampMS()-start, time.Now().Format("15:04:05 02.01.2006"))
+	} else {
+		startup = fmt.Sprintf("Ranssibot started up @ %[1]s", time.Now().Format("15:04:05 02.01.2006"))
 	}
 
 	bot.SendMessage(whitelist.GetRecipientByName("tulir"), startup, nil)
 	log.Infof(startup)
-
-	go listen(bot)
 
 	// Listen to messages
 	for message := range messages {

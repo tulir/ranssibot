@@ -65,3 +65,8 @@ func StringToTime(str string) (Time, error) {
 func Timestamp() int64 {
 	return int64(time.Now().Unix())
 }
+
+// TimestampMS gets the current UNIX timestamp in milliseconds
+func TimestampMS() int64 {
+	return time.Now().UnixNano() / int64(time.Millisecond)
+}
