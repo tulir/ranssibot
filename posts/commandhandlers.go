@@ -36,12 +36,12 @@ func handleNews(bot *telebot.Bot, message telebot.Message, args []string) {
 }
 
 func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
-	if len(args) < 3 {
+	if len(args) < 1 {
 		bot.SendMessage(message.Chat, lang.Translate("posts.read.usage"), util.Markdown)
 		return
 	}
 
-	id, err := strconv.Atoi(args[2])
+	id, err := strconv.Atoi(args[0])
 	if err != nil {
 		bot.SendMessage(message.Chat, lang.Translatef("error.parse.integer", err), util.Markdown)
 		return
@@ -79,12 +79,12 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 }
 
 func handleComment(bot *telebot.Bot, message telebot.Message, args []string) {
-	if len(args) < 4 {
+	if len(args) < 2 {
 		bot.SendMessage(message.Chat, lang.Translate("posts.spam.usage"), util.Markdown)
 		return
 	}
 
-	id, err := strconv.Atoi(args[2])
+	id, err := strconv.Atoi(args[0])
 	if err != nil {
 		bot.SendMessage(message.Chat, lang.Translatef("error.parse.integer", err), util.Markdown)
 		return
@@ -102,7 +102,7 @@ func handleComment(bot *telebot.Bot, message telebot.Message, args []string) {
 	}
 
 	msg := ""
-	for _, str := range args[3:] {
+	for _, str := range args[1:] {
 		msg += str + " "
 	}
 	msg = strings.TrimSpace(msg)

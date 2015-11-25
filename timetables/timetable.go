@@ -39,30 +39,30 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 
 	day := today
 	year := whitelist.GetYeargroupIndex(message.Sender.ID)
-	if len(args) == 2 {
-		if strings.EqualFold(args[1], lang.Translate("timetable.year.first")) {
+	if len(args) == 1 {
+		if strings.EqualFold(args[0], lang.Translate("timetable.year.first")) {
 			year = 1
-		} else if strings.EqualFold(args[1], lang.Translate("timetable.year.second")) {
+		} else if strings.EqualFold(args[0], lang.Translate("timetable.year.second")) {
 			year = 2
-		} else if strings.EqualFold(args[1], "update") {
+		} else if strings.EqualFold(args[0], "update") {
 			Update()
 			bot.SendMessage(message.Chat, lang.Translate("timetable.update.success"), util.Markdown)
 		} else {
-			dayNew, err := shift(day, args[1], 0, len(other), bot, message)
+			dayNew, err := shift(day, args[0], 0, len(other), bot, message)
 			if err != nil {
 				return
 			}
 			day = dayNew
 		}
-	} else if len(args) == 3 {
-		if strings.EqualFold(args[1], lang.Translate("timetable.year.first")) {
+	} else if len(args) == 2 {
+		if strings.EqualFold(args[0], lang.Translate("timetable.year.first")) {
 			year = 1
-		} else if strings.EqualFold(args[1], lang.Translate("timetable.year.second")) {
+		} else if strings.EqualFold(args[0], lang.Translate("timetable.year.second")) {
 			year = 2
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("timetable.usage"), util.Markdown)
 		}
-		dayNew, err := shift(day, args[2], 0, len(other), bot, message)
+		dayNew, err := shift(day, args[1], 0, len(other), bot, message)
 		if err != nil {
 			return
 		}
