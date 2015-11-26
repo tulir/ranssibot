@@ -80,7 +80,7 @@ func main() {
 
 // Handle a command
 func handleCommand(bot *telebot.Bot, message telebot.Message) {
-	if whitelist.GetUserWithUID(message.Sender.ID).UID != 0 {
+	if whitelist.GetUserWithUID(message.Sender.ID).UID == 0 {
 		bot.SendMessage(message.Chat, lang.Translatef("whitelist.notwhitelisted", message.Sender.ID), util.Markdown)
 		return
 	}
