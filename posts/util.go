@@ -17,10 +17,10 @@ import (
 	"time"
 )
 
-const lastreadpost = "data/lastreadpost"
-const postsubs = "data/postsubs"
-
-var subs = []int{}
+const (
+	lastreadpost = "data/lastreadpost"
+	subSetting   = "posts-subscription"
+)
 
 var lastupdate int64
 var news *rss.Feed
@@ -43,7 +43,6 @@ func updateNews() {
 
 // Loop is an infinite loop that checks for new Ranssi posts
 func Loop(bot *telebot.Bot) {
-	readSubs()
 	for {
 		lrData, _ := ioutil.ReadFile(lastreadpost)
 		lastRead, err := strconv.Atoi(strings.Split(string(lrData), "\n")[0])
@@ -57,8 +56,8 @@ func Loop(bot *telebot.Bot) {
 		if node != nil {
 			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
-			for _, uid := range subs {
-				bot.SendMessage(whitelist.GetUserWithUID(uid), lang.Translatef("posts.new", topic, lastRead), util.Markdown)
+			for _, user := range whitelist.GetUsersWithSetting(subSetting, "true") {
+				bot.SendMessage(user, lang.Translatef("posts.new", topic, lastRead), util.Markdown)
 			}
 
 			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)
@@ -77,8 +76,7 @@ func subscribe(uid int) bool {
 		return false
 	}
 	log.Debugf("[Posts] %[1]d successfully subscribed to the notifcation list", uid)
-	subs = append(subs, uid)
-	writeSubs()
+	whitelist.GetUserWithUID(uid).SetSetting(subSetting, "true")
 	return true
 }
 
@@ -89,49 +87,12 @@ func unsubscribe(uid int) bool {
 		return false
 	}
 	log.Debugf("[Posts] %[1]d successfully unsubscribed from the notifcation list", uid)
-	for i, subuid := range subs {
-		if subuid == uid {
-			subs[i] = subs[len(subs)-1]
-			subs = subs[:len(subs)-1]
-		}
-	}
-	writeSubs()
+	whitelist.GetUserWithUID(uid).RemoveSetting(subSetting)
 	return true
 }
 
 func isSubscribed(uid int) bool {
-	for _, id := range subs {
-		if id == uid {
-			return true
-		}
-	}
-	return false
-}
-
-// Read the UIDs that are subscribed to the notification list.
-func readSubs() {
-	log.Debugf("[Posts] Reading subscriptions...")
-	subsData, _ := ioutil.ReadFile(postsubs)
-	subsRaw := strings.Split(string(subsData), "\n")
-	for _, str := range subsRaw {
-		if len(str) != 0 && !strings.HasPrefix(str, "#") {
-			uid, err := strconv.Atoi(str)
-			if err == nil {
-				subs = append(subs, uid)
-			} else {
-				log.Warnf("Failed to parse subscription entry %[1]s", str)
-			}
-		}
-	}
-}
-
-// Write the UIDs that are subscribed to the notification list.
-func writeSubs() {
-	s := ""
-	for _, uid := range subs {
-		s += strconv.Itoa(uid) + "\n"
-	}
-	ioutil.WriteFile(postsubs, []byte(s), 0700)
+	return whitelist.GetUserWithUID(uid).HasSetting(subSetting)
 }
 
 func spam(id int, message string) error {
