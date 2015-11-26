@@ -6,7 +6,7 @@ import (
 
 // Whitelist is the container for a whitelisted group of users.
 type Whitelist struct {
-	Users []User `json:"users"`
+	Users []User `json:"whitelist"`
 }
 
 // User struct that is used for whitelisted user entries
