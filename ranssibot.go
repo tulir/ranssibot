@@ -28,7 +28,7 @@ func init() {
 	log.PrintDebug = *debug
 	log.Fileformat = "logs/%[1]s-%[2]d.log"
 	log.Init()
-	lang.Init()
+	lang.Load()
 	whitelist.Load()
 
 	if !*disableSafeShutdown {
