@@ -46,12 +46,13 @@ posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d:
 
 timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Usage:* `/posts comment <id> <message>`
-posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment> \[id] \[message]`
+posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
+
 help.usage=*Usage:* `/help \[command]`
 help=*Ranssibot Command List* \
 Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
-`/posts <subscribe/unsubscribe/read/comment> [id] [message]` - Ranssi post utilities.
+`/posts <subscribe/unsubscribe/read/comment/latest> [id] [message]` - Ranssi post utilities.
 help.timetable=*Command /timetable help* \
 `/timetable ventit/neliöt [day offset]` - Get the timetable of the given year group. \
 `/timetable [day offset]` - Get the timetable of your own year group.
@@ -59,4 +60,5 @@ help.posts=*Command /posts help* \
 `/posts subscribe` - Subscribe to the Ranssi post notification list. \
 `/posts unsubscribe` - Unsubscribe from the Ranssi post notification list. \
 `/posts read <id>` - Read the Ranssi post with the given ID. \
-`/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID.
+`/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
+`/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
