@@ -102,7 +102,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		} else if len(args) > 0 {
 			if strings.EqualFold(args[0], "timetable") {
 				bot.SendMessage(message.Chat, lang.Translate("help.timetable"), util.Markdown)
-			} else if strings.EqualFold(args[1], "posts") {
+			} else if strings.EqualFold(args[0], "posts") {
 				bot.SendMessage(message.Chat, lang.Translate("help.posts"), util.Markdown)
 			} else {
 				bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
