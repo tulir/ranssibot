@@ -38,6 +38,12 @@ func onCommand(bot *telebot.Bot, command string, args []string) {
 		msg := connect(args[1:])
 		bot.SendMessage(user, "*[Sysadmin]* "+msg, util.Markdown)
 		log.Infof("Sent message %[1]s to %[2]s", msg, args[0])
+	} else if command == "broadcast" {
+		msg := connect(args)
+		for _, user := range whitelist.GetAllUsers() {
+			bot.SendMessage(user, "*[Sysadmin Broadcast]* "+msg, util.Markdown)
+		}
+		log.Infof("Broadcasted message %[1]s", msg)
 	} else if command == "stop" {
 		Shutdown()
 	}
