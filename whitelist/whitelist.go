@@ -6,7 +6,7 @@ import (
 	log "maunium.net/maulogger"
 )
 
-const whitelistFile = "data/whitelist.json"
+const whitelistFile = "whitelist.json"
 
 // Load loads the whitelist from file.
 func Load() {
