@@ -23,6 +23,11 @@ var NilUser = User{}
 
 var whitelist = &Whitelist{}
 
+// GetAllUsers returns all the whitelisted users.
+func GetAllUsers() []User {
+	return whitelist.Users
+}
+
 // GetUserWithUID gets the User struct that has the given UID.
 func GetUserWithUID(uid int) User {
 	for _, user := range whitelist.Users {
@@ -43,14 +48,38 @@ func GetUserWithName(name string) User {
 	return NilUser
 }
 
+// GetUsersWithSetting get all the users that have the given setting.
+func GetUsersWithSetting(setting string, value string) []User {
+	var users []User
+	for _, user := range whitelist.Users {
+		val, ok := user.GetSetting(setting)
+		if ok && (len(value) == 0 || strings.EqualFold(value, val)) {
+			users = append(users, user)
+		}
+	}
+	return users
+}
+
 // GetSetting gets the given setting from the user.
-func (u User) GetSetting(key string) string {
-	return u.Settings[key]
+func (u User) GetSetting(key string) (string, bool) {
+	val, ok := u.Settings[key]
+	return val, ok
+}
+
+// HasSetting checks if the user has the given setting.
+func (u User) HasSetting(key string) bool {
+	_, ok := u.GetSetting(key)
+	return ok
 }
 
 // SetSetting sets a setting
 func (u User) SetSetting(key string, value string) {
 	u.Settings[key] = value
+}
+
+// RemoveSetting removes a setting
+func (u User) RemoveSetting(key string) {
+	delete(u.Settings, key)
 }
 
 // Destination returns the UID for Telebot.
