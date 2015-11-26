@@ -25,14 +25,14 @@ func listen(bot *telebot.Bot) {
 
 func onCommand(bot *telebot.Bot, command string, args []string) {
 	if command == "msg" {
-		user := whitelist.GetRecipientByName(args[0])
+		user := whitelist.GetUserWithName(args[0])
 		if user.Destination() == 0 {
 			i, err := strconv.Atoi(args[0])
 			if err != nil {
 				log.Errorf("Couldn't find an integer or a whitelisted user from %s", args[0])
 				return
 			}
-			user = whitelist.GetRecipientByUID(i)
+			user = whitelist.GetUserWithUID(i)
 		}
 
 		msg := connect(args[1:])

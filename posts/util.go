@@ -58,7 +58,7 @@ func Loop(bot *telebot.Bot) {
 			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
 			for _, uid := range subs {
-				bot.SendMessage(whitelist.GetRecipientByUID(uid), lang.Translatef("posts.new", topic, lastRead), util.Markdown)
+				bot.SendMessage(whitelist.GetUserWithUID(uid), lang.Translatef("posts.new", topic, lastRead), util.Markdown)
 			}
 
 			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)

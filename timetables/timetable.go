@@ -38,7 +38,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	}
 
 	day := today
-	year := whitelist.GetYeargroupIndex(message.Sender.ID)
+	year := whitelist.GetUserWithUID(message.Sender.ID).Year
 	if len(args) == 1 {
 		if strings.EqualFold(args[0], lang.Translate("timetable.year.first")) {
 			year = 1
