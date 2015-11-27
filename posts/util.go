@@ -57,7 +57,7 @@ func Loop(bot *telebot.Bot) {
 			config.GetConfig().LastReadPost = readNow
 			config.ASave()
 			updateNews()
-			time.Sleep(10 * time.Second)
+			time.Sleep(5 * time.Second)
 			continue
 		}
 		time.Sleep(1 * time.Minute)
