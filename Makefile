@@ -10,7 +10,6 @@ packagepie: compilepie ranssibot lang/en_US.lang lang/fi_FI.lang
 
 pie: packagepie
 	rm -f ranssibot
-	mv ranssibot.tar.gz ~/
 
 clean:
 	rm -f ranssibot
