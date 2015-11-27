@@ -19,15 +19,16 @@ var IndentConfig = false
 // Autosave determines if the config should be automatically saved when something is changed.
 var Autosave = flag.BoolP("config-autosave", "s", true, "Don't save config even if something is changed.")
 
-var config = &Configuration{}
+// ConfigFile is the configuration file to use.
+const ConfigFile = "config.json"
 
-const configFile = "config.json"
+var config = &Configuration{}
 
 // Load loads the whitelist from file.
 func Load() {
 	config = &Configuration{}
 	// Read the file
-	data, err := ioutil.ReadFile(configFile)
+	data, err := ioutil.ReadFile(ConfigFile)
 	// Check if there was an error
 	if err != nil {
 		loadFailed(err)
@@ -62,7 +63,7 @@ func save() {
 		log.Errorf("Failed to save config: %[1]s", err)
 		return
 	}
-	err = ioutil.WriteFile(configFile, data, 0700)
+	err = ioutil.WriteFile(ConfigFile, data, 0700)
 	if err != nil {
 		log.Errorf("Failed to save config: %[1]s", err)
 		return

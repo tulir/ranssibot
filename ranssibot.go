@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	flag "github.com/ogier/pflag"
 	"github.com/tucnak/telebot"
 	log "maunium.net/maulogger"
-	"maunium.net/ranssibot/lang"
-	//"maunium.net/ranssibot/laundry"
-	flag "github.com/ogier/pflag"
 	"maunium.net/ranssibot/config"
+	"maunium.net/ranssibot/lang"
 	"maunium.net/ranssibot/posts"
 	"maunium.net/ranssibot/timetables"
 	"maunium.net/ranssibot/util"
@@ -59,7 +58,6 @@ func main() {
 	// Update timetables
 	timetables.Update()
 
-	//go laundry.NotifierTick()
 	go posts.Loop(bot)
 	go listen(bot)
 
