@@ -60,8 +60,7 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 	for {
 		if bodyNode == nil {
 			break
-		}
-		if bodyNode.Data == "br" {
+		} else if bodyNode.Data == "br" {
 			if !prevbr {
 				body += "\n"
 				prevbr = true
@@ -72,7 +71,6 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 		}
 		prevbr = false
 		bodyNode = bodyNode.NextSibling
-		body = strings.TrimSpace(body)
 	}
 
 	bot.SendMessage(message.Chat, lang.Translatef("posts.read", id, title, body), util.Markdown)
