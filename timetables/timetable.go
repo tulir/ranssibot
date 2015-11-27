@@ -5,9 +5,9 @@ import (
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	log "maunium.net/maulogger"
+	"maunium.net/ranssibot/config"
 	"maunium.net/ranssibot/lang"
 	"maunium.net/ranssibot/util"
-	"maunium.net/ranssibot/whitelist"
 	"strconv"
 	"strings"
 )
@@ -38,7 +38,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	}
 
 	day := today
-	year := whitelist.GetUserWithUID(message.Sender.ID).Year
+	year := config.GetUserWithUID(message.Sender.ID).Year
 	if len(args) == 1 {
 		if strings.EqualFold(args[0], lang.Translate("timetable.year.first")) {
 			year = 1

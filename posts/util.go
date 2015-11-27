@@ -7,9 +7,9 @@ import (
 	"golang.org/x/net/html"
 	"io/ioutil"
 	log "maunium.net/maulogger"
+	"maunium.net/ranssibot/config"
 	"maunium.net/ranssibot/lang"
 	"maunium.net/ranssibot/util"
-	"maunium.net/ranssibot/whitelist"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -18,8 +18,7 @@ import (
 )
 
 const (
-	lastreadpost = "data/lastreadpost"
-	subSetting   = "posts-subscription"
+	subSetting = "posts-subscription"
 )
 
 var lastupdate int64
@@ -44,23 +43,26 @@ func updateNews() {
 // Loop is an infinite loop that checks for new Ranssi posts
 func Loop(bot *telebot.Bot) {
 	for {
-		lrData, _ := ioutil.ReadFile(lastreadpost)
+		lastRead := config.GetConfig().LastReadPost
+		/*lrData, _ := ioutil.ReadFile(lastreadpost)
 		lastRead, err := strconv.Atoi(strings.Split(string(lrData), "\n")[0])
 		if lastRead == 0 || err != nil {
 			log.Fatalf("Failed to find index of last read Ranssi post.")
 			panic(err)
-		}
+		}*/
 		lastRead++
 
 		node := getPost(lastRead)
 		if node != nil {
 			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
-			for _, user := range whitelist.GetUsersWithSetting(subSetting, "true") {
+			for _, user := range config.GetUsersWithSetting(subSetting, "true") {
 				bot.SendMessage(user, lang.Translatef("posts.new", topic, lastRead), util.Markdown)
 			}
 
-			ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)
+			/*ioutil.WriteFile(lastreadpost, []byte(strconv.Itoa(lastRead)), 0700)*/
+			config.GetConfig().LastReadPost = lastRead
+			config.ASave()
 			time.Sleep(10 * time.Second)
 			updateNews()
 		} else {
@@ -72,27 +74,29 @@ func Loop(bot *telebot.Bot) {
 // Subscribe the given UID to the notification list.
 func subscribe(uid int) bool {
 	if isSubscribed(uid) {
-		log.Debugf("[Posts] %[1]d attempted to subscribe to the notification list, but was already subscribed", uid)
+		log.Debugf("%[1]d attempted to subscribe to the notification list, but was already subscribed", uid)
 		return false
 	}
 	log.Debugf("[Posts] %[1]d successfully subscribed to the notifcation list", uid)
-	whitelist.GetUserWithUID(uid).SetSetting(subSetting, "true")
+	config.GetUserWithUID(uid).SetSetting(subSetting, "true")
+	config.ASave()
 	return true
 }
 
 // Unsubscribe the given UID from the notification list.
 func unsubscribe(uid int) bool {
 	if !isSubscribed(uid) {
-		log.Debugf("[Posts] %[1]d attempted to unsubscribe from the notification list, but was not subscribed", uid)
+		log.Debugf("%[1]d attempted to unsubscribe from the notification list, but was not subscribed", uid)
 		return false
 	}
-	log.Debugf("[Posts] %[1]d successfully unsubscribed from the notifcation list", uid)
-	whitelist.GetUserWithUID(uid).RemoveSetting(subSetting)
+	log.Debugf("%[1]d successfully unsubscribed from the notifcation list", uid)
+	config.GetUserWithUID(uid).RemoveSetting(subSetting)
+	config.ASave()
 	return true
 }
 
 func isSubscribed(uid int) bool {
-	return whitelist.GetUserWithUID(uid).HasSetting(subSetting)
+	return config.GetUserWithUID(uid).HasSetting(subSetting)
 }
 
 func spam(id int, message string) error {

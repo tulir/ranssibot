@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"github.com/tucnak/telebot"
 	log "maunium.net/maulogger"
+	"maunium.net/ranssibot/config"
 	"maunium.net/ranssibot/util"
-	"maunium.net/ranssibot/whitelist"
 	"os"
 	"strconv"
 	"strings"
@@ -17,6 +17,8 @@ func listen(bot *telebot.Bot) {
 		text, _ := reader.ReadString('\n')
 		text = text[:len(text)-1]
 
+		log.Debugf("Sysinput: %s", text)
+
 		args := strings.Split(text, " ")
 
 		onCommand(bot, strings.ToLower(args[0]), args[1:])
@@ -24,26 +26,32 @@ func listen(bot *telebot.Bot) {
 }
 
 func onCommand(bot *telebot.Bot, command string, args []string) {
-	if command == "msg" {
-		user := whitelist.GetUserWithName(args[0])
+	if command == "msg" && len(args) > 1 {
+		user := config.GetUserWithName(args[0])
 		if user.Destination() == 0 {
 			i, err := strconv.Atoi(args[0])
 			if err != nil {
 				log.Errorf("Couldn't find an integer or a whitelisted user from %s", args[0])
 				return
 			}
-			user = whitelist.GetUserWithUID(i)
+			user = config.GetUserWithUID(i)
 		}
 
 		msg := connect(args[1:])
 		bot.SendMessage(user, "*[Sysadmin]* "+msg, util.Markdown)
 		log.Infof("Sent message %[1]s to %[2]s", msg, args[0])
-	} else if command == "broadcast" {
+	} else if command == "broadcast" && len(args) > 0 {
 		msg := connect(args)
-		for _, user := range whitelist.GetAllUsers() {
+		for _, user := range config.GetAllUsers() {
 			bot.SendMessage(user, "*[Sysadmin Broadcast]* "+msg, util.Markdown)
 		}
 		log.Infof("Broadcasted message %[1]s", msg)
+	} else if command == "config" && len(args) > 0 {
+		if strings.EqualFold(args[0], "save") {
+			config.Save()
+		} else if strings.EqualFold(args[0], "load") {
+			config.Load()
+		}
 	} else if command == "stop" {
 		Shutdown()
 	}

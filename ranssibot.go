@@ -7,10 +7,10 @@ import (
 	"maunium.net/ranssibot/lang"
 	//"maunium.net/ranssibot/laundry"
 	flag "github.com/ogier/pflag"
+	"maunium.net/ranssibot/config"
 	"maunium.net/ranssibot/posts"
 	"maunium.net/ranssibot/timetables"
 	"maunium.net/ranssibot/util"
-	"maunium.net/ranssibot/whitelist"
 	"os"
 	"os/signal"
 	"strings"
@@ -29,7 +29,8 @@ func init() {
 	log.Fileformat = "logs/%[1]s-%[2]d.log"
 	log.Init()
 	lang.Load()
-	whitelist.Load()
+	config.IndentConfig = *debug
+	config.Load()
 
 	if !*disableSafeShutdown {
 		c := make(chan os.Signal, 1)
@@ -69,7 +70,7 @@ func main() {
 		startup = fmt.Sprintf("Ranssibot started up @ %[1]s", time.Now().Format("15:04:05 02.01.2006"))
 	}
 
-	bot.SendMessage(whitelist.GetUserWithName("tulir"), startup, nil)
+	bot.SendMessage(config.GetUserWithName("tulir"), startup, nil)
 	log.Infof(startup)
 
 	// Listen to messages
@@ -80,7 +81,7 @@ func main() {
 
 // Handle a command
 func handleCommand(bot *telebot.Bot, message telebot.Message) {
-	if whitelist.GetUserWithUID(message.Sender.ID).UID == 0 {
+	if config.GetUserWithUID(message.Sender.ID).UID == 0 {
 		bot.SendMessage(message.Chat, lang.Translatef("whitelist.notwhitelisted", message.Sender.ID), util.Markdown)
 		return
 	}
@@ -118,7 +119,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 // Shutdown shuts down the Ranssibot.
 func Shutdown() {
 	log.Infof("Ranssibot cleaning up and exiting...")
-	whitelist.Save(*debug)
+	config.Save()
 	log.Shutdown()
 	os.Exit(0)
 }

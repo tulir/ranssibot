@@ -1,13 +1,8 @@
-package whitelist
+package config
 
 import (
 	"strings"
 )
-
-// Whitelist is the container for a whitelisted group of users.
-type Whitelist struct {
-	Users []User `json:"whitelist"`
-}
 
 // User struct that is used for whitelisted user entries
 type User struct {
@@ -21,16 +16,14 @@ type User struct {
 // NilUser is an empty user type.
 var NilUser = User{}
 
-var whitelist = &Whitelist{}
-
 // GetAllUsers returns all the whitelisted users.
 func GetAllUsers() []User {
-	return whitelist.Users
+	return config.Whitelist
 }
 
 // GetUserWithUID gets the User struct that has the given UID.
 func GetUserWithUID(uid int) User {
-	for _, user := range whitelist.Users {
+	for _, user := range config.Whitelist {
 		if user.UID == uid {
 			return user
 		}
@@ -40,8 +33,8 @@ func GetUserWithUID(uid int) User {
 
 // GetUserWithName gets the User struct that has the given name.
 func GetUserWithName(name string) User {
-	for _, user := range whitelist.Users {
-		if user.Name == name {
+	for _, user := range config.Whitelist {
+		if strings.EqualFold(user.Name, name) {
 			return user
 		}
 	}
@@ -51,7 +44,7 @@ func GetUserWithName(name string) User {
 // GetUsersWithSetting get all the users that have the given setting.
 func GetUsersWithSetting(setting string, value string) []User {
 	var users []User
-	for _, user := range whitelist.Users {
+	for _, user := range config.Whitelist {
 		val, ok := user.GetSetting(setting)
 		if ok && (len(value) == 0 || strings.EqualFold(value, val)) {
 			users = append(users, user)
@@ -80,6 +73,15 @@ func (u User) SetSetting(key string, value string) {
 // RemoveSetting removes a setting
 func (u User) RemoveSetting(key string) {
 	delete(u.Settings, key)
+}
+
+// GetLanguage gets the user display language
+func (u User) GetLanguage() string {
+	lang, ok := u.GetSetting("language")
+	if !ok {
+		return "en_US"
+	}
+	return lang
 }
 
 // Destination returns the UID for Telebot.
