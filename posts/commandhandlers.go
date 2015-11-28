@@ -76,6 +76,10 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 	bot.SendMessage(message.Chat, lang.Translatef("posts.read", id, title, body), util.Markdown)
 }
 
+func handleReadComments(bot *telebot.Bot, message telebot.Message, args []string) {
+	bot.SendMessage(message.Chat, "Not yet implemented", nil)
+}
+
 func handleComment(bot *telebot.Bot, message telebot.Message, args []string) {
 	if len(args) < 2 {
 		bot.SendMessage(message.Chat, lang.Translate("posts.spam.usage"), util.Markdown)
