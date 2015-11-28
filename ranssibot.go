@@ -83,7 +83,9 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		bot.SendMessage(message.Chat, lang.Translatef("whitelist.notwhitelisted", message.Sender.ID), util.Markdown)
 		return
 	}
-	args := strings.Split(message.Text, " ")[1:]
+	args := strings.Split(message.Text, " ")
+	command := args[0]
+	args = args[1:]
 	if message.Chat.IsGroupChat() {
 		log.Infof("%[1]s (%[2]d) @ %[3]s (%[4]d) sent command: %[3]s", message.Sender.Username, message.Sender.ID, message.Chat.Title, message.Chat.ID, message.Text)
 	} else {
@@ -91,17 +93,17 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	}
 	if strings.HasPrefix(message.Text, "Mui.") || message.Text == "/start" {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
-	} else if strings.HasPrefix(message.Text, "/timetable") {
+	} else if util.CheckArgs(command, "/timetable", "/tt", "/timetables", "/tts") {
 		timetables.HandleCommand(bot, message, args)
-	} else if strings.HasPrefix(message.Text, "/posts") {
+	} else if util.CheckArgs(command, "/posts", "/post") {
 		posts.HandleCommand(bot, message, args)
-	} else if strings.HasPrefix(message.Text, "/help") {
+	} else if util.CheckArgs(command, "/help", "help", "?", "/?") {
 		if len(args) == 0 {
 			bot.SendMessage(message.Chat, lang.Translate("help"), util.Markdown)
 		} else if len(args) > 0 {
-			if strings.EqualFold(args[0], "timetable") {
+			if util.CheckArgs(args[0], "timetable", "timetables") {
 				bot.SendMessage(message.Chat, lang.Translate("help.timetable"), util.Markdown)
-			} else if strings.EqualFold(args[0], "posts") {
+			} else if util.CheckArgs(args[0], "posts", "post") {
 				bot.SendMessage(message.Chat, lang.Translate("help.posts"), util.Markdown)
 			} else {
 				bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)

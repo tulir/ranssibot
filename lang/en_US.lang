@@ -4,7 +4,7 @@ Telegram-käyttäjäsi ID on %[1]d
 
 error.parse.integer=I couldn't parse an integer from "_%[1]s_"
 error.parse.time=I couldn't parse a time from "_%[1]s_"
-error.commandnotfound=Command not found.
+error.commandnotfound=Command not found. Type "/help" for help.
 
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s

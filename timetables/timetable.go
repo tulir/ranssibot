@@ -40,11 +40,11 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	day := today
 	year := config.GetUserWithUID(message.Sender.ID).Year
 	if len(args) == 1 {
-		if strings.EqualFold(args[0], lang.Translate("timetable.year.first")) {
+		if util.CheckArgs(args[0], lang.Translate("timetable.year.first")) {
 			year = 1
-		} else if strings.EqualFold(args[0], lang.Translate("timetable.year.second")) {
+		} else if util.CheckArgs(args[0], lang.Translate("timetable.year.second")) {
 			year = 2
-		} else if strings.EqualFold(args[0], "update") {
+		} else if util.CheckArgs(args[0], "update") {
 			Update()
 			bot.SendMessage(message.Chat, lang.Translate("timetable.update.success"), util.Markdown)
 		} else {
@@ -55,9 +55,9 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 			day = dayNew
 		}
 	} else if len(args) == 2 {
-		if strings.EqualFold(args[0], lang.Translate("timetable.year.first")) {
+		if util.CheckArgs(args[0], lang.Translate("timetable.year.first")) {
 			year = 1
-		} else if strings.EqualFold(args[0], lang.Translate("timetable.year.second")) {
+		} else if util.CheckArgs(args[0], lang.Translate("timetable.year.second")) {
 			year = 2
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("timetable.usage"), util.Markdown)
