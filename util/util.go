@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 // Markdown contains the SendOptions for markdown messages
@@ -128,4 +129,14 @@ func FindSpan(typ string, key string, val string, node *html.Node) *html.Node {
 		}
 	}
 	return nil
+}
+
+// CheckArgs checks if the given list of strings contains the given argument.
+func CheckArgs(arg string, options ...string) bool {
+	for _, option := range options {
+		if strings.EqualFold(arg, option) {
+			return true
+		}
+	}
+	return false
 }
