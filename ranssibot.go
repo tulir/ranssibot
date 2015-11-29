@@ -25,7 +25,7 @@ func init() {
 	flag.Parse()
 
 	log.PrintDebug = *debug
-	log.Fileformat = "logs/%[1]s-%[2]d.log"
+	log.Fileformat = "logs/%[1]s-%02[2]d.log"
 	log.Init()
 	lang.Load()
 	config.IndentConfig = *debug
