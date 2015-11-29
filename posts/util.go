@@ -47,14 +47,16 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 
 		node := getPost(readNow)
 		if node != nil {
-			if !noNotifAtInit {
-				topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
+			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
-				log.Infof("New Ranssi post detected: %s (ID %d)", topic, readNow)
+			log.Infof("New Ranssi post detected: %s (ID %d)", topic, readNow)
+
+			if !noNotifAtInit {
 				for _, user := range config.GetUsersWithSetting(subSetting, "true") {
 					bot.SendMessage(user, lang.Translatef("posts.new", topic, readNow), util.Markdown)
 				}
 			}
+
 			config.GetConfig().LastReadPost = readNow
 			config.ASave()
 			updateNews()
