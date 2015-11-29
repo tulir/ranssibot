@@ -110,6 +110,13 @@ func Render(node *html.Node) string {
 	return buf.String()
 }
 
+// RenderText renders the given HTML node to a string.
+func RenderText(node *html.Node) string {
+	buf := new(bytes.Buffer)
+	renderHTML(buf, node)
+	return buf.String()
+}
+
 // FindSpan finds a html element of the given type with the given key-value attribute from the given node
 func FindSpan(typ string, key string, val string, node *html.Node) *html.Node {
 	if node.Type == html.ElementNode && node.Data == typ {
