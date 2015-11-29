@@ -19,6 +19,7 @@ import (
 
 var token = flag.StringP("token", "t", "", "The Telegram bot token to use.")
 var debug = flag.BoolP("debug", "d", false, "Enable debug mode")
+var bot *telebot.Bot
 var disableSafeShutdown = flag.Bool("no-safe-shutdown", false, "Disable Interrupt/SIGTERM catching and handling.")
 
 func init() {
@@ -44,7 +45,8 @@ func init() {
 func main() {
 	start := util.TimestampMS()
 	// Connect to Telegram
-	bot, err := telebot.NewBot(*token)
+	var err error
+	bot, err = telebot.NewBot(*token)
 	if err != nil {
 		log.Fatalf("Error connecting to Telegram: %[1]s", err)
 		return
@@ -121,5 +123,6 @@ func Shutdown() {
 	log.Infof("Ranssibot cleaning up and exiting...")
 	config.Save()
 	log.Shutdown()
+	bot.SendMessage(config.GetUserWithName("tulir"), fmt.Sprintf("Ranssibot shut down @ %[1]s", time.Now().Format("15:04:05 02.01.2006")), nil)
 	os.Exit(0)
 }
