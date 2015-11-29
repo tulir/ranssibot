@@ -58,7 +58,7 @@ func main() {
 	// Update timetables
 	timetables.Update()
 
-	go posts.Loop(bot)
+	go posts.Loop(bot, *debug)
 	go listen(bot)
 
 	var startup string

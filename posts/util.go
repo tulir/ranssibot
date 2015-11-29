@@ -41,25 +41,27 @@ func updateNews() {
 }
 
 // Loop is an infinite loop that checks for new Ranssi posts
-func Loop(bot *telebot.Bot) {
+func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 	for {
 		readNow := config.GetConfig().LastReadPost + 1
 
 		node := getPost(readNow)
 		if node != nil {
-			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
+			if !noNotifAtInit {
+				topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
-			log.Infof("New Ranssi post detected: %s (ID %d)", topic, readNow)
-			for _, user := range config.GetUsersWithSetting(subSetting, "true") {
-				bot.SendMessage(user, lang.Translatef("posts.new", topic, readNow), util.Markdown)
+				log.Infof("New Ranssi post detected: %s (ID %d)", topic, readNow)
+				for _, user := range config.GetUsersWithSetting(subSetting, "true") {
+					bot.SendMessage(user, lang.Translatef("posts.new", topic, readNow), util.Markdown)
+				}
 			}
-
 			config.GetConfig().LastReadPost = readNow
 			config.ASave()
 			updateNews()
 			time.Sleep(5 * time.Second)
 			continue
 		}
+		noNotifAtInit = false
 		time.Sleep(1 * time.Minute)
 	}
 }
