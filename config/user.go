@@ -1,6 +1,7 @@
 package config
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -35,6 +36,16 @@ func GetUserWithUID(uid int) User {
 func GetUserWithName(name string) User {
 	for _, user := range config.Whitelist {
 		if strings.EqualFold(user.Name, name) {
+			return user
+		}
+	}
+	return NilUser
+}
+
+// GetUser gets the User struct that has the given value as name or UID.
+func GetUser(identifier string) User {
+	for _, user := range config.Whitelist {
+		if strings.EqualFold(user.Name, identifier) || strings.EqualFold(strconv.Itoa(user.UID), identifier) {
 			return user
 		}
 	}
