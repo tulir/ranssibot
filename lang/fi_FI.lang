@@ -34,7 +34,7 @@ Paina seuraavaa linkkiä lukeaksesi ilmoitus: http://ranssi.paivola.fi/story.php
 
 posts.notfound=Ranssi-ilmoitusta ID:llä %[1]d ei löydetty!
 
-posts.read=*%[2]s* \
+posts.read=*%[2]s* - Lisätty %[4]s \
 %[3]s
 
 posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!

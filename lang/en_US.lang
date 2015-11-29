@@ -37,7 +37,7 @@ Click on the following link to read it: http://ranssi.paivola.fi/story.php?id=%[
 
 posts.notfound=Couldn't find a Ranssi post with the ID %[1]d!
 
-posts.read=*%[2]s* \
+posts.read=*%[2]s* - Posted at %[4]s \
 %[3]s
 
 posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza list!
