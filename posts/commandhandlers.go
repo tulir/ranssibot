@@ -54,24 +54,7 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 	post = post.FirstChild
 
 	title := strings.TrimSpace(post.FirstChild.Data)
-	body := ""
-	bodyNode := post.NextSibling.FirstChild
-	prevbr := false
-	for {
-		if bodyNode == nil {
-			break
-		} else if bodyNode.Data == "br" {
-			if !prevbr {
-				body += "\n"
-				prevbr = true
-				continue
-			}
-		} else {
-			body += bodyNode.Data
-		}
-		prevbr = false
-		bodyNode = bodyNode.NextSibling
-	}
+	body := util.RenderText(post.NextSibling)
 
 	bot.SendMessage(message.Chat, lang.Translatef("posts.read", id, title, body), util.Markdown)
 }
