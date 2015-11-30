@@ -3,9 +3,9 @@ package main
 import (
 	"bufio"
 	"github.com/tucnak/telebot"
-	log "maunium.net/maulogger"
-	"maunium.net/ranssibot/config"
-	"maunium.net/ranssibot/util"
+	log "maunium.net/go/maulogger"
+	"maunium.net/go/ranssibot/config"
+	"maunium.net/go/ranssibot/util"
 	"os"
 	"strconv"
 	"strings"

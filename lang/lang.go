@@ -3,7 +3,7 @@ package lang
 import (
 	"fmt"
 	"io/ioutil"
-	log "maunium.net/maulogger"
+	log "maunium.net/go/maulogger"
 	"strings"
 )
 

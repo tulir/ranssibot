@@ -2,8 +2,8 @@ package posts
 
 import (
 	"github.com/tucnak/telebot"
-	"maunium.net/ranssibot/lang"
-	"maunium.net/ranssibot/util"
+	"maunium.net/go/ranssibot/lang"
+	"maunium.net/go/ranssibot/util"
 )
 
 // HandleCommand handles Ranssi post commands

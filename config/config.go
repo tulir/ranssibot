@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	flag "github.com/ogier/pflag"
 	"io/ioutil"
-	log "maunium.net/maulogger"
+	log "maunium.net/go/maulogger"
 )
 
 // Configuration is the container for a config.

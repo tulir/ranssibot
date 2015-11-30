@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/tucnak/telebot"
-	"maunium.net/ranssibot/config"
-	"maunium.net/ranssibot/lang"
-	"maunium.net/ranssibot/util"
+	"maunium.net/go/ranssibot/config"
+	"maunium.net/go/ranssibot/lang"
+	"maunium.net/go/ranssibot/util"
 )
 
 func handleStop(bot *telebot.Bot, message telebot.Message, args []string) {

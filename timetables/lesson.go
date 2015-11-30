@@ -2,7 +2,7 @@ package timetables
 
 import (
 	"fmt"
-	"maunium.net/ranssibot/lang"
+	"maunium.net/go/ranssibot/lang"
 	"strconv"
 	"strings"
 	"unicode"
