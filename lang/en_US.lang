@@ -5,6 +5,7 @@ Telegram-käyttäjäsi ID on %[1]d
 error.parse.integer=I couldn't parse an integer from "_%[1]s_"
 error.parse.time=I couldn't parse a time from "_%[1]s_"
 error.commandnotfound=Command not found. Type "/help" for help.
+error.noperms=You don't have the permission %[1]s
 
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
@@ -44,6 +45,42 @@ posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
+mgmt.whitelist.settings.view=*Settings of user %[1]s:*<br>%[2]s
+mgmt.whitelist.settings.view.empty=The user %[1]s has no settings.
+mgmt.whitelist.settings.view.entry=%[1]s: %[2]s<br>
+mgmt.whitelist.settings.get.notfound=The user %[1]s doesn't have a setting with the key %[2]s!
+mgmt.whitelist.settings.get=%[1]s has set the setting %[2]s to %[3]s.
+mgmt.whitelist.settings.set=Set the setting %[2]s to %[3]s for %[1]s.
+mgmt.whitelist.settings.remove=Set the setting %[2]s was removed from %[1]s.
+mgmt.whitelist.settings.remove.fail=The user %[1]s didn't have the setting %[2]s!
+
+mgmt.whitelist.permissions.view=*Permissions of user %[1]s:*<br>%[2]s
+mgmt.whitelist.permissions.view.empty=The user %[1]s has no non-standard permissions.
+mgmt.whitelist.permissions.view.entry= - %[1]s<br>
+mgmt.whitelist.permissions.add=Added permission %[2]s to %[1]s.
+mgmt.whitelist.permissions.add.fail=The user %[1]s already has the permission %[2]s!
+mgmt.whitelist.permissions.remove=Removed permission %[2]s from %[1]s.
+mgmt.whitelist.permissions.remove.fail=The user %[1]s didn't have the permission %[2]s!
+
+mgmt.error.usernotfound=I couldn't find an user with the name or UID %[1]s!
+
+mgmt.whitelist.usage=*Usage:* `/whitelist <add/remove/get/settings/permissions> ...`
+
+mgmt.whitelist.add.usage=*Usage:* `/whitelist add <uid> <name> <yeargroup>`
+mgmt.whitelist.remove.usage=*Usage:* `/whitelist remove <uid/name>`
+mgmt.whitelist.get.usage=*Usage:* `/whitelist get <uid/name>`
+
+mgmt.whitelist.settings.usage=*Usage:* `/whitelist settings <view/get/set/remove> <uid/name>...`
+mgmt.whitelist.settings.view.usage=*Usage:* `/whitelist settings view <uid/name>`
+mgmt.whitelist.settings.get.usage=*Usage:* `/whitelist settings get <uid/name> <setting>`
+mgmt.whitelist.settings.set.usage=*Usage:* `/whitelist settings set <uid/name> <setting> <value>`
+mgmt.whitelist.settings.remove.usage=*Usage:* `/whitelist settings remove <uid/name> <setting>`
+
+mgmt.whitelist.permissions.usage=*Usage:* `/whitelist permissions <view/add/remove> <uid/name>...`
+mgmt.whitelist.permissions.view.usage=*Usage:* `/whitelist permissions view <uid/name>`
+mgmt.whitelist.permissions.add.usage=*Usage:* `/whitelist permissions add <uid/name> <permission>`
+mgmt.whitelist.permissions.remove.usage=*Usage:* `/whitelist permissions remove <uid/name> <permission>`
+
 timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Usage:* `/posts comment <id> <message>`
 posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
@@ -52,7 +89,8 @@ help.usage=*Usage:* `/help \[command]`
 help=*Ranssibot Command List* \
 Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
-`/posts <subscribe/unsubscribe/read/comment/latest> [id] [message]` - Ranssi post utilities.
+`/posts <subscribe/unsubscribe/read/comment/latest> ...` - Ranssi post utilities. \
+`/whitelist <add/remove/get/settings/permissions> ...` - Whitelist management utilities.
 help.timetable=*Command /timetable help* \
 `/timetable ventit/neliöt [day offset]` - Get the timetable of the given year group. \
 `/timetable [day offset]` - Get the timetable of your own year group.
@@ -62,3 +100,18 @@ help.posts=*Command /posts help* \
 `/posts read <id>` - Read the Ranssi post with the given ID. \
 `/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
 `/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
+help.whitelist=*Command /whitelist help* \
+`/whitelist add <uid> <name> <yeargroup>` - Add the given UID to the whitelist with the given name and yeargroup. \
+`/whitelist remove <uid/name>` - Remove the given user. \
+`/whitelist get <uid/name>` - Get the basic information about the given user. \
+`/whitelist settings <view/get/set/remove> ...` - Manage the settings of the given user. \
+`/whitelist permissions <view/add/remove> ...` - Manage the permissions of the given user.
+help.whitelist.settings=*Command /whitelist settings help* \
+`/whitelist settings view <uid/name>` - View all the settings that the given user has. \
+`/whitelist settings get <uid/name> <setting>` - Get the value that the given user has set for the given setting. \
+`/whitelist settings set <uid/name> <setting> <value>` - Set the value of the given setting to the given value for the given user. \
+`/whitelist settings remove <uid/name> <setting>` - Remove the given setting from the given user.
+help.whitelist.permissions=*Command /whitelist permissions help* \
+`/whitelist permissions view <uid/name>` - View all the permissions that the given user has. \
+`/whitelist permissions add <uid/name> <permission>` - Add the given permission to the given user. \
+`/whitelist permissions remove <uid/name> <permission>` - Remove the given permission from the given user.

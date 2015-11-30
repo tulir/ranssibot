@@ -107,6 +107,18 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 				bot.SendMessage(message.Chat, lang.Translate("help.timetable"), util.Markdown)
 			} else if util.CheckArgs(args[0], "posts", "post") {
 				bot.SendMessage(message.Chat, lang.Translate("help.posts"), util.Markdown)
+			} else if util.CheckArgs(args[0], "whitelist", "wl") {
+				if len(args) > 1 {
+					if util.CheckArgs(args[1], "permissions", "perms") {
+						bot.SendMessage(message.Chat, lang.Translate("help.whitelist.permissions"), util.Markdown)
+					} else if util.CheckArgs(args[1], "settings", "preferences", "prefs", "properties", "props") {
+						bot.SendMessage(message.Chat, lang.Translate("help.whitelist.settings"), util.Markdown)
+					} else {
+						bot.SendMessage(message.Chat, lang.Translate("help.whitelist"), util.Markdown)
+					}
+				} else {
+					bot.SendMessage(message.Chat, lang.Translate("help.whitelist"), util.Markdown)
+				}
 			} else {
 				bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
 			}
