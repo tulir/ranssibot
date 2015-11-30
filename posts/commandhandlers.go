@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"bytes"
 	"github.com/tucnak/telebot"
 	"golang.org/x/net/html"
 	"maunium.net/ranssibot/lang"
@@ -29,11 +30,11 @@ func handleNews(bot *telebot.Bot, message telebot.Message, args []string) {
 	if util.Timestamp()-lastupdate > 1500 {
 		updateNews()
 	}
-	var entries string
+	var buffer bytes.Buffer
 	for _, item := range news.Items {
-		entries += lang.Translatef("posts.latest.entry", item.Title, item.Link, item.Summary, item.Date.Format("15:04:05 02.01.2006"))
+		buffer.WriteString(lang.Translatef("posts.latest.entry", item.Title, item.Link, item.Summary, item.Date.Format("15:04:05 02.01.2006")))
 	}
-	bot.SendMessage(message.Chat, lang.Translatef("posts.latest", entries), util.Markdown)
+	bot.SendMessage(message.Chat, lang.Translatef("posts.latest", buffer.String()), util.Markdown)
 }
 
 func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
@@ -86,12 +87,12 @@ func handleComment(bot *telebot.Bot, message telebot.Message, args []string) {
 		bot.SendMessage(message.Chat, lang.Translatef("posts.spam.nospamlist", id), util.Markdown)
 		return
 	}
-
-	msg := ""
+	var buffer bytes.Buffer
 	for _, str := range args[1:] {
-		msg += str + " "
+		buffer.WriteString(str)
+		buffer.WriteString(" ")
 	}
-	msg = strings.TrimSpace(msg)
+	msg := strings.TrimSpace(buffer.String())
 	err = spam(id, msg)
 	if err != nil {
 		bot.SendMessage(message.Chat, err.Error(), nil)
