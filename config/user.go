@@ -54,6 +54,7 @@ func GetUser(identifier string) User {
 
 // GetUsersWithSetting get all the users that have the given setting.
 func GetUsersWithSetting(setting string, value string) []User {
+	setting = strings.ToLower(setting)
 	var users []User
 	for _, user := range config.Whitelist {
 		val, ok := user.GetSetting(setting)
@@ -66,23 +67,32 @@ func GetUsersWithSetting(setting string, value string) []User {
 
 // GetSetting gets the given setting from the user.
 func (u User) GetSetting(key string) (string, bool) {
+	key = strings.ToLower(key)
 	val, ok := u.Settings[key]
 	return val, ok
 }
 
 // HasSetting checks if the user has the given setting.
 func (u User) HasSetting(key string) bool {
+	key = strings.ToLower(key)
 	_, ok := u.GetSetting(key)
 	return ok
 }
 
 // SetSetting sets a setting
 func (u User) SetSetting(key string, value string) {
+	key = strings.ToLower(key)
 	u.Settings[key] = value
+}
+
+// GetSettings returns the settings map of the user
+func (u User) GetSettings() map[string]string {
+	return u.Settings
 }
 
 // RemoveSetting removes a setting
 func (u User) RemoveSetting(key string) {
+	key = strings.ToLower(key)
 	delete(u.Settings, key)
 }
 
@@ -102,6 +112,7 @@ func (u User) Destination() int {
 
 // HasPermission checks if the user has the given permission.
 func (u User) HasPermission(permission string) bool {
+	permission = strings.ToLower(permission)
 	for _, perm := range u.Permissions {
 		if strings.EqualFold(perm, permission) || strings.EqualFold(perm, "all") {
 			return true
@@ -112,6 +123,7 @@ func (u User) HasPermission(permission string) bool {
 
 // AddPermission adds the given permission to the user.
 func (u User) AddPermission(permission string) bool {
+	permission = strings.ToLower(permission)
 	if !u.HasPermission(permission) {
 		u.Permissions = append(u.Permissions, permission)
 		return true
@@ -121,6 +133,7 @@ func (u User) AddPermission(permission string) bool {
 
 // RemovePermission removes the given permission from the user.
 func (u User) RemovePermission(permission string) bool {
+	permission = strings.ToLower(permission)
 	for i, perm := range u.Permissions {
 		if strings.EqualFold(perm, permission) {
 			u.Permissions = append(u.Permissions[:i], u.Permissions[i+1:]...)
@@ -128,4 +141,9 @@ func (u User) RemovePermission(permission string) bool {
 		}
 	}
 	return false
+}
+
+// GetPermissions returns all the permissions of an user
+func (u User) GetPermissions() []string {
+	return u.Permissions
 }
