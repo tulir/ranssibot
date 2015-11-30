@@ -53,7 +53,7 @@ func onCommand(bot *telebot.Bot, command string, args []string) {
 			config.Load()
 		}
 	} else if command == "stop" {
-		Shutdown()
+		Shutdown("Sysadmin")
 	}
 }
 

@@ -37,7 +37,7 @@ func init() {
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 		go func() {
 			<-c
-			Shutdown()
+			Shutdown("Interrupt/SIGTERM")
 		}()
 	}
 }
@@ -113,16 +113,24 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
 		}
+	} else if util.CheckArgs(command, "/stop", "/shutdown", "/poweroff") {
+		handleStop(bot, message, args)
+	} else if util.CheckArgs(command, "/whitelist", "/wl") {
+		handleWhitelist(bot, message, args)
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}
 }
 
 // Shutdown shuts down the Ranssibot.
-func Shutdown() {
+func Shutdown(by string) {
 	log.Infof("Ranssibot cleaning up and exiting...")
 	config.Save()
 	log.Shutdown()
-	bot.SendMessage(config.GetUserWithName("tulir"), fmt.Sprintf("Ranssibot shut down @ %[1]s", time.Now().Format("15:04:05 02.01.2006")), nil)
+
+	shutdown := fmt.Sprintf("Ranssibot shut down by %[2]s @ %[1]s", time.Now().Format("15:04:05 02.01.2006"), by)
+	log.Debugf(shutdown)
+	bot.SendMessage(config.GetUserWithName("tulir"), shutdown, nil)
+
 	os.Exit(0)
 }
