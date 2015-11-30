@@ -45,6 +45,9 @@ posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
+mgmt.whitelist.list=*Whitelisted users:*<br>%[1]s
+mgmt.whitelist.list.entry=%[1]s (UID %[2]d)<br>
+
 mgmt.whitelist.settings.view=*Settings of user %[1]s:*<br>%[2]s
 mgmt.whitelist.settings.view.empty=The user %[1]s has no settings.
 mgmt.whitelist.settings.view.entry=%[1]s: %[2]s<br>
