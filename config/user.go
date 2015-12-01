@@ -110,11 +110,6 @@ func (u User) SetSetting(key string, value string) {
 	u.Settings[key] = value
 }
 
-// GetSettings returns the settings map of the user
-func (u User) GetSettings() map[string]string {
-	return u.Settings
-}
-
 // RemoveSetting removes a setting
 func (u User) RemoveSetting(key string) {
 	key = strings.ToLower(key)
@@ -166,9 +161,4 @@ func (u User) RemovePermission(permission string) bool {
 		}
 	}
 	return false
-}
-
-// GetPermissions returns all the permissions of an user
-func (u User) GetPermissions() []string {
-	return u.Permissions
 }

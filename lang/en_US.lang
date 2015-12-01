@@ -47,9 +47,10 @@ posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d:
 
 mgmt.whitelist.list=*Whitelisted users:*<br>%[1]s
 mgmt.whitelist.list.entry=%[1]s (UID %[2]d)<br>
-
 mgmt.whitelist.add=Added %[2]s (UID %[1]d, Year %[3]d) to the whitelist.
 mgmt.whitelist.add.alreadyused=The name %[2]s or UID %[1]d is already whitelisted.
+mgmt.whitelist.remove=Removed %[2]s (UID %[1]d) from the whitelist.
+mgmt.whitelist.get=The UID %[1]d is whitelisted with the name %[2]s and is on year %[3]d
 
 mgmt.whitelist.settings.view=*Settings of user %[1]s:*<br>%[2]s
 mgmt.whitelist.settings.view.empty=The user %[1]s has no settings.
