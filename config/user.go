@@ -99,7 +99,6 @@ func (u User) GetSetting(key string) (string, bool) {
 
 // HasSetting checks if the user has the given setting.
 func (u User) HasSetting(key string) bool {
-	key = strings.ToLower(key)
 	_, ok := u.GetSetting(key)
 	return ok
 }
@@ -123,6 +122,11 @@ func (u User) GetLanguage() string {
 		return "en_US"
 	}
 	return lang
+}
+
+// GetLanguage gets the user display language
+func GetLanguage(uid int) string {
+	return GetUserWithUID(uid).GetLanguage()
 }
 
 // Destination returns the UID for Telebot.
