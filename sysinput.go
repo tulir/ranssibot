@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"github.com/tucnak/telebot"
 	log "maunium.net/go/maulogger"
 	"maunium.net/go/ranssibot/config"
@@ -58,9 +59,10 @@ func onCommand(bot *telebot.Bot, command string, args []string) {
 }
 
 func connect(array []string) string {
-	var str string
+	var buffer bytes.Buffer
 	for _, val := range array {
-		str = str + " " + val
+		buffer.WriteString(" ")
+		buffer.WriteString(val)
 	}
-	return str[1:]
+	return buffer.String()[1:]
 }
