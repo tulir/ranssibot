@@ -34,7 +34,7 @@ func handleWhitelist(bot *telebot.Bot, message telebot.Message, args []string) {
 					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add.parseint", args[3]), util.Markdown)
 					return
 				}
-				if config.AddUser(config.User{UID: uid, Name: args[2], Year: year}) {
+				if config.AddUser(config.CreateUser(uid, args[2], year)) {
 					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add", uid, args[2], year), util.Markdown)
 				} else {
 					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add.alreadyused", uid, args[2]), util.Markdown)
