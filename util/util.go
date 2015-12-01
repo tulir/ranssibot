@@ -20,6 +20,22 @@ func init() {
 	Markdown.ParseMode = telebot.ModeMarkdown
 }
 
+// CustomKeyboard creates a SendOptions instance with the given custom keyboard.
+func CustomKeyboard(keyboard [][]string, markdown bool) *telebot.SendOptions {
+	so := new(telebot.SendOptions)
+	if markdown {
+		so.ParseMode = telebot.ModeMarkdown
+	}
+
+	rm := *new(telebot.ReplyMarkup)
+	rm.OneTimeKeyboard = true
+	rm.CustomKeyboard = keyboard
+	rm.ResizeKeyboard = true
+	so.ReplyMarkup = rm
+
+	return so
+}
+
 // HTTPGet performs a HTTP GET request on the given URL
 func HTTPGet(url string) string {
 	response, err := http.Get(url)
