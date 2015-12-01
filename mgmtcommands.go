@@ -7,6 +7,7 @@ import (
 	"maunium.net/go/ranssibot/config"
 	"maunium.net/go/ranssibot/lang"
 	"maunium.net/go/ranssibot/util"
+	"strconv"
 )
 
 func handleStop(bot *telebot.Bot, message telebot.Message, args []string) {
@@ -23,7 +24,21 @@ func handleWhitelist(bot *telebot.Bot, message telebot.Message, args []string) {
 				return
 			}
 			if len(args) > 3 {
-				// TODO: Whitelist add
+				uid, err := strconv.Atoi(args[1])
+				if err != nil {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add.parseint", args[1]), util.Markdown)
+					return
+				}
+				year, err := strconv.Atoi(args[3])
+				if err != nil {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add.parseint", args[3]), util.Markdown)
+					return
+				}
+				if config.AddUser(config.User{UID: uid, Name: args[2], Year: year}) {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add", uid, args[2], year), util.Markdown)
+				} else {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add.alreadyused", uid, args[2]), util.Markdown)
+				}
 			} else {
 				bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.add.usage"), util.Markdown)
 			}

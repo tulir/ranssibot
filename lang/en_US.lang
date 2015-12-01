@@ -48,6 +48,9 @@ posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d:
 mgmt.whitelist.list=*Whitelisted users:*<br>%[1]s
 mgmt.whitelist.list.entry=%[1]s (UID %[2]d)<br>
 
+mgmt.whitelist.add=Added %[2]s (UID %[1]d, Year %[3]d) to the whitelist.
+mgmt.whitelist.add.alreadyused=The name %[2]s or UID %[1]d is already whitelisted.
+
 mgmt.whitelist.settings.view=*Settings of user %[1]s:*<br>%[2]s
 mgmt.whitelist.settings.view.empty=The user %[1]s has no settings.
 mgmt.whitelist.settings.view.entry=%[1]s: %[2]s<br>
@@ -67,7 +70,7 @@ mgmt.whitelist.permissions.remove.fail=The user %[1]s didn't have the permission
 
 mgmt.error.usernotfound=I couldn't find an user with the name or UID %[1]s!
 
-mgmt.whitelist.usage=*Usage:* `/whitelist <add/remove/get/settings/permissions> ...`
+mgmt.whitelist.usage=*Usage:* `/whitelist <list/add/remove/get/settings/permissions> ...`
 
 mgmt.whitelist.add.usage=*Usage:* `/whitelist add <uid> <name> <yeargroup>`
 mgmt.whitelist.remove.usage=*Usage:* `/whitelist remove <uid/name>`
@@ -104,6 +107,7 @@ help.posts=*Command /posts help* \
 `/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
 `/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
 help.whitelist=*Command /whitelist help* \
+`/whitelist list` - Get the list of whitelisted users. \
 `/whitelist add <uid> <name> <yeargroup>` - Add the given UID to the whitelist with the given name and yeargroup. \
 `/whitelist remove <uid/name>` - Remove the given user. \
 `/whitelist get <uid/name>` - Get the basic information about the given user. \
