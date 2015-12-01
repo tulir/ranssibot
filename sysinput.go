@@ -8,7 +8,6 @@ import (
 	"maunium.net/go/ranssibot/config"
 	"maunium.net/go/ranssibot/util"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -28,19 +27,14 @@ func listen(bot *telebot.Bot) {
 
 func onCommand(bot *telebot.Bot, command string, args []string) {
 	if command == "msg" && len(args) > 1 {
-		user := config.GetUserWithName(args[0])
+		user := config.GetUser(args[0])
 		if user.Destination() == 0 {
-			i, err := strconv.Atoi(args[0])
-			if err != nil {
-				log.Errorf("Couldn't find an integer or a whitelisted user from %s", args[0])
-				return
-			}
-			user = config.GetUserWithUID(i)
+			log.Errorf("Couldn't get an user with the name or UID %s", args[0])
 		}
 
 		msg := connect(args[1:])
 		bot.SendMessage(user, "*[Sysadmin]* "+msg, util.Markdown)
-		log.Infof("Sent message %[1]s to %[2]s", msg, args[0])
+		log.Infof("Sent message %[1]s to %[2]s", msg, user.Name)
 	} else if command == "broadcast" && len(args) > 0 {
 		msg := connect(args)
 		for _, user := range config.GetAllUsers() {
