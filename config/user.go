@@ -17,6 +17,26 @@ type User struct {
 // NilUser is an empty user type.
 var NilUser = User{}
 
+// AddUser adds the given user to the whitelist.
+func AddUser(user User) bool {
+	if GetUserWithUID(user.UID).UID != NilUser.UID || GetUserWithName(user.Name).UID != NilUser.UID {
+		return false
+	}
+	config.Whitelist = append(config.Whitelist, user)
+	return true
+}
+
+// RemoveUser removes the given user from the whitelist.
+func RemoveUser(identifier string) bool {
+	for index, user := range config.Whitelist {
+		if strings.EqualFold(user.Name, identifier) || strings.EqualFold(strconv.Itoa(user.UID), identifier) {
+			config.Whitelist = append(config.Whitelist[:index], config.Whitelist[index+1:]...)
+			return true
+		}
+	}
+	return false
+}
+
 // GetAllUsers returns all the whitelisted users.
 func GetAllUsers() []User {
 	return config.Whitelist
