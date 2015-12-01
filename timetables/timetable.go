@@ -33,7 +33,7 @@ var lastupdate = util.Timestamp()
 // HandleCommand handles a /timetable command
 func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	if util.Timestamp() > lastupdate+600 {
-		bot.SendMessage(message.Chat, "Updating cached timetables...", util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translatef("timetable.update"), util.Markdown)
 		Update()
 	}
 
