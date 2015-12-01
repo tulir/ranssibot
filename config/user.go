@@ -17,6 +17,11 @@ type User struct {
 // NilUser is an empty user type.
 var NilUser = User{}
 
+// CreateUser creates an user.
+func CreateUser(uid int, name string, year int) User {
+	return User{UID: uid, Name: name, Year: year, Permissions: make([]string, 0), Settings: make(map[string]string, 0)}
+}
+
 // AddUser adds the given user to the whitelist.
 func AddUser(user User) bool {
 	if GetUserWithUID(user.UID).UID != NilUser.UID || GetUserWithName(user.Name).UID != NilUser.UID {
