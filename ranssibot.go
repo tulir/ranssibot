@@ -99,6 +99,12 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		timetables.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/posts", "/post") {
 		posts.HandleCommand(bot, message, args)
+	} else if util.CheckArgs(command, "/config", "/configuration") {
+		handleConfig(bot, message, args)
+	} else if util.CheckArgs(command, "/stop", "/shutdown", "/poweroff") {
+		handleStop(bot, message, args)
+	} else if util.CheckArgs(command, "/whitelist", "/wl") {
+		handleWhitelist(bot, message, args)
 	} else if util.CheckArgs(command, "/help", "help", "?", "/?") {
 		if len(args) == 0 {
 			bot.SendMessage(message.Chat, lang.Translate("help"), util.Markdown)
@@ -107,6 +113,8 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 				bot.SendMessage(message.Chat, lang.Translate("help.timetable"), util.Markdown)
 			} else if util.CheckArgs(args[0], "posts", "post") {
 				bot.SendMessage(message.Chat, lang.Translate("help.posts"), util.Markdown)
+			} else if util.CheckArgs(args[0], "config", "configuration") {
+				bot.SendMessage(message.Chat, lang.Translate("help.config"), util.Markdown)
 			} else if util.CheckArgs(args[0], "whitelist", "wl") {
 				if len(args) > 1 {
 					if util.CheckArgs(args[1], "permissions", "perms") {
@@ -125,10 +133,6 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
 		}
-	} else if util.CheckArgs(command, "/stop", "/shutdown", "/poweroff") {
-		handleStop(bot, message, args)
-	} else if util.CheckArgs(command, "/whitelist", "/wl") {
-		handleWhitelist(bot, message, args)
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}
