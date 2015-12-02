@@ -1,16 +1,17 @@
 whitelist.notwhitelisted=\
-Et ole Päivölän Lukujärjestysbotin whitelistillä. Voit tökkiä Tuliria päästäksesi whitelistille. \
+Et ole Ranssibotin whitelistillä. Voit tökkiä Tuliria päästäksesi whitelistille. \
 Telegram-käyttäjäsi ID on %[1]d
 
-error.parse.integer=I couldn't parse an integer from "_%[1]s_"
-error.parse.time=I couldn't parse a time from "_%[1]s_"
-error.commandnotfound=Komentoa ei löydetty
+error.parse.integer=En pystynyt muuttamaan antamaasi arvoa "_%[1]s_" luvuksi!
+error.parse.time=En pystynyt muuttamaan antamaasi arvoa "_%[1]s_" ajaksi!
+error.commandnotfound=Komentoa ei löydetty. Kirjoita "/help" saadaksesi apua.
+error.noperms=Sinulla ei ole lupaa %[1]s
 
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
 
-timetable.nodata=En saa tietoa muualta, kuin osoitteesta http://ranssi.paivola.fi/lj.php, joten en voi näyttää sinulle tietoja, jotka ovat noin kaukana.
-timetable.update.success=Päivitetään tallennettua lukujärjestystä...
+timetable.nodata=Minulla on pääsy vain siihen dataan, mikä on näkyvillä osoitteessa http://ranssi.paivola.fi/lj.php, joten en voi näyttää noin kaukana olevia tietoja.
+timetable.update=Päivitetään välimuistiin tallennettua lukujärjestystä...
 timetable.generic=*Lukujärjestys %[5]s* \
 `Aamu:  %[1]s` \
 `IP1:   %[2]s` \
@@ -23,32 +24,80 @@ timetable.noyeargroup=En tiedä, millä vuosikurssilla olet.
 timetable.year.first=ventit
 timetable.year.second=neliöt
 
-posts.subscribed=Olet nyt rekisteröitynyt Ranssibotin ilmoituslistalle
-posts.unsubscribed=Et ole enää rekisteröitynyt Ranssibotin ilmoituslistalle
-posts.notsubscribed=Et ollut rekisteröitynyt Ranssibotin ilmoituslistalle
-posts.alreadysubscribed=Olit jo rekisteröitynyt Ranssibotin ilmoituslistalle
+posts.subscribed=Saat nyt viestejä uusista Ranssi-ilmoituksista.
+posts.unsubscribed=Et saa enää viestejä uusista Ranssi-ilmoituksista.
+posts.notsubscribed=Et ollut pyytänyt saada viestejä uusista Ranssi-ilmoituksista!
+posts.alreadysubscribed=Olit jo pyytänyt saada viestejä uusista Ranssi-ilmoituksista!
 
-posts.new=*[Ilmoitusilmoitus]* \
-Ranssille on lisätty uusi ilmoitus `%[1]s` (Post ID: %[2]d) \
-Paina seuraavaa linkkiä lukeaksesi ilmoitus: http://ranssi.paivola.fi/story.php?id=%[2]d
+posts.latest=*Etusivun Ranssi-ilmoitukset:*<br>%s
+posts.latest.entry=`%[1]s` %[2]s<br><br>
 
-posts.notfound=Ranssi-ilmoitusta ID:llä %[1]d ei löydetty!
+posts.new=*[Ranssi-ilmoitus]* \
+Uusi Ranssi-ilmoitus otsikolla `%[1]s` julkaistiin (Ilmoituksen ID: %[2]d) \
+Paina seuraavaa linkkiä lukeaksesi ilmoituksen: http://ranssi.paivola.fi/story.php?id=%[2]d
 
-posts.read=*%[2]s* - Lisätty %[4]s \
+posts.notfound=En löytänyt Ranssi-ilmoitusta ID:llä %[1]d!
+
+posts.read=*%[2]s* - Ilmoitus jätetty %[4]s \
 %[3]s
 
 posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!
 posts.spam.sent=Lähetettiin seuraava kommentti Ranssi-ilmoitukseen, jonka ID on %[1]d: \
 %[2]s
 
+mgmt.whitelist.list=*Whitelisted users:*<br>%[1]s
+mgmt.whitelist.list.entry=%[1]s (UID %[2]d)<br>
+mgmt.whitelist.add=Added %[2]s (UID %[1]d, Year %[3]d) to the whitelist.
+mgmt.whitelist.add.alreadyused=The name %[2]s or UID %[1]d is already whitelisted.
+mgmt.whitelist.remove=Removed %[2]s (UID %[1]d) from the whitelist.
+mgmt.whitelist.get=The UID %[1]d is whitelisted with the name %[2]s and is on year %[3]d
+
+mgmt.whitelist.settings.view=*Settings of user %[1]s:*<br>%[2]s
+mgmt.whitelist.settings.view.empty=The user %[1]s has no settings.
+mgmt.whitelist.settings.view.entry=%[1]s: %[2]s<br>
+mgmt.whitelist.settings.get.notfound=The user %[1]s doesn't have a setting with the key %[2]s!
+mgmt.whitelist.settings.get=%[1]s has set the setting %[2]s to %[3]s.
+mgmt.whitelist.settings.set=Set the setting %[2]s to %[3]s for %[1]s.
+mgmt.whitelist.settings.remove=Set the setting %[2]s was removed from %[1]s.
+mgmt.whitelist.settings.remove.fail=The user %[1]s didn't have the setting %[2]s!
+
+mgmt.whitelist.permissions.view=*Permissions of user %[1]s:*<br>%[2]s
+mgmt.whitelist.permissions.view.empty=The user %[1]s has no non-standard permissions.
+mgmt.whitelist.permissions.view.entry= - %[1]s<br>
+mgmt.whitelist.permissions.add=Added permission %[2]s to %[1]s.
+mgmt.whitelist.permissions.add.fail=The user %[1]s already has the permission %[2]s!
+mgmt.whitelist.permissions.remove=Removed permission %[2]s from %[1]s.
+mgmt.whitelist.permissions.remove.fail=The user %[1]s didn't have the permission %[2]s!
+
+mgmt.error.usernotfound=I couldn't find an user with the name or UID %[1]s!
+
+mgmt.whitelist.usage=*Usage:* `/whitelist <list/add/remove/get/settings/permissions> ...`
+
+mgmt.whitelist.add.usage=*Usage:* `/whitelist add <uid> <name> <yeargroup>`
+mgmt.whitelist.remove.usage=*Usage:* `/whitelist remove <uid/name>`
+mgmt.whitelist.get.usage=*Usage:* `/whitelist get <uid/name>`
+
+mgmt.whitelist.settings.usage=*Usage:* `/whitelist settings <view/get/set/remove> <uid/name>...`
+mgmt.whitelist.settings.view.usage=*Usage:* `/whitelist settings view <uid/name>`
+mgmt.whitelist.settings.get.usage=*Usage:* `/whitelist settings get <uid/name> <setting>`
+mgmt.whitelist.settings.set.usage=*Usage:* `/whitelist settings set <uid/name> <setting> <value>`
+mgmt.whitelist.settings.remove.usage=*Usage:* `/whitelist settings remove <uid/name> <setting>`
+
+mgmt.whitelist.permissions.usage=*Usage:* `/whitelist permissions <view/add/remove> <uid/name>...`
+mgmt.whitelist.permissions.view.usage=*Usage:* `/whitelist permissions view <uid/name>`
+mgmt.whitelist.permissions.add.usage=*Usage:* `/whitelist permissions add <uid/name> <permission>`
+mgmt.whitelist.permissions.remove.usage=*Usage:* `/whitelist permissions remove <uid/name> <permission>`
+
 timetable.usage=*Käyttö:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Käyttö:* `/posts comment <id> <viesti>`
-posts.usage=*Käyttö:* `/posts <subscribe/unsubscribe/read/comment> \[id] \[viesti]`
+posts.usage=*Käyttö:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[viesti]`
 help.usage=*Käyttö:* `/help \[komento]`
-help=*Ranssibot Komentolista* \
-Käytä komentoa `/help <komento>` tarkempia ohjeita varten \
+
+help=*Ranssibot Command List* \
+Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
-`/posts <subscribe/unsubscribe/read/comment> [id] [viesti]` - Ranssi post utilities.
+`/posts <subscribe/unsubscribe/read/comment/latest> ...` - Ranssi post utilities. \
+`/whitelist <add/remove/get/settings/permissions> ...` - Whitelist management utilities.
 help.timetable=*Command /timetable help* \
 `/timetable ventit/neliöt [day offset]` - Get the timetable of the given year group. \
 `/timetable [day offset]` - Get the timetable of your own year group.
@@ -56,4 +105,21 @@ help.posts=*Command /posts help* \
 `/posts subscribe` - Subscribe to the Ranssi post notification list. \
 `/posts unsubscribe` - Unsubscribe from the Ranssi post notification list. \
 `/posts read <id>` - Read the Ranssi post with the given ID. \
-`/posts comment <id> <viesti>` - Post a comment on the Ranssi post with the given ID.
+`/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
+`/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
+help.whitelist=*Command /whitelist help* \
+`/whitelist list` - Get the list of whitelisted users. \
+`/whitelist add <uid> <name> <yeargroup>` - Add the given UID to the whitelist with the given name and yeargroup. \
+`/whitelist remove <uid/name>` - Remove the given user. \
+`/whitelist get <uid/name>` - Get the basic information about the given user. \
+`/whitelist settings <view/get/set/remove> ...` - Manage the settings of the given user. \
+`/whitelist permissions <view/add/remove> ...` - Manage the permissions of the given user.
+help.whitelist.settings=*Command /whitelist settings help* \
+`/whitelist settings view <uid/name>` - View all the settings that the given user has. \
+`/whitelist settings get <uid/name> <setting>` - Get the value that the given user has set for the given setting. \
+`/whitelist settings set <uid/name> <setting> <value>` - Set the value of the given setting to the given value for the given user. \
+`/whitelist settings remove <uid/name> <setting>` - Remove the given setting from the given user.
+help.whitelist.permissions=*Command /whitelist permissions help* \
+`/whitelist permissions view <uid/name>` - View all the permissions that the given user has. \
+`/whitelist permissions add <uid/name> <permission>` - Add the given permission to the given user. \
+`/whitelist permissions remove <uid/name> <permission>` - Remove the given permission from the given user.

@@ -47,7 +47,13 @@ func handleWhitelist(bot *telebot.Bot, message telebot.Message, args []string) {
 				return
 			}
 			if len(args) > 1 {
-				// TODO: Whitelist remove
+				user := config.GetUser(args[1])
+				if user.UID == config.NilUser.UID {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.error.usernotfound", args[1]), util.Markdown)
+				} else {
+					config.RemoveUser(args[1])
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.remove", user.UID, user.Name), util.Markdown)
+				}
 			} else {
 				bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.remove.usage"), util.Markdown)
 			}
@@ -56,7 +62,12 @@ func handleWhitelist(bot *telebot.Bot, message telebot.Message, args []string) {
 				return
 			}
 			if len(args) > 1 {
-				// TODO: Whitelist get
+				user := config.GetUser(args[1])
+				if user.UID == config.NilUser.UID {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.error.usernotfound", args[1]), util.Markdown)
+				} else {
+					bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.get", user.UID, user.Name, user.Year), util.Markdown)
+				}
 			} else {
 				bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.get.usage"), util.Markdown)
 			}
@@ -100,11 +111,11 @@ func handleWhitelistSettings(bot *telebot.Bot, message telebot.Message, args []s
 		if !checkPerms(bot, message.Sender.ID, "whitelist.settings.view") {
 			return true
 		}
-		if len(user.GetSettings()) == 0 {
+		if len(user.Settings) == 0 {
 			bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.settings.view.empty", user.Name), util.Markdown)
 		} else {
 			var buffer bytes.Buffer
-			for key, val := range user.GetSettings() {
+			for key, val := range user.Settings {
 				buffer.WriteString(lang.Translatef("mgmt.whitelist.settings.view.entry", key, val))
 			}
 			bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.settings.view", user.Name, buffer.String()), util.Markdown)
@@ -167,11 +178,11 @@ func handleWhitelistPerms(bot *telebot.Bot, message telebot.Message, args []stri
 		if !checkPerms(bot, message.Sender.ID, "whitelist.permissions.view") {
 			return true
 		}
-		if len(user.GetPermissions()) == 0 {
+		if len(user.Permissions) == 0 {
 			bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.permissions.view.empty", user.Name), util.Markdown)
 		} else {
 			var buffer bytes.Buffer
-			for _, perm := range user.GetPermissions() {
+			for _, perm := range user.Permissions {
 				buffer.WriteString(lang.Translatef("mgmt.whitelist.permissions.view.entry", perm))
 			}
 			bot.SendMessage(message.Chat, lang.Translatef("mgmt.whitelist.permissions.view", user.Name, buffer.String()), util.Markdown)

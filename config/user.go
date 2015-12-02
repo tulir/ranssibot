@@ -99,7 +99,6 @@ func (u User) GetSetting(key string) (string, bool) {
 
 // HasSetting checks if the user has the given setting.
 func (u User) HasSetting(key string) bool {
-	key = strings.ToLower(key)
 	_, ok := u.GetSetting(key)
 	return ok
 }
@@ -108,11 +107,6 @@ func (u User) HasSetting(key string) bool {
 func (u User) SetSetting(key string, value string) {
 	key = strings.ToLower(key)
 	u.Settings[key] = value
-}
-
-// GetSettings returns the settings map of the user
-func (u User) GetSettings() map[string]string {
-	return u.Settings
 }
 
 // RemoveSetting removes a setting
@@ -128,6 +122,11 @@ func (u User) GetLanguage() string {
 		return "en_US"
 	}
 	return lang
+}
+
+// GetLanguage gets the user display language
+func GetLanguage(uid int) string {
+	return GetUserWithUID(uid).GetLanguage()
 }
 
 // Destination returns the UID for Telebot.
@@ -166,9 +165,4 @@ func (u User) RemovePermission(permission string) bool {
 		}
 	}
 	return false
-}
-
-// GetPermissions returns all the permissions of an user
-func (u User) GetPermissions() []string {
-	return u.Permissions
 }
