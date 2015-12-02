@@ -43,7 +43,13 @@ func onCommand(bot *telebot.Bot, command string, args []string) {
 		log.Infof("Broadcasted message %[1]s", msg)
 	} else if command == "config" && len(args) > 0 {
 		if strings.EqualFold(args[0], "save") {
-			config.Save()
+			if !config.IndentConfig && len(args) > 1 && strings.EqualFold(args[0], "pretty") {
+				config.IndentConfig = true
+				config.Save()
+				config.IndentConfig = false
+			} else {
+				config.Save()
+			}
 		} else if strings.EqualFold(args[0], "load") {
 			config.Load()
 		}
