@@ -45,6 +45,10 @@ posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
+mgmt.config.save=Saved config to file.
+mgmt.config.save.debug=Saved config in human-readable form to file.
+mgmt.config.load=Loaded config from file.
+
 mgmt.whitelist.list=*Whitelisted users:*<br>%[1]s
 mgmt.whitelist.list.entry=%[1]s (UID %[2]d)<br>
 mgmt.whitelist.add=Added %[2]s (UID %[1]d, Year %[3]d) to the whitelist.
@@ -88,6 +92,8 @@ mgmt.whitelist.permissions.view.usage=*Usage:* `/whitelist permissions view <uid
 mgmt.whitelist.permissions.add.usage=*Usage:* `/whitelist permissions add <uid/name> <permission>`
 mgmt.whitelist.permissions.remove.usage=*Usage:* `/whitelist permissions remove <uid/name> <permission>`
 
+mgmt.config.usage=*Usage:* `/config <save/load> [debug]`
+
 timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Usage:* `/posts comment <id> <message>`
 posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
@@ -97,7 +103,8 @@ help=*Ranssibot Command List* \
 Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
 `/posts <subscribe/unsubscribe/read/comment/latest> ...` - Ranssi post utilities. \
-`/whitelist <add/remove/get/settings/permissions> ...` - Whitelist management utilities.
+`/whitelist <add/remove/get/settings/permissions> ...` - Whitelist management utilities. \
+`/config <save/load> [debug]` - Save/load config to/from disk.
 help.timetable=*Command /timetable help* \
 `/timetable ventit/neliöt [day offset]` - Get the timetable of the given year group. \
 `/timetable [day offset]` - Get the timetable of your own year group.
@@ -107,6 +114,9 @@ help.posts=*Command /posts help* \
 `/posts read <id>` - Read the Ranssi post with the given ID. \
 `/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
 `/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
+help.config=*Command /config help* \
+`/config save [debug]` - Save the config to file. If the debug argument is given, the file will be forced to be saved in human-readable indented form. \
+`/config load` - Load the config from file.
 help.whitelist=*Command /whitelist help* \
 `/whitelist list` - Get the list of whitelisted users. \
 `/whitelist add <uid> <name> <yeargroup>` - Add the given UID to the whitelist with the given name and yeargroup. \
