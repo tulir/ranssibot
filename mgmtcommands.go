@@ -17,6 +17,29 @@ func handleStop(bot *telebot.Bot, message telebot.Message, args []string) {
 	Shutdown(fmt.Sprintf("%[1]s %[2]s (ID %[3]d)", message.Sender.FirstName, message.Sender.LastName, message.Sender.ID))
 }
 
+func handleConfig(bot *telebot.Bot, message telebot.Message, args []string) {
+	if len(args) > 0 {
+		if util.CheckArgs(args[0], "save") {
+			if !config.IndentConfig && len(args) > 1 && util.CheckArgs(args[0], "pretty", "indent", "readable", "human", "debug") {
+				config.IndentConfig = true
+				config.Save()
+				config.IndentConfig = false
+				bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.save.debug"), util.Markdown)
+			} else {
+				config.Save()
+				bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.save"), util.Markdown)
+			}
+		} else if util.CheckArgs(args[0], "load") {
+			config.Load()
+			bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.load"), util.Markdown)
+		} else {
+			bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.usage"), util.Markdown)
+		}
+	} else {
+		bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.usage"), util.Markdown)
+	}
+}
+
 func handleWhitelist(bot *telebot.Bot, message telebot.Message, args []string) {
 	if len(args) > 0 {
 		if util.CheckArgs(args[0], "add") {
