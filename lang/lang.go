@@ -99,7 +99,6 @@ func Translate(key string) string {
 
 // GetLanguage returns a language by the given name.
 func GetLanguage(lang string) Language {
-	lang = strings.ToLower(lang)
 	for _, l := range languages {
 		if lang == l.Name {
 			return l
