@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	flag "github.com/ogier/pflag"
 	"github.com/tucnak/telebot"
+	"io/ioutil"
 	log "maunium.net/go/maulogger"
 	"maunium.net/go/ranssibot/config"
 	"maunium.net/go/ranssibot/lang"
@@ -16,6 +18,15 @@ import (
 	"syscall"
 	"time"
 )
+
+// VersionLong is the human-readable form of the version.
+const VersionLong = "0.1 Beta 1"
+
+// Version is the computer-readable form of the version.
+const Version = "0.1-B1"
+
+var startedAt time.Time
+var hostname string
 
 var token = flag.StringP("token", "t", "", "The Telegram bot token to use.")
 var debug = flag.BoolP("debug", "d", false, "Enable debug mode")
@@ -40,6 +51,13 @@ func init() {
 			Shutdown("Interrupt/SIGTERM")
 		}()
 	}
+
+	data, err := ioutil.ReadFile("/etc/hostname")
+	if err != nil {
+		log.Fatalln("Failed to read hostname: %s", err)
+		return
+	}
+	hostname = strings.TrimSpace(string(data))
 }
 
 func main() {
@@ -63,11 +81,13 @@ func main() {
 	go posts.Loop(bot, *debug)
 	go listen(bot)
 
+	startedAt = time.Now()
+
 	var startup string
 	if *debug {
-		startup = fmt.Sprintf("Ranssibot started up in %[1]dms @ %[2]s (Debug mode)", util.TimestampMS()-start, time.Now().Format("15:04:05 02.01.2006"))
+		startup = fmt.Sprintf("Ranssibot started up in %[1]dms @ %[2]s (Debug mode)", util.TimestampMS()-start, startedAt.Format("15:04:05 02.01.2006"))
 	} else {
-		startup = fmt.Sprintf("Ranssibot started up @ %[1]s", time.Now().Format("15:04:05 02.01.2006"))
+		startup = fmt.Sprintf("Ranssibot started up @ %[1]s", startedAt.Format("15:04:05 02.01.2006"))
 	}
 
 	bot.SendMessage(config.GetUserWithName("tulir"), startup, nil)
@@ -133,6 +153,18 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		} else {
 			bot.SendMessage(message.Chat, lang.Translate("help.usage"), util.Markdown)
 		}
+	} else if util.CheckArgs(command, "/instanceinfo", "/instinfo", "/insinfo", "/instance", "/info") {
+		var buffer bytes.Buffer
+		buffer.WriteString(lang.Translatef("instance.title", VersionLong))
+		if *debug {
+			buffer.WriteString(lang.Translatef("instance.debug.active"))
+		} else {
+			buffer.WriteString(lang.Translatef("instance.debug.inactive"))
+		}
+		buffer.WriteString(lang.Translatef("instance.users", len(config.GetAllUsers())))
+		buffer.WriteString(lang.Translatef("instance.hostname", hostname))
+		buffer.WriteString(lang.Translatef("instance.startedat", startedAt.Format("15:04:05 02.01.2006")))
+		bot.SendMessage(message.Chat, buffer.String(), util.Markdown)
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate("error.commandnotfound"), util.Markdown)
 	}

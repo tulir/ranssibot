@@ -2,6 +2,13 @@ whitelist.notwhitelisted=\
 You aren't on the Ranssibot whitelist \
 The ID of your Telegram user is %[1]d
 
+instance.title=*Ranssibot version %[1]s*<br>
+instance.debug.active=Running in debug mode.<br>
+instance.debug.inactive=Running in standard mode.<br>
+instance.hostname=Running on %[1]s<br>
+instance.startedat=Started at %[1]s<br>
+instance.users=There are %[1]d whitelisted users<br>
+
 error.parse.integer=I couldn't parse an integer from "_%[1]s_"
 error.parse.time=I couldn't parse a time from "_%[1]s_"
 error.commandnotfound=Command not found. Type "/help" for help.
