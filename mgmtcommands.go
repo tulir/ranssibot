@@ -20,6 +20,9 @@ func handleStop(bot *telebot.Bot, message telebot.Message, args []string) {
 func handleConfig(bot *telebot.Bot, message telebot.Message, args []string) {
 	if len(args) > 0 {
 		if util.CheckArgs(args[0], "save") {
+			if !checkPerms(bot, message.Sender.ID, "config.save") {
+				return
+			}
 			if !config.IndentConfig && len(args) > 1 && util.CheckArgs(args[0], "pretty", "indent", "readable", "human", "debug") {
 				config.IndentConfig = true
 				config.Save()
@@ -30,6 +33,9 @@ func handleConfig(bot *telebot.Bot, message telebot.Message, args []string) {
 				bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.save"), util.Markdown)
 			}
 		} else if util.CheckArgs(args[0], "load") {
+			if !checkPerms(bot, message.Sender.ID, "config.load") {
+				return
+			}
 			config.Load()
 			bot.SendMessage(message.Chat, lang.Translatef("mgmt.config.load"), util.Markdown)
 		} else {
