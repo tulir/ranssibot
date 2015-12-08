@@ -52,6 +52,11 @@ posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
+lang.changed=You've changed your language to %[1]s
+lang.changed.other=You've changed %[2]ss language to %[1]s
+lang.notfound=I couldn't find a language by the name %[1]s.\
+Available languages: %[2]s
+
 mgmt.config.save=Saved config to file.
 mgmt.config.save.debug=Saved config in human-readable form to file.
 mgmt.config.load=Loaded config from file.
@@ -104,6 +109,7 @@ mgmt.config.usage=*Usage:* `/config <save/load> [debug]`
 timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Usage:* `/posts comment <id> <message>`
 posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
+lang.usage=*Usage:* `/lang <language> [user]`
 
 help.usage=*Usage:* `/help \[command]`
 help=*Ranssibot Command List* \
@@ -140,3 +146,5 @@ help.whitelist.permissions=*Command /whitelist permissions help* \
 `/whitelist permissions view <uid/name>` - View all the permissions that the given user has. \
 `/whitelist permissions add <uid/name> <permission>` - Add the given permission to the given user. \
 `/whitelist permissions remove <uid/name> <permission>` - Remove the given permission from the given user.
+help.language=*Command /language help* \
+`/language <language> [user]` - Change your (or optionally [user]s) language to <language>.

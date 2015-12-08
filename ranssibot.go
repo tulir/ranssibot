@@ -119,6 +119,8 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		timetables.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/posts", "/post") {
 		posts.HandleCommand(bot, message, args)
+	} else if util.CheckArgs(command, "/lang", "/language") {
+		lang.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/config", "/configuration") {
 		handleConfig(bot, message, args)
 	} else if util.CheckArgs(command, "/stop", "/shutdown", "/poweroff") {
