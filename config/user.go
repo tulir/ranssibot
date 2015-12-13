@@ -117,11 +117,11 @@ func (u User) RemoveSetting(key string) {
 
 // GetLanguage gets the user display language
 func (u User) GetLanguage() string {
-	lang, ok := u.GetSetting("language")
+	lng, ok := u.GetSetting("language")
 	if !ok {
-		return "en_US"
+		return "english"
 	}
-	return lang
+	return lng
 }
 
 // GetLanguage gets the user display language
@@ -137,8 +137,16 @@ func (u User) Destination() int {
 // HasPermission checks if the user has the given permission.
 func (u User) HasPermission(permission string) bool {
 	permission = strings.ToLower(permission)
+	minus := strings.HasPrefix(permission, "-")
 	for _, perm := range u.Permissions {
-		if strings.EqualFold(perm, permission) || strings.EqualFold(perm, "all") {
+		if !minus && strings.EqualFold(perm, "all") {
+			return true
+		} else if strings.EqualFold(perm, "-all") {
+			if minus {
+				return true
+			}
+			return false
+		} else if strings.EqualFold(perm, permission) {
 			return true
 		}
 	}

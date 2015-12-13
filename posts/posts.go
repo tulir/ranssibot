@@ -23,6 +23,6 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	} else if util.CheckArgs(args[0], "comments", "readcomments", "viewcomments", "getcomments") {
 		handleReadComments(bot, message, args[1:])
 	} else {
-		bot.SendMessage(message.Chat, lang.Translate("posts.usage"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.ITranslate(message.Sender.ID, "posts.usage"), util.Markdown)
 	}
 }

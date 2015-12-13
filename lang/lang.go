@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	log "maunium.net/go/maulogger"
+	"maunium.net/go/ranssibot/config"
 	"strings"
 )
 
@@ -84,14 +85,34 @@ func trimSuffix(s, suffix string) string {
 	return s
 }
 
-// Translatef translates the given key and then formats the translated text with the given arguments.
-func Translatef(key string, args ...interface{}) string {
-	return fmt.Sprintf(Translate(key), args...)
+// ITranslatef translates the given key and then formats the translated text with the given arguments.
+func ITranslatef(u int, key string, args ...interface{}) string {
+	return GetLanguage(config.GetUserWithUID(u).GetLanguage()).Translatef(key, args)
 }
 
-// Translate translates the given key.
-func Translate(key string) string {
-	return GetLanguage("english").Translate(key)
+// ITranslate translates the given key.
+func ITranslate(u int, key string) string {
+	return GetLanguage(config.GetUserWithUID(u).GetLanguage()).Translate(key)
+}
+
+// UTranslatef translates the given key and then formats the translated text with the given arguments.
+func UTranslatef(u config.User, key string, args ...interface{}) string {
+	return GetLanguage(u.GetLanguage()).Translatef(key, args)
+}
+
+// UTranslate translates the given key.
+func UTranslate(u config.User, key string) string {
+	return GetLanguage(u.GetLanguage()).Translate(key)
+}
+
+// LTranslatef translates the given key and then formats the translated text with the given arguments.
+func LTranslatef(language string, key string, args ...interface{}) string {
+	return GetLanguage(language).Translatef(key, args)
+}
+
+// LTranslate translates the given key.
+func LTranslate(language string, key string) string {
+	return GetLanguage(language).Translate(key)
 }
 
 // GetLanguage returns a language by the given name.

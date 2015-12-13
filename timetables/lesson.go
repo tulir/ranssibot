@@ -50,9 +50,9 @@ type Lesson struct {
 // ToString converts a lesson to a string.
 func (lesson Lesson) ToString() string {
 	if lesson.Course == 0 || lesson.Lesson == 0 {
-		return fmt.Sprintf(lang.Translate("lesson-format.noncoursed"), lesson.Subject.Name, lesson.Subject.ShortName)
+		return fmt.Sprintf(lang.LTranslate("english", "lesson-format.noncoursed"), lesson.Subject.Name, lesson.Subject.ShortName)
 	}
-	return fmt.Sprintf(lang.Translate("lesson-format.coursed"), lesson.Subject.Name, lesson.Subject.ShortName, lesson.Course, lesson.Lesson)
+	return fmt.Sprintf(lang.LTranslate("english", "lesson-format.coursed"), lesson.Subject.Name, lesson.Subject.ShortName, lesson.Course, lesson.Lesson)
 }
 
 // ParseLesson attempts to parse a lesson from the given string.
@@ -119,101 +119,4 @@ func ParseLesson(str string) *Lesson {
 	}
 
 	return &Lesson{Subject: subject, Course: courseID, Lesson: lessonID}
-
-	/*state := 0
-	var subj string
-	var courseID, lessonID int
-	for index, char := range str {
-		charStr := string(char)
-		if state == 0 {
-			if index < 2 {
-				if !unicode.IsLetter(char) {
-					return Lesson{}, errors.New("Error: The first two charcaters of a subject string are always letters.")
-				}
-				subj += charStr
-			} else {
-				if unicode.IsLetter(char) {
-					continue
-				} else if unicode.IsSpace(char) {
-					state++
-				} else if unicode.IsDigit(char) {
-					i, err := strconv.Atoi(charStr)
-					if err != nil {
-						return Lesson{}, err
-					}
-					courseID = i
-					state += 2
-				} else {
-					return Lesson{}, errors.New("Error")
-				}
-			}
-		} else if state == 1 || state == 2 || state == 3 {
-			if unicode.IsSpace(char) {
-				continue
-			} else if unicode.IsDigit(char) {
-				i, err := strconv.Atoi(charStr)
-				if err != nil {
-					return Lesson{}, err
-				}
-				if state == 1 {
-					courseID = i
-				} else {
-					if lessonID != 0 {
-						lessonID = lessonID*10 + i
-					} else {
-						lessonID = i
-					}
-				}
-				state++
-			} else if unicode.IsLetter(char) {
-				if strings.EqualFold(charStr, "a") {
-					state = 5
-				}
-			} else {
-				break
-			}
-		} else if state >= 5 {
-			var checkfor rune
-			switch state {
-			case 5:
-				checkfor = 'l'
-			case 6:
-				checkfor = 'k'
-			case 7:
-				fallthrough
-			case 8:
-				checkfor = 'a'
-			case 9:
-				lessonID = 1
-			}
-			if char == unicode.ToLower(checkfor) || char == unicode.ToUpper(checkfor) {
-				state++
-			} else {
-				break
-			}
-		} else if state == 4 {
-			break
-		}
-	}
-	print(str)
-	print(" -> ")
-	print(subj)
-	print(" - ")
-	print(lessonID)
-	print(" - ")
-	print(courseID)
-	print("\n")
-	if lessonID == 0 && courseID != 0 {
-		lessonID = courseID
-		courseID = 1
-	} else if courseID == 0 {
-		courseID = 1
-	}
-
-	for name, value := range subjects {
-		if strings.EqualFold(name, subj) {
-			return Lesson{Subject: value, Course: courseID, Lesson: lessonID}, nil
-		}
-	}
-	return Lesson{Subject: Subject{Name: subj, ShortName: subj}, Course: courseID, Lesson: lessonID}, nil*/
 }
