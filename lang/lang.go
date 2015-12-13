@@ -87,7 +87,7 @@ func trimSuffix(s, suffix string) string {
 
 // ITranslatef translates the given key and then formats the translated text with the given arguments.
 func ITranslatef(u int, key string, args ...interface{}) string {
-	return GetLanguage(config.GetUserWithUID(u).GetLanguage()).Translatef(key, args)
+	return GetLanguage(config.GetUserWithUID(u).GetLanguage()).Translatef(key, args...)
 }
 
 // ITranslate translates the given key.
@@ -97,7 +97,7 @@ func ITranslate(u int, key string) string {
 
 // UTranslatef translates the given key and then formats the translated text with the given arguments.
 func UTranslatef(u config.User, key string, args ...interface{}) string {
-	return GetLanguage(u.GetLanguage()).Translatef(key, args)
+	return GetLanguage(u.GetLanguage()).Translatef(key, args...)
 }
 
 // UTranslate translates the given key.
@@ -107,7 +107,7 @@ func UTranslate(u config.User, key string) string {
 
 // LTranslatef translates the given key and then formats the translated text with the given arguments.
 func LTranslatef(language string, key string, args ...interface{}) string {
-	return GetLanguage(language).Translatef(key, args)
+	return GetLanguage(language).Translatef(key, args...)
 }
 
 // LTranslate translates the given key.
