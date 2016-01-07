@@ -31,7 +31,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
 	} else if util.CheckArgs(command, "/timetable", "/tt", "/timetables", "/tts") {
 		timetables.HandleCommand(bot, message, args)
-	} else if util.CheckArgs(command, "/posts", "/post") {
+	} else if util.CheckArgs(command, "/posts", "/post", "/news") {
 		posts.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/lang", "/language") {
 		lang.HandleCommand(bot, message, args)
