@@ -36,7 +36,7 @@ func init() {
 	flag.Parse()
 
 	log.PrintDebug = *debug
-	log.Fileformat = "logs/%[1]s-%02[2]d.log"
+	log.Fileformat = func(now string, i int) string { return fmt.Sprintf("logs/%[1]s-%02[2]d.log", now, i) }
 	log.Init()
 	lang.Load()
 	config.IndentConfig = *debug
