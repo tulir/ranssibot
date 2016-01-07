@@ -28,7 +28,7 @@ func listen(bot *telebot.Bot) {
 func onCommand(bot *telebot.Bot, command string, args []string) {
 	if command == "msg" && len(args) > 1 {
 		user := config.GetUser(args[0])
-		if user.Destination() == 0 {
+		if user.UID == config.NilUser.UID {
 			log.Errorf("Couldn't get an user with the name or UID %s", args[0])
 		}
 
