@@ -16,7 +16,7 @@ import (
 func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if sender.UID == 0 {
-		bot.SendMessage(message.Chat, lang.LTranslatef("english", "whitelist.notwhitelisted", message.Sender.ID), util.Markdown)
+		bot.SendMessage(message.Chat, lang.GetLanguage("english").Translatef("whitelist.notwhitelisted", message.Sender.ID), util.Markdown)
 		return
 	}
 	args := strings.Split(message.Text, " ")
@@ -46,52 +46,52 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	} else if util.CheckArgs(command, "/instanceinfo", "/instinfo", "/insinfo", "/instance", "/info") {
 		handleInstance(bot, message, args)
 	} else if strings.HasPrefix(message.Text, "/") {
-		bot.SendMessage(message.Chat, lang.UTranslate(sender, "error.commandnotfound"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translate(sender, "error.commandnotfound"), util.Markdown)
 	}
 }
 
 func handleInstance(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	var buffer bytes.Buffer
-	buffer.WriteString(lang.UTranslatef(sender, "instance.title", VersionLong))
+	buffer.WriteString(lang.Translatef(sender, "instance.title", VersionLong))
 	if *debug {
-		buffer.WriteString(lang.UTranslatef(sender, "instance.debug.active"))
+		buffer.WriteString(lang.Translatef(sender, "instance.debug.active"))
 	} else {
-		buffer.WriteString(lang.UTranslatef(sender, "instance.debug.inactive"))
+		buffer.WriteString(lang.Translatef(sender, "instance.debug.inactive"))
 	}
-	buffer.WriteString(lang.UTranslatef(sender, "instance.users", len(config.GetAllUsers())))
-	buffer.WriteString(lang.UTranslatef(sender, "instance.hostname", hostname))
-	buffer.WriteString(lang.UTranslatef(sender, "instance.startedat", startedAt.Format("15:04:05 02.01.2006")))
+	buffer.WriteString(lang.Translatef(sender, "instance.users", len(config.GetAllUsers())))
+	buffer.WriteString(lang.Translatef(sender, "instance.hostname", hostname))
+	buffer.WriteString(lang.Translatef(sender, "instance.startedat", startedAt.Format("15:04:05 02.01.2006")))
 	bot.SendMessage(message.Chat, buffer.String(), util.Markdown)
 }
 
 func handleHelp(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if len(args) == 0 {
-		bot.SendMessage(message.Chat, lang.UTranslate(sender, "help"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translate(sender, "help"), util.Markdown)
 	} else if len(args) > 0 {
 		if util.CheckArgs(args[0], "timetable", "timetables") {
-			bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.timetable"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "help.timetable"), util.Markdown)
 		} else if util.CheckArgs(args[0], "posts", "post") {
-			bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.posts"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "help.posts"), util.Markdown)
 		} else if util.CheckArgs(args[0], "config", "configuration") {
-			bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.config"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "help.config"), util.Markdown)
 		} else if util.CheckArgs(args[0], "whitelist", "wl") {
 			if len(args) > 1 {
 				if util.CheckArgs(args[1], "permissions", "perms") {
-					bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.whitelist.permissions"), util.Markdown)
+					bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist.permissions"), util.Markdown)
 				} else if util.CheckArgs(args[1], "settings", "preferences", "prefs", "properties", "props") {
-					bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.whitelist.settings"), util.Markdown)
+					bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist.settings"), util.Markdown)
 				} else {
-					bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.whitelist"), util.Markdown)
+					bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist"), util.Markdown)
 				}
 			} else {
-				bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.whitelist"), util.Markdown)
+				bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist"), util.Markdown)
 			}
 		} else {
-			bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.usage"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "help.usage"), util.Markdown)
 		}
 	} else {
-		bot.SendMessage(message.Chat, lang.UTranslate(sender, "help.usage"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translate(sender, "help.usage"), util.Markdown)
 	}
 }

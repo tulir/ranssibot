@@ -85,34 +85,15 @@ func trimSuffix(s, suffix string) string {
 	return s
 }
 
-// ITranslatef translates the given key and then formats the translated text with the given arguments.
-func ITranslatef(u int, key string, args ...interface{}) string {
-	return GetLanguage(config.GetUserWithUID(u).GetLanguage()).Translatef(key, args...)
-}
-
-// ITranslate translates the given key.
-func ITranslate(u int, key string) string {
-	return GetLanguage(config.GetUserWithUID(u).GetLanguage()).Translate(key)
-}
-
-// UTranslatef translates the given key and then formats the translated text with the given arguments.
-func UTranslatef(u config.User, key string, args ...interface{}) string {
+// Translatef translates the given key in the language of the given user
+// and then formats the translated text with the given arguments.
+func Translatef(u config.User, key string, args ...interface{}) string {
 	return GetLanguage(u.GetLanguage()).Translatef(key, args...)
 }
 
-// UTranslate translates the given key.
-func UTranslate(u config.User, key string) string {
+// Translate translates the given key in the language of the given user.
+func Translate(u config.User, key string) string {
 	return GetLanguage(u.GetLanguage()).Translate(key)
-}
-
-// LTranslatef translates the given key and then formats the translated text with the given arguments.
-func LTranslatef(language string, key string, args ...interface{}) string {
-	return GetLanguage(language).Translatef(key, args...)
-}
-
-// LTranslate translates the given key.
-func LTranslate(language string, key string) string {
-	return GetLanguage(language).Translate(key)
 }
 
 // GetLanguage returns a language by the given name.

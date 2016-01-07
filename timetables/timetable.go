@@ -34,46 +34,46 @@ var lastupdate = util.Timestamp()
 func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if util.Timestamp() > lastupdate+600 {
-		bot.SendMessage(message.Chat, lang.UTranslatef(sender, "timetable.update"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translatef(sender, "timetable.update"), util.Markdown)
 		Update()
 	}
 
 	day := today
 	year := sender.Year
 	if len(args) == 1 {
-		if util.CheckArgs(args[0], lang.UTranslate(sender, "timetable.year.first")) {
+		if util.CheckArgs(args[0], lang.Translate(sender, "timetable.year.first")) {
 			year = 1
-		} else if util.CheckArgs(args[0], lang.UTranslate(sender, "timetable.year.second")) {
+		} else if util.CheckArgs(args[0], lang.Translate(sender, "timetable.year.second")) {
 			year = 2
 		} else if util.CheckArgs(args[0], "update") {
 			Update()
-			bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.update.success"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.update.success"), util.Markdown)
 		} else {
 			dayNew, err := shift(day, args[0], 0, len(other))
 			if err != nil {
 				if err.Error() == "OOB" {
-					bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.nodata"), util.Markdown)
+					bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.nodata"), util.Markdown)
 				} else if err.Error() == "PARSEINT" {
-					bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.usage"), util.Markdown)
+					bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.usage"), util.Markdown)
 				}
 				return
 			}
 			day = dayNew
 		}
 	} else if len(args) == 2 {
-		if util.CheckArgs(args[0], lang.UTranslate(sender, "timetable.year.first")) {
+		if util.CheckArgs(args[0], lang.Translate(sender, "timetable.year.first")) {
 			year = 1
-		} else if util.CheckArgs(args[0], lang.UTranslate(sender, "timetable.year.second")) {
+		} else if util.CheckArgs(args[0], lang.Translate(sender, "timetable.year.second")) {
 			year = 2
 		} else {
-			bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.usage"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.usage"), util.Markdown)
 		}
 		dayNew, err := shift(day, args[1], 0, len(other))
 		if err != nil {
 			if err.Error() == "OOB" {
-				bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.nodata"), util.Markdown)
+				bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.nodata"), util.Markdown)
 			} else if err.Error() == "PARSEINT" {
-				bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.usage"), util.Markdown)
+				bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.usage"), util.Markdown)
 			}
 			return
 		}
@@ -81,7 +81,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	}
 
 	if day < 0 || day >= len(other) {
-		bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.nodata"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.nodata"), util.Markdown)
 		return
 	}
 
@@ -90,7 +90,7 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 	} else if year == 2 {
 		sendSecondYear(day, bot, message)
 	} else {
-		bot.SendMessage(message.Chat, lang.UTranslate(sender, "timetable.noyeargroup"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translate(sender, "timetable.noyeargroup"), util.Markdown)
 	}
 }
 
@@ -186,7 +186,11 @@ func Update() {
 				// Uncomment to enable lesson parsing
 				/*lsn := ParseLesson(data)
 				if lsn != nil {
-					data = lsn.ToString()
+					if lsn.Course == 0 || lsn.Lesson == 0 {
+						data = fmt.Sprintf(lang.LTranslate("english", "lesson-format.noncoursed"), lsn.Subject.Name, lsn.Subject.ShortName)
+					} else {
+						data = fmt.Sprintf(lang.LTranslate("english", "lesson-format.coursed"), lsn.Subject.Name, lsn.Subject.ShortName, lsn.Course, lsn.Lesson)
+					}
 				}*/
 				// Save the parsed data to the correct location.
 				switch lesson {
@@ -222,17 +226,17 @@ func Update() {
 func sendFirstYear(day int, bot *telebot.Bot, message telebot.Message) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	bot.SendMessage(message.Chat,
-		lang.UTranslatef(sender, "timetable.generic",
+		lang.Translatef(sender, "timetable.generic",
 			firstyear[day][0].Subject, firstyear[day][1].Subject, firstyear[day][2].Subject, firstyear[day][3].Subject,
-			util.DateToString(firstyear[day][0].Date))+"\n"+lang.UTranslatef(sender, "timetable.other", other[day].Subject),
+			util.DateToString(firstyear[day][0].Date))+"\n"+lang.Translatef(sender, "timetable.other", other[day].Subject),
 		util.Markdown)
 }
 
 func sendSecondYear(day int, bot *telebot.Bot, message telebot.Message) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	bot.SendMessage(message.Chat,
-		lang.UTranslatef(sender, "timetable.generic",
+		lang.Translatef(sender, "timetable.generic",
 			secondyear[day][0].Subject, secondyear[day][1].Subject, secondyear[day][2].Subject, secondyear[day][3].Subject,
-			util.DateToString(secondyear[day][0].Date))+"\n"+lang.UTranslatef(sender, "timetable.other", other[day].Subject),
+			util.DateToString(secondyear[day][0].Date))+"\n"+lang.Translatef(sender, "timetable.other", other[day].Subject),
 		util.Markdown)
 }

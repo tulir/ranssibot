@@ -53,7 +53,7 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 
 			if !noNotifAtInit {
 				for _, user := range config.GetUsersWithSetting(subSetting, "true") {
-					bot.SendMessage(user, lang.UTranslatef(user, "posts.new", topic, readNow), util.Markdown)
+					bot.SendMessage(user, lang.Translatef(user, "posts.new", topic, readNow), util.Markdown)
 				}
 			}
 

@@ -1,8 +1,6 @@
 package timetables
 
 import (
-	"fmt"
-	"maunium.net/go/ranssibot/lang"
 	"strconv"
 	"strings"
 	"unicode"
@@ -45,14 +43,6 @@ var ignore = []string{
 type Lesson struct {
 	Subject        Subject
 	Course, Lesson int
-}
-
-// ToString converts a lesson to a string.
-func (lesson Lesson) ToString() string {
-	if lesson.Course == 0 || lesson.Lesson == 0 {
-		return fmt.Sprintf(lang.LTranslate("english", "lesson-format.noncoursed"), lesson.Subject.Name, lesson.Subject.ShortName)
-	}
-	return fmt.Sprintf(lang.LTranslate("english", "lesson-format.coursed"), lesson.Subject.Name, lesson.Subject.ShortName, lesson.Course, lesson.Lesson)
 }
 
 // ParseLesson attempts to parse a lesson from the given string.
