@@ -14,7 +14,7 @@ import (
 
 func handleSubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
-	if subscribe(message.Chat.ID) {
+	if subscribe(sender) {
 		bot.SendMessage(message.Chat, lang.UTranslate(sender, "posts.subscribed"), util.Markdown)
 	} else {
 		bot.SendMessage(message.Chat, lang.UTranslate(sender, "posts.alreadysubscribed"), util.Markdown)
@@ -22,7 +22,7 @@ func handleSubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
 }
 func handleUnsubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
-	if unsubscribe(message.Chat.ID) {
+	if unsubscribe(sender) {
 		bot.SendMessage(message.Chat, lang.UTranslate(sender, "posts.unsubscribed"), util.Markdown)
 	} else {
 		bot.SendMessage(message.Chat, lang.UTranslate(sender, "posts.notsubscribed"), util.Markdown)

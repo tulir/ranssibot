@@ -69,31 +69,31 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 }
 
 // Subscribe the given UID to the notification list.
-func subscribe(uid int) bool {
-	if isSubscribed(uid) {
-		log.Debugf("%[1]d attempted to subscribe to the notification list, but was already subscribed", uid)
+func subscribe(u config.User) bool {
+	if isSubscribed(u) {
+		log.Debugf("%[1]s attempted to subscribe to the notification list, but was already subscribed", u.Name)
 		return false
 	}
-	log.Debugf("[Posts] %[1]d successfully subscribed to the notifcation list", uid)
-	config.GetUserWithUID(uid).SetSetting(subSetting, "true")
+	log.Debugf("[Posts] %[1]s successfully subscribed to the notifcation list", u.Name)
+	u.SetSetting(subSetting, "true")
 	config.ASave()
 	return true
 }
 
 // Unsubscribe the given UID from the notification list.
-func unsubscribe(uid int) bool {
-	if !isSubscribed(uid) {
-		log.Debugf("%[1]d attempted to unsubscribe from the notification list, but was not subscribed", uid)
+func unsubscribe(u config.User) bool {
+	if !isSubscribed(u) {
+		log.Debugf("%[1]s attempted to unsubscribe from the notification list, but was not subscribed", u.Name)
 		return false
 	}
-	log.Debugf("%[1]d successfully unsubscribed from the notifcation list", uid)
-	config.GetUserWithUID(uid).RemoveSetting(subSetting)
+	log.Debugf("%[1]s successfully unsubscribed from the notifcation list", u.Name)
+	u.RemoveSetting(subSetting)
 	config.ASave()
 	return true
 }
 
-func isSubscribed(uid int) bool {
-	return config.GetUserWithUID(uid).HasSetting(subSetting)
+func isSubscribed(u config.User) bool {
+	return u.HasSetting(subSetting)
 }
 
 func spam(id int, message string) error {

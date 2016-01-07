@@ -130,8 +130,8 @@ func GetLanguage(uid int) string {
 }
 
 // Destination returns the UID for Telebot.
-func (u User) Destination() int {
-	return u.UID
+func (u User) Destination() string {
+	return strconv.Itoa(u.UID)
 }
 
 // HasPermission checks if the user has the given permission.
