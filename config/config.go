@@ -17,7 +17,7 @@ type Configuration struct {
 var IndentConfig = false
 
 // Autosave determines if the config should be automatically saved when something is changed.
-var Autosave = flag.BoolP("config-autosave", "s", true, "Don't save config even if something is changed.")
+var Autosave = flag.BoolP("config-autosave", "s", true, "Don't save config when something is changed.")
 
 // ConfigFile is the configuration file to use.
 const ConfigFile = "config.json"
