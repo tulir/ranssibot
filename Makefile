@@ -1,8 +1,7 @@
-
-ranssibot: $(shell ls */*.go *.go)
+ranssibot: $(shell find -name "*.go")
 	go install
 
-compilepie: $(shell ls */*.go *.go)
+compilepie: $(shell find -name "*.go")
 	env GOOS=linux GOARCH=arm GOARM=7 go build -v
 
 packagepie: compilepie ranssibot $(shell ls lang/*.lang)
