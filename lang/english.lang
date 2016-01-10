@@ -14,6 +14,8 @@ error.parse.time=I couldn't parse a time from "_%[1]s_"
 error.commandnotfound=Command not found. Type "/help" for help.
 error.noperms=You don't have the permission %[1]s
 
+saunatemp=The Sauna temperature is currently %[1]s°C
+
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
 

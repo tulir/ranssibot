@@ -14,6 +14,8 @@ error.parse.time=En pystynyt muuttamaan antamaasi arvoa "_%[1]s_" ajaksi!
 error.commandnotfound=Komentoa ei löydetty. Kirjoita "/help" saadaksesi apua.
 error.noperms=Sinulla ei ole lupaa %[1]s
 
+saunatemp=Saunan lämpötila on tällä hetkellä %[1]s °C
+
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
 

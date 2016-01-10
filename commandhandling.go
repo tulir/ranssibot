@@ -35,6 +35,8 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		posts.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/lang", "/language") {
 		lang.HandleCommand(bot, message, args)
+	} else if util.CheckArgs(command, "/sauna") {
+		handleSauna(bot, message, args)
 	} else if util.CheckArgs(command, "/config", "/configuration") {
 		handleConfig(bot, message, args)
 	} else if util.CheckArgs(command, "/stop", "/shutdown", "/poweroff") {
@@ -48,6 +50,11 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 	} else if strings.HasPrefix(message.Text, "/") {
 		bot.SendMessage(message.Chat, lang.Translate(sender, "error.commandnotfound"), util.Markdown)
 	}
+}
+
+func handleSauna(bot *telebot.Bot, message telebot.Message, args []string) {
+	sender := config.GetUserWithUID(message.Sender.ID)
+	bot.SendMessage(message.Chat, lang.Translatef(sender, "saunatemp", strings.TrimSpace(util.HTTPGet("http://sauna.paivola.fi/saunatemp.cgi"))), util.Markdown)
 }
 
 func handleInstance(bot *telebot.Bot, message telebot.Message, args []string) {
