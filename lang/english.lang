@@ -118,6 +118,7 @@ help=*Ranssibot Command List* \
 Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
 `/posts <subscribe/unsubscribe/read/comment/latest> ...` - Ranssi post utilities. \
+`/sauna` - Get the current temperature of The Sauna. \
 `/whitelist <add/remove/get/settings/permissions> ...` - Whitelist management utilities. \
 `/config <save/load> [debug]` - Save/load config to/from disk.
 help.timetable=*Command /timetable help* \
