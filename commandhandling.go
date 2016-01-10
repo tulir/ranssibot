@@ -54,46 +54,60 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 
 func handleInstance(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
+	// Create a bytebuffer to get a better performance with the instance info message.
 	var buffer bytes.Buffer
+	// Add the title.
 	buffer.WriteString(lang.Translatef(sender, "instance.title", VersionLong))
+	// Add debug mode status.
 	if *debug {
 		buffer.WriteString(lang.Translatef(sender, "instance.debug.active"))
 	} else {
 		buffer.WriteString(lang.Translatef(sender, "instance.debug.inactive"))
 	}
+	// Add amount of whitelisted users.
 	buffer.WriteString(lang.Translatef(sender, "instance.users", len(config.GetAllUsers())))
+	// Add the host machine's internal hostname.
 	buffer.WriteString(lang.Translatef(sender, "instance.hostname", hostname))
+	// Add the start timestamp.
 	buffer.WriteString(lang.Translatef(sender, "instance.startedat", startedAt.Format("15:04:05 02.01.2006")))
+	// Send the message to the user.
 	bot.SendMessage(message.Chat, buffer.String(), util.Markdown)
 }
 
 func handleHelp(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
-	if len(args) == 0 {
-		bot.SendMessage(message.Chat, lang.Translate(sender, "help"), util.Markdown)
-	} else if len(args) > 0 {
+	if len(args) > 0 {
 		if util.CheckArgs(args[0], "timetable", "timetables") {
+			// Send help for /timetable
 			bot.SendMessage(message.Chat, lang.Translate(sender, "help.timetable"), util.Markdown)
-		} else if util.CheckArgs(args[0], "posts", "post") {
+		} else if util.CheckArgs(args[0], "posts", "post", "news") {
+			// Send help for /posts
 			bot.SendMessage(message.Chat, lang.Translate(sender, "help.posts"), util.Markdown)
 		} else if util.CheckArgs(args[0], "config", "configuration") {
+			// Send help for /config
 			bot.SendMessage(message.Chat, lang.Translate(sender, "help.config"), util.Markdown)
 		} else if util.CheckArgs(args[0], "whitelist", "wl") {
 			if len(args) > 1 {
 				if util.CheckArgs(args[1], "permissions", "perms") {
+					// Send help for /whitelist permissions
 					bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist.permissions"), util.Markdown)
 				} else if util.CheckArgs(args[1], "settings", "preferences", "prefs", "properties", "props") {
+					// Send help for /whitelist settings
 					bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist.settings"), util.Markdown)
 				} else {
+					// Send help for /whitelist
 					bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist"), util.Markdown)
 				}
 			} else {
+				// Send help for /whitelist
 				bot.SendMessage(message.Chat, lang.Translate(sender, "help.whitelist"), util.Markdown)
 			}
 		} else {
+			// Unidentified help page, send standard help message.
 			bot.SendMessage(message.Chat, lang.Translate(sender, "help.usage"), util.Markdown)
 		}
 	} else {
+		// No arguments were given, send the standard help message.
 		bot.SendMessage(message.Chat, lang.Translate(sender, "help.usage"), util.Markdown)
 	}
 }
