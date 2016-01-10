@@ -29,8 +29,9 @@ var hostname string
 
 var token = flag.StringP("token", "t", "", "The Telegram bot token to use.")
 var debug = flag.BoolP("debug", "d", false, "Enable debug mode")
-var bot *telebot.Bot
 var disableSafeShutdown = flag.Bool("no-safe-shutdown", false, "Disable Interrupt/SIGTERM catching and handling.")
+
+var bot *telebot.Bot
 
 func init() {
 	flag.Parse()
