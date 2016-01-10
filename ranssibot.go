@@ -19,10 +19,10 @@ import (
 )
 
 // VersionLong is the human-readable form of the version.
-const VersionLong = "0.1 Beta 1"
+const VersionLong = "0.1 Beta 2"
 
 // Version is the computer-readable form of the version.
-const Version = "0.1-B1"
+const Version = "0.1-B2"
 
 var startedAt time.Time
 var hostname string
