@@ -54,6 +54,9 @@ posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!
 posts.spam.sent=Lähetettiin seuraava kommentti Ranssi-ilmoitukseen, jonka ID on %[1]d: \
 %[2]s
 
+laundry.soon=Sinulla (%[1]s) on pian pyykkivuoro!
+laundry.subscribed=Saat nyt viestejä hieman ennen %[1]s:n pyykkivuoroja.
+
 lang.changed=Vaihdoit kieleksesi %[1]s
 lang.changed.other=Vaihdoit käyttäjän %[2]s kieleksi %[1]s
 lang.notfound=En löytänyt kieltä nimeltä %[1]s.\
@@ -111,7 +114,8 @@ mgmt.config.usage=*Usage:* `/config <save/load> [debug]`
 timetable.usage=*Käyttö:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Käyttö:* `/posts comment <id> <viesti>`
 posts.usage=*Käyttö:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[viesti]`
-lang.usage=*Usage:* `/lang <language> [user]`
+laundry.usage=Käyttö: `/laundry <(un)subscribe/<day offset>/next/now> [nimi/nimet...]`
+lang.usage=*Käyttö:* `/lang <kieli> [käyttäjä]`
 
 help.usage=*Käyttö:* `/help \[komento]`
 help=*Ranssibot Command List* \
@@ -130,6 +134,12 @@ help.posts=*Command /posts help* \
 `/posts read <id>` - Read the Ranssi post with the given ID. \
 `/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
 `/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
+help.laundry=*Command /laundry help* \
+`/laundry subscribe <name(s...)>` - Subscribe to get notifications about the laundry turns of the given names. \
+`/laundry unsubscribe <name(s...)> - Unsubscribe from notifications for the given names.` \
+`/laundry <day offset>` - Get the laundry on the day with the given offset. \
+`/laundry next` - Get the person who has the next laundry turn. \
+`/laundry now` - Get the person who has the current laundry turn.
 help.config=*Command /config help* \
 `/config save [debug]` - Save the config to file. If the debug argument is given, the file will be forced to be saved in human-readable indented form. \
 `/config load` - Load the config from file.
