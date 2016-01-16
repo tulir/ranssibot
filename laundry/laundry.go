@@ -72,7 +72,7 @@ func Notify(bot *telebot.Bot, time int) {
 		return
 	}
 	// Find the timetable table header node
-	laundrynode := util.FindSpan("tr", "class", "today", util.FindSpan("table", "class", "pyykit", doc)).FirstChild
+	laundrynode := util.FindSpan("tr", "class", "today", doc).FirstChild
 
 	switch time {
 	case 5:
