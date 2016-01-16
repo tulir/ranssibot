@@ -36,18 +36,21 @@ func Loop(bot *telebot.Bot) {
 			day = now.Day()
 		}
 		if notified == 5 {
-			time.Sleep(1 * time.Minute)
+			// All of the days notifications have been sent, so sleep times can be longer.
+			time.Sleep(20 * time.Minute)
 			continue
 		}
 		minsNow := minutesInDay(now)
 		if minsNow >= notifyMinutes[notified]+notifMaxDiff {
 			// If the notified status is incorrect (as in the notify point was already over notifMaxDiff minutes ago)
 			// increment the notified status and continue loop.
-			println("Skipping notification", minsNow, notifyMinutes[notified], notifMaxDiff)
+			log.Debugf("Skipping notifications for turn #%d", notified)
 			notified++
+			continue
 		} else if minsNow >= notifyMinutes[notified]-notifMinDiff {
-			notified++
+			log.Debugf("Sending notifications for turn #%d", notified)
 			Notify(bot, notified)
+			notified++
 		}
 		time.Sleep(1 * time.Minute)
 	}
