@@ -44,13 +44,13 @@ func Loop(bot *telebot.Bot) {
 		if minsNow >= notifyMinutes[notified]+notifMaxDiff {
 			// If the notified status is incorrect (as in the notify point was already over notifMaxDiff minutes ago)
 			// increment the notified status and continue loop.
-			log.Debugf("Skipping notifications for turn #%d", notified)
 			notified++
+			log.Debugf("Skipping notifications for turn #%d", notified)
 			continue
 		} else if minsNow >= notifyMinutes[notified]-notifMinDiff {
+			notified++
 			log.Debugf("Sending notifications for turn #%d", notified)
 			Notify(bot, notified)
-			notified++
 		}
 		time.Sleep(1 * time.Minute)
 	}
