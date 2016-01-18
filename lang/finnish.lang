@@ -54,6 +54,12 @@ posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!
 posts.spam.sent=Lähetettiin seuraava kommentti Ranssi-ilmoitukseen, jonka ID on %[1]d: \
 %[2]s
 
+food.menu=*Päivän ruoat:* \
+Aamupala: %[1]s \
+Lounas: %[2]s \
+Kahvi: %[3]s \
+Päivällinen: %[4]s
+
 lang.changed=Vaihdoit kieleksesi %[1]s
 lang.changed.other=Vaihdoit käyttäjän %[2]s kieleksi %[1]s
 lang.notfound=En löytänyt kieltä nimeltä %[1]s.\

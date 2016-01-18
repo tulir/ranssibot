@@ -5,6 +5,7 @@ import (
 	"github.com/tucnak/telebot"
 	log "maunium.net/go/maulogger"
 	"maunium.net/go/ranssibot/config"
+	"maunium.net/go/ranssibot/food"
 	"maunium.net/go/ranssibot/lang"
 	"maunium.net/go/ranssibot/posts"
 	"maunium.net/go/ranssibot/timetables"
@@ -33,6 +34,8 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		timetables.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/posts", "/post", "/news") {
 		posts.HandleCommand(bot, message, args)
+	} else if util.CheckArgs(command, "/food", "/menu") {
+		food.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/lang", "/language") {
 		lang.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/sauna") {

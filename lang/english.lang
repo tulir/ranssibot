@@ -54,6 +54,12 @@ posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
+food.menu=*Today's Menu:* \
+Breakfast: %[1]s \
+Lunch: %[2]s \
+Coffee: %[3]s \
+Dinner: %[4]s
+
 lang.changed=You've changed your language to %[1]s
 lang.changed.other=You've changed %[2]ss language to %[1]s
 lang.notfound=I couldn't find a language by the name %[1]s.\
