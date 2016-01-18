@@ -71,10 +71,10 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 // Subscribe the given UID to the notification list.
 func subscribe(u config.User) bool {
 	if isSubscribed(u) {
-		log.Debugf("%[1]s attempted to subscribe to the notification list, but was already subscribed", u.Name)
+		log.Debugf("%[1]s attempted to subscribe to the post notification list, but was already subscribed", u.Name)
 		return false
 	}
-	log.Debugf("[Posts] %[1]s successfully subscribed to the notifcation list", u.Name)
+	log.Debugf("%[1]s successfully subscribed to the post notifcation list", u.Name)
 	u.SetSetting(subSetting, "true")
 	config.ASave()
 	return true
@@ -83,10 +83,10 @@ func subscribe(u config.User) bool {
 // Unsubscribe the given UID from the notification list.
 func unsubscribe(u config.User) bool {
 	if !isSubscribed(u) {
-		log.Debugf("%[1]s attempted to unsubscribe from the notification list, but was not subscribed", u.Name)
+		log.Debugf("%[1]s attempted to unsubscribe from the post notification list, but was not subscribed", u.Name)
 		return false
 	}
-	log.Debugf("%[1]s successfully unsubscribed from the notifcation list", u.Name)
+	log.Debugf("%[1]s successfully unsubscribed from the post notifcation list", u.Name)
 	u.RemoveSetting(subSetting)
 	config.ASave()
 	return true
