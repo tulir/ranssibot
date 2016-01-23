@@ -19,7 +19,7 @@ saunatemp=Saunan lämpötila on tällä hetkellä %[1]s °C
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
 
-timetable.nodata=Minulla on pääsy vain siihen dataan, mikä on näkyvillä osoitteessa http://ranssi.paivola.fi/lj.php, joten en voi näyttää noin kaukana olevia tietoja.
+timetable.nodata=Minulla on pääsy vain siihen dataan, mikä on näkyvillä [lukujärjestyksessä ranssilla](http://ranssi.paivola.fi/lj.php), joten en voi näyttää noin kaukana olevia tietoja.
 timetable.update=Päivitetään välimuistiin tallennettua lukujärjestystä...
 timetable.generic=*Lukujärjestys %[5]s* \
 `Aamu:  %[1]s` \
@@ -43,11 +43,11 @@ posts.latest.entry=`%[1]s` %[2]s<br><br>
 
 posts.new=*[Ranssi-ilmoitus]* \
 Uusi Ranssi-ilmoitus otsikolla `%[1]s` julkaistiin (Ilmoituksen ID: %[2]d) \
-Paina seuraavaa linkkiä lukeaksesi ilmoituksen: http://ranssi.paivola.fi/story.php?id=%[2]d
+[Paina tästä lukeaksesi ilmoituksen](http://ranssi.paivola.fi/story.php?id=%[2]d)
 
 posts.notfound=En löytänyt Ranssi-ilmoitusta ID:llä %[1]d!
 
-posts.read=*%[2]s* - Ilmoitus jätetty %[4]s \
+posts.read=[*%[2]s*](%[5]s) - Ilmoitus jätetty %[4]s \
 %[3]s
 
 posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!

@@ -19,7 +19,7 @@ saunatemp=The Sauna temperature is currently %[1]s°C
 lesson-format.coursed=%[1]s %[3]d %[4]d
 lesson-format.noncoursed=%[1]s
 
-timetable.nodata=I'm limited to the data shown on http://ranssi.paivola.fi/lj.php, so I can't show the timetables that far away.
+timetable.nodata=I'm limited to the data shown on [the timetable on ranssi](http://ranssi.paivola.fi/lj.php), so I can't show the timetables that far away.
 timetable.update=Updating cached timetables...
 timetable.generic=*Lukujärjestys %[5]s* \
 `Aamu:  %[1]s` \
@@ -43,11 +43,11 @@ posts.latest.entry=`%[1]s` %[2]s<br><br>
 
 posts.new=*[Post Notifier]* \
 There is a new Ranssi post titled `%[1]s` (Post ID: %[2]d) \
-Click on the following link to read it: http://ranssi.paivola.fi/story.php?id=%[2]d
+[Click here to read it](http://ranssi.paivola.fi/story.php?id=%[2]d)
 
 posts.notfound=Couldn't find a Ranssi post with the ID %[1]d!
 
-posts.read=*%[2]s* - Posted at %[4]s \
+posts.read=[*%[2]s*](%[5]s) - Posted at %[4]s \
 %[3]s
 
 posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza list!

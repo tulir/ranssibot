@@ -63,7 +63,9 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 	title := strings.TrimSpace(post.FirstChild.Data)
 	body := util.RenderText(post.NextSibling)
 	time, _ := time.Parse("2006-01-02 15:04:05", strings.TrimSpace(post.NextSibling.NextSibling.FirstChild.NextSibling.Data))
-	bot.SendMessage(message.Chat, lang.Translatef(sender, "posts.read", id, title, body, time.Format("15:04:05 02.01.2006")), util.Markdown)
+	timestamp := time.Format("15:04:05 02.01.2006")
+	url := "http://ranssi.paivola.fi/story.php?id=" + strconv.Itoa(id)
+	bot.SendMessage(message.Chat, lang.Translatef(sender, "posts.read", id, title, body, timestamp, url), util.Markdown)
 }
 
 func handleReadComments(bot *telebot.Bot, message telebot.Message, args []string) {
