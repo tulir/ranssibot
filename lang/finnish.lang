@@ -119,7 +119,6 @@ posts.spam.usage=*Käyttö:* `/posts comment <id> <viesti>`
 posts.usage=*Käyttö:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[viesti]`
 lang.usage=*Usage:* `/lang <language> [user]`
 
-help.usage=*Käyttö:* `/help \[komento]`
 help=*Ranssibot Command List* \
 Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \

@@ -107,10 +107,10 @@ func handleHelp(bot *telebot.Bot, message telebot.Message, args []string) {
 			}
 		} else {
 			// Unidentified help page, send standard help message.
-			bot.SendMessage(message.Chat, lang.Translate(sender, "help.usage"), util.Markdown)
+			bot.SendMessage(message.Chat, lang.Translate(sender, "help"), util.Markdown)
 		}
 	} else {
 		// No arguments were given, send the standard help message.
-		bot.SendMessage(message.Chat, lang.Translate(sender, "help.usage"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translate(sender, "help"), util.Markdown)
 	}
 }

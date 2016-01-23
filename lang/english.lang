@@ -119,7 +119,6 @@ posts.spam.usage=*Usage:* `/posts comment <id> <message>`
 posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
 lang.usage=*Usage:* `/lang <language> [user]`
 
-help.usage=*Usage:* `/help \[command]`
 help=*Ranssibot Command List* \
 Use `/help <command>` for more specific help \
 `/timetable <ventit/neliöt/day offset> [day offset]` - Get data from the timetables. \
