@@ -35,19 +35,19 @@ func Load() {
 		return
 	}
 	// No error, parse the data
-	log.Infof("Reading config data...")
+	log.Infof("[Config] Reading data...")
 	err = json.Unmarshal(data, config)
 	// Check if parsing failed
 	if err != nil {
 		loadFailed(err)
 		return
 	}
-	log.Debugf("Successfully loaded config from disk")
+	log.Debugf("[Config] Successfully loaded data from disk")
 }
 
 // Save saves the whitelist data to file.
 func Save() {
-	log.Infof("Saving config to disk...")
+	log.Infof("[Config] Saving data to disk...")
 	save()
 }
 
@@ -60,21 +60,21 @@ func save() {
 		data, err = json.Marshal(config)
 	}
 	if err != nil {
-		log.Errorf("Failed to save config: %[1]s", err)
+		log.Errorf("[Config] Failed to save: %[1]s", err)
 		return
 	}
 	err = ioutil.WriteFile(ConfigFile, data, 0700)
 	if err != nil {
-		log.Errorf("Failed to save config: %[1]s", err)
+		log.Errorf("[Config] Failed to save: %[1]s", err)
 		return
 	}
-	log.Debugf("Successfully saved config to disk")
+	log.Debugf("[Config] Successfully saved to disk")
 }
 
 // ASave calls Save if Autosave is true
 func ASave() {
 	if *Autosave {
-		log.Debugf("Autosaving config...")
+		log.Debugf("[Config] Autosaving...")
 		save()
 	}
 }
@@ -85,10 +85,10 @@ func GetConfig() *Configuration {
 }
 
 func loadFailed(err error) {
-	log.Errorf("Failed to load config: %[1]s; Using hardcoded version", err)
+	log.Errorf("[Config] Failed to load: %[1]s; Using hardcoded version", err)
 	*config = Configuration{
 		Whitelist: []User{
-			User{UID: 84359547, Name: "Tulir", Year: 21, Permissions: []string{"all"}},
+			User{UID: 84359547, Name: "Tulir", Year: 1, Permissions: []string{"all"}},
 		},
 	}
 }

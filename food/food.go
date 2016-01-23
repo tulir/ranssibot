@@ -53,12 +53,12 @@ func handleSubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if isSubscribed(sender) {
 		bot.SendMessage(message.Chat, lang.Translate(sender, "food.alreadysubscribed"), util.Markdown)
-		log.Debugf("%[1]s attempted to subscribe to the food notification list, but was already subscribed", sender.Name)
+		log.Debugf("[Food] %[1]s attempted to subscribe to the notification list, but was already subscribed", sender.Name)
 	} else {
 		sender.SetSetting(subSetting, "true")
 		config.ASave()
 		bot.SendMessage(message.Chat, lang.Translate(sender, "food.subscribed"), util.Markdown)
-		log.Debugf("%[1]s successfully subscribed to the food notifcation list", sender.Name)
+		log.Debugf("[Food] %[1]s successfully subscribed to the notifcation list", sender.Name)
 	}
 }
 
@@ -66,12 +66,12 @@ func handleUnsubscribe(bot *telebot.Bot, message telebot.Message, args []string)
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if !isSubscribed(sender) {
 		bot.SendMessage(message.Chat, lang.Translate(sender, "food.notsubscribed"), util.Markdown)
-		log.Debugf("%[1]s attempted to unsubscribe from the food notification list, but was not subscribed", sender.Name)
+		log.Debugf("[Food] %[1]s attempted to unsubscribe from the notification list, but was not subscribed", sender.Name)
 	} else {
 		sender.RemoveSetting(subSetting)
 		config.ASave()
 		bot.SendMessage(message.Chat, lang.Translate(sender, "food.unsubscribed"), util.Markdown)
-		log.Debugf("%[1]s successfully unsubscribed from the food notifcation list", sender.Name)
+		log.Debugf("[Food] %[1]s successfully unsubscribed from the notifcation list", sender.Name)
 	}
 }
 
@@ -80,7 +80,7 @@ func UpdateMenu() {
 	menustr := util.HTTPGetMin("https://ruoka.paivola.fi/api.php")
 	json.Unmarshal([]byte(menustr), &menu)
 	lastUpdate = util.Timestamp()
-	log.Debugf("Successfully updated today's menu.")
+	log.Debugf("[Food] Successfully updated today's menu.")
 }
 
 func isSubscribed(u config.User) bool {

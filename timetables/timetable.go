@@ -113,7 +113,7 @@ func Update() {
 	// Check if there was an error
 	if err != nil {
 		// Print the error
-		log.Errorf("Failed to update timetable cache: %s", err)
+		log.Errorf("[Timetables] Failed to update cache: %s", err)
 		// Return
 		return
 	}
@@ -218,7 +218,7 @@ func Update() {
 		lastupdate = util.Timestamp()
 	} else {
 		// Node not found, print error
-		log.Errorf("Error updating timetables: Failed to find timetable table header node!")
+		log.Errorf("[Timetables] Error updating: Failed to find timetable table header node!")
 		lastupdate = 0
 	}
 }

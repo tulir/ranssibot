@@ -17,7 +17,7 @@ func listen(bot *telebot.Bot) {
 		text, _ := reader.ReadString('\n')
 		text = text[:len(text)-1]
 
-		log.Debugf("Sysinput: %s", text)
+		log.Debugf("[Syscmds] Received %s", text)
 
 		args := strings.Split(text, " ")
 
@@ -29,18 +29,18 @@ func onCommand(bot *telebot.Bot, command string, args []string) {
 	if command == "msg" && len(args) > 1 {
 		user := config.GetUser(args[0])
 		if user.UID == config.NilUser.UID {
-			log.Errorf("Couldn't get an user with the name or UID %s", args[0])
+			log.Errorf("[Syscmds] Couldn't get an user with the name or UID %s", args[0])
 		}
 
 		msg := connect(args[1:])
 		bot.SendMessage(user, "*[Sysadmin]* "+msg, util.Markdown)
-		log.Infof("Sent message %[1]s to %[2]s", msg, user.Name)
+		log.Infof("[Syscmds] Sent message %[1]s to %[2]s", msg, user.Name)
 	} else if command == "broadcast" && len(args) > 0 {
 		msg := connect(args)
 		for _, user := range config.GetAllUsers() {
 			bot.SendMessage(user, "*[Sysadmin Broadcast]* "+msg, util.Markdown)
 		}
-		log.Infof("Broadcasted message %[1]s", msg)
+		log.Infof("[Syscmds] Broadcasted message %[1]s", msg)
 	} else if command == "config" && len(args) > 0 {
 		if strings.EqualFold(args[0], "save") {
 			if !config.IndentConfig && len(args) > 1 && strings.EqualFold(args[0], "pretty") {

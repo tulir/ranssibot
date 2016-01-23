@@ -25,20 +25,20 @@ func Load() {
 		}
 		filename := "lang/" + f.Name()
 		langname := trimSuffix(f.Name(), ".lang")
-		log.Infof("Loading language %s...", langname)
+		log.Infof("[Language] Loading %s...", langname)
 		// Read the file
 		langdata, err := ioutil.ReadFile(filename)
 		// Check if there was an error
 		if err != nil {
 			// Error, print message.
-			log.Fatalf("Failed to load the language %[1]s: %[2]s", langname, err)
+			log.Fatalf("[Language] Failed to load the %[1]s: %[2]s", langname, err)
 			panic(err)
 		}
 		// Split the file string to an array of lines
 		langraw := strings.Split(string(langdata), "\n")
 		// Parse the data and save it to the language map.
 		languages = append(languages, &Language{Name: langname, Data: parseLangData(langraw)})
-		log.Debugf("Successfully loaded the language %s", langname)
+		log.Debugf("[Language] Successfully loaded %s", langname)
 	}
 }
 

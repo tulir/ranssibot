@@ -36,7 +36,7 @@ func init() {
 func updateNews() {
 	err := news.Update()
 	if err != nil {
-		log.Errorf("Failed to update Ranssi News: %s", err)
+		log.Errorf("[Posts] Failed to update front-page posts: %s", err)
 	}
 }
 
@@ -49,7 +49,7 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 		if node != nil {
 			topic := strings.TrimSpace(node.FirstChild.FirstChild.Data)
 
-			log.Infof("New Ranssi post detected: %s (ID %d)", topic, readNow)
+			log.Infof("[Posts] New post detected: %s (ID %d)", topic, readNow)
 
 			if !noNotifAtInit {
 				for _, user := range config.GetUsersWithSetting(subSetting, "true") {
@@ -71,10 +71,10 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 // Subscribe the given UID to the notification list.
 func subscribe(u config.User) bool {
 	if isSubscribed(u) {
-		log.Debugf("%[1]s attempted to subscribe to the post notification list, but was already subscribed", u.Name)
+		log.Debugf("[Posts] %[1]s attempted to subscribe to the notification list, but was already subscribed", u.Name)
 		return false
 	}
-	log.Debugf("%[1]s successfully subscribed to the post notifcation list", u.Name)
+	log.Debugf("[Posts] %[1]s successfully subscribed to the notifcation list", u.Name)
 	u.SetSetting(subSetting, "true")
 	config.ASave()
 	return true
@@ -83,10 +83,10 @@ func subscribe(u config.User) bool {
 // Unsubscribe the given UID from the notification list.
 func unsubscribe(u config.User) bool {
 	if !isSubscribed(u) {
-		log.Debugf("%[1]s attempted to unsubscribe from the post notification list, but was not subscribed", u.Name)
+		log.Debugf("[Posts] %[1]s attempted to unsubscribe from the notification list, but was not subscribed", u.Name)
 		return false
 	}
-	log.Debugf("%[1]s successfully unsubscribed from the post notifcation list", u.Name)
+	log.Debugf("[Posts] %[1]s successfully unsubscribed from the notifcation list", u.Name)
 	u.RemoveSetting(subSetting)
 	config.ASave()
 	return true
@@ -99,13 +99,13 @@ func isSubscribed(u config.User) bool {
 func spam(id int, message string) error {
 	resp, err := http.PostForm("http://ranssi.paivola.fi/story.php?id="+strconv.Itoa(id), url.Values{"comment": {message}})
 	if err != nil {
-		log.Errorf("Error posting message \"%[1]s\" to the Ranssi post with ID %[2]d:\n%[3]s", message, id, err)
+		log.Errorf("[Posts] Error posting message \"%[1]s\" to the Ranssi post with ID %[2]d:\n%[3]s", message, id, err)
 		return errors.New("Failed to post message")
 	}
 	defer resp.Body.Close()
 	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Errorf("Failed to read response: %[1]s", err)
+		log.Errorf("[Posts] Failed to read response: %[1]s", err)
 		return errors.New("Failed to read response")
 	}
 	return nil
