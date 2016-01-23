@@ -141,7 +141,7 @@ func handleWhitelistSettings(bot *telebot.Bot, message telebot.Message, args []s
 	}
 
 	if util.CheckArgs(args[0], "view", "see", "list") {
-		if !checkPerms(bot, sender, "whitelist.settings.view") {
+		if user.UID != sender.UID && !checkPerms(bot, sender, "whitelist.settings.view") {
 			return true
 		}
 		if len(user.Settings) == 0 {
@@ -154,7 +154,7 @@ func handleWhitelistSettings(bot *telebot.Bot, message telebot.Message, args []s
 			bot.SendMessage(message.Chat, lang.Translatef(sender, "mgmt.whitelist.settings.view", user.Name, buffer.String()), util.Markdown)
 		}
 	} else if util.CheckArgs(args[0], "get") {
-		if !checkPerms(bot, sender, "whitelist.settings.get") {
+		if user.UID != sender.UID && !checkPerms(bot, sender, "whitelist.settings.get") {
 			return true
 		}
 		if len(args) > 2 {
@@ -168,7 +168,7 @@ func handleWhitelistSettings(bot *telebot.Bot, message telebot.Message, args []s
 			bot.SendMessage(message.Chat, lang.Translatef(sender, "mgmt.whitelist.settings.get.usage"), util.Markdown)
 		}
 	} else if util.CheckArgs(args[0], "add", "set") {
-		if !checkPerms(bot, sender, "whitelist.settings.add") {
+		if user.UID != sender.UID && !checkPerms(bot, sender, "whitelist.settings.add") {
 			return true
 		}
 		if len(args) > 3 {
@@ -178,7 +178,7 @@ func handleWhitelistSettings(bot *telebot.Bot, message telebot.Message, args []s
 			bot.SendMessage(message.Chat, lang.Translatef(sender, "mgmt.whitelist.settings.set.usage"), util.Markdown)
 		}
 	} else if util.CheckArgs(args[0], "remove", "rm", "delete", "del") {
-		if !checkPerms(bot, sender, "whitelist.settings.remove") {
+		if user.UID != sender.UID && !checkPerms(bot, sender, "whitelist.settings.remove") {
 			return true
 		}
 		if len(args) > 2 {
