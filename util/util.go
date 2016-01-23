@@ -156,8 +156,9 @@ func FindSpan(typ string, key string, val string, node *html.Node) *html.Node {
 
 // CheckArgs checks if the given list of strings contains the given argument.
 func CheckArgs(arg string, options ...string) bool {
+	arg = strings.ToLower(arg)
 	for _, option := range options {
-		if strings.EqualFold(arg, option) {
+		if arg == option {
 			return true
 		}
 	}
