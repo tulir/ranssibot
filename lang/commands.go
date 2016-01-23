@@ -6,10 +6,7 @@ import (
 	"maunium.net/go/ranssibot/util"
 )
 
-const (
-	langChangePerm      = "-lang.change"
-	langChangeOtherPerm = "lang.change.other"
-)
+const langChangeOtherPerm = "lang.change.other"
 
 // HandleCommand handles a /language command
 func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
@@ -31,11 +28,6 @@ func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
 			user.SetSetting("language", lang.Name)
 			bot.SendMessage(message.Chat, Translatef(sender, "lang.changed.other", lang.Name, user.Name), util.Markdown)
 		} else {
-			if sender.HasPermission(langChangePerm) {
-				bot.SendMessage(message.Chat, Translatef(sender, "error.noperms", langChangePerm), util.Markdown)
-				return
-			}
-
 			sender.SetSetting("language", lang.Name)
 			bot.SendMessage(message.Chat, Translatef(sender, "lang.changed", lang.Name), util.Markdown)
 		}
