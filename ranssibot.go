@@ -83,15 +83,13 @@ func main() {
 
 	startedAt = time.Now()
 
-	var startup string
+	var startup = "Ranssibot started up"
 	if *debug {
 		startup = fmt.Sprintf("Ranssibot started up in %[1]dms @ %[2]s (Debug mode)", util.TimestampMS()-start, startedAt.Format("15:04:05 02.01.2006"))
-	} else {
-		startup = fmt.Sprintf("Ranssibot started up")
 	}
 
-	bot.SendMessage(config.GetUserWithName("tulir"), startup, nil)
 	log.Infof(startup)
+	onoffspam(startup)
 
 	// Listen to messages
 	for message := range messages {
@@ -105,9 +103,28 @@ func Shutdown(by string) {
 	config.Save()
 	log.Shutdown()
 
-	shutdown := fmt.Sprintf("Ranssibot shut down by %[2]s @ %[1]s", time.Now().Format("15:04:05 02.01.2006"), by)
-	log.Debugf(shutdown)
-	bot.SendMessage(config.GetUserWithName("tulir"), shutdown, nil)
+	var shutdown = "Ranssibot shut down"
+	if *debug {
+		shutdown = fmt.Sprintf("Ranssibot shut down by %[2]s @ %[1]s", time.Now().Format("15:04:05 02.01.2006"), by)
+	}
+
+	log.Infof(shutdown)
+	onoffspam(shutdown)
 
 	os.Exit(0)
+}
+
+func onoffspam(msg string) {
+	if *debug {
+		for _, user := range config.GetUsersWithSetting("onoff-notifications", "debug-only") {
+			bot.SendMessage(user, msg, util.Markdown)
+		}
+	} else {
+		for _, user := range config.GetUsersWithSetting("onoff-notifications", "normal-only") {
+			bot.SendMessage(user, msg, util.Markdown)
+		}
+	}
+	for _, user := range config.GetUsersWithSetting("onoff-notifications", "true") {
+		bot.SendMessage(user, msg, util.Markdown)
+	}
 }
