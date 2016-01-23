@@ -60,6 +60,10 @@ Lunch: %[2]s \
 Coffee: %[3]s \
 Dinner: %[4]s
 
+laundry.soon=You (%[1]s) have a laundry turn coming up soon!
+laundry.subscribed=You will now receive notifications just before %[1]s's laundry turns.
+laundry.subscriptionscleared=Subscriptions cleared.
+
 lang.changed=You've changed your language to %[1]s
 lang.changed.other=You've changed %[2]ss language to %[1]s
 lang.notfound=I couldn't find a language by the name %[1]s.\
@@ -117,6 +121,7 @@ mgmt.config.usage=*Usage:* `/config <save/load> [debug]`
 timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
 posts.spam.usage=*Usage:* `/posts comment <id> <message>`
 posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
+laundry.usage=Usage: `/laundry <(un)subscribe/<day offset>/next/now> [name(s...)]`
 lang.usage=*Usage:* `/lang <language> [user]`
 
 help=*Ranssibot Command List* \
@@ -135,6 +140,12 @@ help.posts=*Command /posts help* \
 `/posts read <id>` - Read the Ranssi post with the given ID. \
 `/posts comment <id> <message>` - Post a comment on the Ranssi post with the given ID. \
 `/posts latest` - View the front-page Ranssi posts (also works without the "latest" argument)
+help.laundry=*Command /laundry help* \
+`/laundry subscribe <name(s...)>` - Subscribe to get notifications about the laundry turns of the given names. \
+`/laundry unsubscribe <name(s...)> - Unsubscribe from notifications for the given names.` \
+`/laundry <day offset>` - Get the laundry on the day with the given offset. \
+`/laundry next` - Get the person who has the next laundry turn. \
+`/laundry now` - Get the person who has the current laundry turn.
 help.config=*Command /config help* \
 `/config save [debug]` - Save the config to file. If the debug argument is given, the file will be forced to be saved in human-readable indented form. \
 `/config load` - Load the config from file.

@@ -1,32 +1,62 @@
 package laundry
 
 import (
+	"bytes"
 	"github.com/tucnak/telebot"
-	"golang.org/x/net/html"
 	log "maunium.net/go/maulogger"
+	"maunium.net/go/ranssibot/config"
 	"maunium.net/go/ranssibot/lang"
 	"maunium.net/go/ranssibot/util"
 	"strings"
 	"time"
 )
 
-var laundry = make(map[int][]string)
+var notified = 0
+var day = 0
 
-// NotifierTick notifies the people who have a laundry turn coming up soon
-func NotifierTick() {
-	// TODO: Load next laundry turns, check if any of the reservation names
-	// are found in the laundry name registry and if found, send a notification.
-	//
-	// ALSO: Don't forget to make something call this method in a separate
-	// thread on a specific interval.
-	//
-	// ALSO²: If this method is directly put into a new thread,
-	// remember to add a sleep call.
+var notifyMinutes = []int{
+	8*60 + 00,
+	11*60 + 15,
+	14*60 + 30,
+	17*60 + 00,
+	18*60 + 45,
+}
 
-	// Get the timetable page and convert the string to a reader
-	reader := strings.NewReader(util.HTTPGet("http://ranssi.paivola.fi/pyykit.php"))
-	// Parse the HTML from the reader
-	doc, err := html.Parse(reader)
+// Loop is an infinite loop that checks if the time is right to spam about laundry turns.
+func Loop(bot *telebot.Bot) {
+	for {
+		now := time.Now()
+		if day != now.Day() {
+			notified = 0
+			day = now.Day()
+		}
+		if notified == 5 {
+			// All of the days notifications have been sent, so sleep times can be longer.
+			time.Sleep(20 * time.Minute)
+			continue
+		}
+		minsNow := minutesInDay(now)
+		if minsNow >= notifyMinutes[notified]+5 {
+			// If the notified status is incorrect (as in the notify point was already over notifMaxDiff minutes ago)
+			// increment the notified status and continue loop.
+			notified++
+			log.Debugf("Skipping notifications for laundry turn #%d", notified)
+			continue
+		} else if minsNow >= notifyMinutes[notified]-5 {
+			notified++
+			notify(bot, notified)
+		}
+		time.Sleep(2 * time.Minute)
+	}
+}
+
+func minutesInDay(time time.Time) int {
+	return time.Hour()*60 + time.Minute()
+}
+
+func notify(bot *telebot.Bot, time int) {
+	// Get the timetable page
+	doc, err := util.HTTPGetMinAndParse("http://ranssi.paivola.fi/pyykit.php")
 	// Check if there was an error
 	if err != nil {
 		// Print the error
@@ -35,45 +65,77 @@ func NotifierTick() {
 		return
 	}
 	// Find the timetable table header node
-	laundrynode := util.FindSpan("tr", "class", "today",
-		util.FindSpan("table", "class", "pyykit", doc)).
-		FirstChild.NextSibling.NextSibling.NextSibling
+	laundrynode := util.FindSpan("tr", "class", "today", doc).FirstChild
 
-	minutes := minutesInDay()
-	switch minutes {
-	case 21 * 60:
-		print("1")
-		laundrynode = laundrynode.NextSibling.NextSibling
+	switch time {
+	case 5:
+		laundrynode = laundrynode.NextSibling
 		fallthrough
-	case 17*60 + 00:
-		print("2")
-		laundrynode = laundrynode.NextSibling.NextSibling
+	case 4:
+		laundrynode = laundrynode.NextSibling
 		fallthrough
-	case 14*60 + 45:
-		print("3")
-		laundrynode = laundrynode.NextSibling.NextSibling
+	case 3:
+		laundrynode = laundrynode.NextSibling
 		fallthrough
-	case 12*60 + 00:
-		print("4")
-		laundrynode = laundrynode.NextSibling.NextSibling
+	case 2:
+		laundrynode = laundrynode.NextSibling
 		fallthrough
-	case 8*60 + 45:
-		print("5")
-		laundrynode = laundrynode.NextSibling.NextSibling
+	case 1:
+		laundrynode = laundrynode.NextSibling
 	}
-	println(util.Render(laundrynode))
-}
 
-func minutesInDay() int {
-	t := time.Now()
-	return t.Hour()*60 + t.Minute()
+	for _, attr := range laundrynode.Attr {
+		// If the current node is not marked as busy, don't send any notifications.
+		if attr.Key == "class" && attr.Val == "free" {
+			log.Debugf("Laundry turn #%d is marked as free, skipping.", notified)
+			return
+		}
+	}
+
+	curName := laundrynode.LastChild.Data
+	curNameLower := strings.ToLower(curName)
+	if len(curName) == 0 {
+		log.Debugf("Laundry turn #%d is empty, skipping.", notified)
+		return
+	}
+	log.Debugf("Sending notifications for laundry turn #%d", notified)
+	for _, user := range config.GetAllUsers() {
+		str, ok := user.GetSetting("laundry")
+		if ok {
+			names := strings.Split(str, ", ")
+			for _, name := range names {
+				if curNameLower == name {
+					bot.SendMessage(user, lang.Translatef(user, "laundry.soon", curName), util.Markdown)
+				}
+			}
+		}
+	}
 }
 
 // HandleCommand handles laundry commands
 func HandleCommand(bot *telebot.Bot, message telebot.Message, args []string) {
+	sender := config.GetUserWithUID(message.Sender.ID)
+	for i := 0; i < len(args); i++ {
+		args[i] = strings.ToLower(args[i])
+	}
 	if len(args) > 1 {
-		laundry[message.Chat.ID] = args[1:]
+		if util.CheckArgs(args[0], "listen", "watch", "sub", "subscribe", "spam") {
+			if util.CheckArgs(args[1], "clear", "empty") {
+				bot.SendMessage(message.Chat, lang.Translatef(sender, "laundry.subscriptionscleared"), util.Markdown)
+				return
+			}
+			var buf bytes.Buffer
+			for n, arg := range args[1:] {
+				buf.Write([]byte(arg))
+				bot.SendMessage(message.Chat, lang.Translatef(sender, "laundry.subscribed", arg), util.Markdown)
+				if n+2 < len(args) {
+					buf.Write([]byte(", "))
+				}
+			}
+			listenFor := strings.ToLower(buf.String())
+			sender.SetSetting("laundry", listenFor)
+		}
 	} else {
-		bot.SendMessage(message.Chat, lang.Translate("laundry.usage"), util.Markdown)
+		bot.SendMessage(message.Chat, lang.Translatef(sender, "laundry.usage"), util.Markdown)
 	}
 }

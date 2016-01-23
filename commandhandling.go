@@ -7,6 +7,7 @@ import (
 	"maunium.net/go/ranssibot/config"
 	"maunium.net/go/ranssibot/food"
 	"maunium.net/go/ranssibot/lang"
+	"maunium.net/go/ranssibot/laundry"
 	"maunium.net/go/ranssibot/posts"
 	"maunium.net/go/ranssibot/timetables"
 	"maunium.net/go/ranssibot/util"
@@ -38,6 +39,8 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		food.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/lang", "/language") {
 		lang.HandleCommand(bot, message, args)
+	} else if util.CheckArgs(command, "/laundry") {
+		laundry.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/sauna") {
 		bot.SendMessage(message.Chat, lang.Translatef(config.GetUserWithUID(message.Sender.ID), "saunatemp", strings.TrimSpace(util.HTTPGet("http://sauna.paivola.fi/saunatemp.cgi"))), util.Markdown)
 	} else if util.CheckArgs(command, "/config", "/configuration") {

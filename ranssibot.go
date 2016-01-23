@@ -8,6 +8,7 @@ import (
 	log "maunium.net/go/maulogger"
 	"maunium.net/go/ranssibot/config"
 	"maunium.net/go/ranssibot/lang"
+	"maunium.net/go/ranssibot/laundry"
 	"maunium.net/go/ranssibot/posts"
 	"maunium.net/go/ranssibot/timetables"
 	"maunium.net/go/ranssibot/util"
@@ -79,6 +80,7 @@ func main() {
 	timetables.Update()
 
 	go posts.Loop(bot, *debug)
+	go laundry.Loop(bot)
 	go listen(bot)
 
 	startedAt = time.Now()
