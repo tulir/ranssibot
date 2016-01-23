@@ -93,7 +93,7 @@ func main() {
 
 	// Listen to messages
 	for message := range messages {
-		handleCommand(bot, message)
+		go handleCommand(bot, message)
 	}
 }
 
