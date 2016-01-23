@@ -50,6 +50,7 @@ func handleGetMenu(bot *telebot.Bot, message telebot.Message, args []string) {
 }
 
 func handleSubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
+	bot.SendMessage(message.Chat, "Warning: The food spam system has not yet been implemented", util.Markdown)
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if isSubscribed(sender) {
 		bot.SendMessage(message.Chat, lang.Translate(sender, "food.alreadysubscribed"), util.Markdown)
@@ -63,6 +64,7 @@ func handleSubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
 }
 
 func handleUnsubscribe(bot *telebot.Bot, message telebot.Message, args []string) {
+	bot.SendMessage(message.Chat, "Warning: The food spam system has not yet been implemented", util.Markdown)
 	sender := config.GetUserWithUID(message.Sender.ID)
 	if !isSubscribed(sender) {
 		bot.SendMessage(message.Chat, lang.Translate(sender, "food.notsubscribed"), util.Markdown)
