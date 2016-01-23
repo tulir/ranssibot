@@ -56,6 +56,7 @@ posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d:
 
 laundry.soon=You (%[1]s) have a laundry turn coming up soon!
 laundry.subscribed=You will now receive notifications just before %[1]s's laundry turns.
+laundry.subscriptionscleared=Subscriptions cleared.
 
 lang.changed=You've changed your language to %[1]s
 lang.changed.other=You've changed %[2]ss language to %[1]s
