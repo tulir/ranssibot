@@ -25,7 +25,7 @@ var secondyear = [26][4]TimetableLesson{}
 var other = [26]TimetableLesson{}
 
 // The day ID for today
-var today = 5
+const today = 5
 
 // The last time the timetable cache was updated
 var lastupdate = util.Timestamp()
