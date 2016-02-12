@@ -30,7 +30,7 @@ func handleCommand(bot *telebot.Bot, message telebot.Message) {
 		log.Infof("%[1]s (%[2]d) sent command: %[3]s", message.Sender.Username, message.Sender.ID, message.Text)
 	}
 	if strings.HasPrefix(message.Text, "Mui.") || message.Text == "/start" {
-		bot.SendMessage(message.Chat, "Mui. "+message.Sender.FirstName+".", nil)
+		bot.SendMessage(message.Chat, "*Mui. "+message.Sender.FirstName+".*", util.Markdown)
 	} else if util.CheckArgs(command, "/timetable", "/tt", "/timetables", "/tts") {
 		timetables.HandleCommand(bot, message, args)
 	} else if util.CheckArgs(command, "/posts", "/post", "/news") {
