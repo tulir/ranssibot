@@ -46,8 +46,12 @@ Uusi Ranssi-ilmoitus otsikolla `%[1]s` julkaistiin (Ilmoituksen ID: %[2]d) \
 [Paina tästä lukeaksesi ilmoituksen](http://ranssi.paivola.fi/story.php?id=%[2]d)
 
 posts.notfound=En löytänyt Ranssi-ilmoitusta ID:llä %[1]d!
+posts.notfound.time=[Time not found]
+posts.notfound.title=[Title not found]
+posts.notfound.body=[Body not found]
 
-posts.read=[*%[2]s*](%[5]s) - Ilmoitus jätetty %[4]s \
+posts.read=[%[2]s](%[5]s) - Ilmoitus jätetty %[4]s \
+\
 %[3]s
 
 posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!

@@ -54,18 +54,30 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 		return
 	}
 	post := getPost(id)
-	if post == nil {
+	if post == nil || post.FirstChild == nil {
 		bot.SendMessage(message.Chat, lang.Translatef(sender, "posts.notfound", id), util.Markdown)
 		return
 	}
 	post = post.FirstChild
 
 	title := strings.TrimSpace(post.FirstChild.Data)
-	body := util.RenderText(post.NextSibling)
-	time, _ := time.Parse("2006-01-02 15:04:05", strings.TrimSpace(post.NextSibling.NextSibling.FirstChild.NextSibling.Data))
-	timestamp := time.Format("15:04:05 02.01.2006")
+
+	var body string
+	if post.NextSibling == nil {
+		body = lang.Translatef(sender, "posts.notfound.body")
+	} else {
+		body = util.RenderText(post.NextSibling)
+	}
+
+	var timestr string
+	if post.NextSibling == nil || post.NextSibling.NextSibling == nil || post.NextSibling.NextSibling.FirstChild == nil || post.NextSibling.NextSibling.FirstChild.NextSibling == nil {
+		timestr = lang.Translatef(sender, "posts.notfound.time")
+	} else {
+		time, _ := time.Parse("2006-01-02 15:04:05", strings.TrimSpace(post.NextSibling.NextSibling.FirstChild.NextSibling.Data))
+		timestr = time.Format("15:04:05 02.01.2006")
+	}
 	url := "http://ranssi.paivola.fi/story.php?id=" + strconv.Itoa(id)
-	bot.SendMessage(message.Chat, lang.Translatef(sender, "posts.read", id, title, body, timestamp, url), util.Markdown)
+	bot.SendMessage(message.Chat, lang.Translatef(sender, "posts.read", id, title, body, timestr, url), util.Markdown)
 }
 
 func handleReadComments(bot *telebot.Bot, message telebot.Message, args []string) {
