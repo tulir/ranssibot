@@ -118,15 +118,12 @@ func Shutdown(by string) {
 
 func onoffspam(msg string) {
 	if *debug {
-		for _, user := range config.GetUsersWithSetting("onoff-notifications", "debug-only") {
+		for _, user := range config.GetUsersWithSetting("onoff-notifications", "debug-only", "true") {
 			bot.SendMessage(user, msg, util.Markdown)
 		}
 	} else {
-		for _, user := range config.GetUsersWithSetting("onoff-notifications", "normal-only") {
+		for _, user := range config.GetUsersWithSetting("onoff-notifications", "normal-only", "true") {
 			bot.SendMessage(user, msg, util.Markdown)
 		}
-	}
-	for _, user := range config.GetUsersWithSetting("onoff-notifications", "true") {
-		bot.SendMessage(user, msg, util.Markdown)
 	}
 }
