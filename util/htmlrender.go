@@ -29,15 +29,15 @@ func renderHTML(w writer, n *html.Node) {
 			renderChildren(w, n)
 			w.WriteString("`")
 		case "a":
+			w.WriteString("[")
+			renderChildren(w, n)
+			w.WriteString("]")
 			for _, attr := range n.Attr {
 				if attr.Key == "href" {
-					w.WriteString(fmt.Sprintf("\\[%s]", attr.Val))
+					w.WriteString(fmt.Sprintf("(%s)", attr.Val))
 					break
 				}
 			}
-			w.WriteString("\\[")
-			renderChildren(w, n)
-			w.WriteString("]")
 		default:
 			renderChildren(w, n)
 		}
