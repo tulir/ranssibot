@@ -119,15 +119,8 @@ func minifyh(reader io.Reader, writer io.Writer) {
 	mhtml.Minify(minify.New(), writer, reader, nil)
 }
 
-// Render renders the given HTML node to a string
+// Render renders the given HTML node to a string.
 func Render(node *html.Node) string {
-	buf := new(bytes.Buffer)
-	html.Render(buf, node)
-	return buf.String()
-}
-
-// RenderText renders the given HTML node to a string.
-func RenderText(node *html.Node) string {
 	buf := new(bytes.Buffer)
 	renderHTML(buf, node)
 	return buf.String()

@@ -66,7 +66,7 @@ func handleRead(bot *telebot.Bot, message telebot.Message, args []string) {
 	if post.NextSibling == nil {
 		body = lang.Translatef(sender, "posts.notfound.body")
 	} else {
-		body = util.RenderText(post.NextSibling)
+		body = util.Render(post.NextSibling)
 	}
 
 	var timestr string
