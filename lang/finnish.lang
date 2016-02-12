@@ -39,7 +39,7 @@ posts.notsubscribed=Et ollut pyytänyt saada viestejä uusista Ranssi-ilmoituksi
 posts.alreadysubscribed=Olit jo pyytänyt saada viestejä uusista Ranssi-ilmoituksista!
 
 posts.latest=*Etusivun Ranssi-ilmoitukset:*<br>%s
-posts.latest.entry=`%[1]s` %[2]s<br><br>
+posts.latest.entry=[%[1]s](%[2]s)<br>
 
 posts.new=*[Ranssi-ilmoitus]* \
 Uusi Ranssi-ilmoitus otsikolla `%[1]s` julkaistiin (Ilmoituksen ID: %[2]d) \
