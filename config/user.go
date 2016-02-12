@@ -105,7 +105,7 @@ func GetUser(identifier string) User {
 }
 
 // GetUsersWithSetting get all the users that have the given setting.
-func GetUsersWithSetting(setting string, value string) []User {
+func GetUsersWithSetting(setting string, values ...string) []User {
 	// Make the setting key lowercase
 	setting = strings.ToLower(setting)
 	var users []User
@@ -114,9 +114,16 @@ func GetUsersWithSetting(setting string, value string) []User {
 		// Check if the current user in the loop has the given setting.
 		val, ok := user.GetSetting(setting)
 		// If a required value was passed, make sure the value the user has matches.
-		if ok && (len(value) == 0 || strings.EqualFold(value, val)) {
-			// Add the user to the list of accepted users.
-			users = append(users, user)
+		if ok {
+			if len(values) > 0 {
+				for _, valc := range values {
+					if strings.EqualFold(valc, val) {
+						users = append(users, user)
+					}
+				}
+			} else {
+				users = append(users, user)
+			}
 		}
 	}
 	// Return the list of accepted users.
