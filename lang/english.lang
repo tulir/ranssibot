@@ -122,9 +122,9 @@ mgmt.whitelist.permissions.remove.usage=*Usage:* `/whitelist permissions remove 
 
 mgmt.config.usage=*Usage:* `/config <save/load> [debug]`
 
-timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> \[day offset]`
+timetable.usage=*Usage:* `/timetable <ventit/neliöt/day offset> [day offset]`
 posts.spam.usage=*Usage:* `/posts comment <id> <message>`
-posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[message]`
+posts.usage=*Usage:* `/posts <subscribe/unsubscribe/read/comment/latest> [id] [message]`
 laundry.usage=Usage: `/laundry <(un)subscribe/<day offset>/next/now> [name(s...)]`
 lang.usage=*Usage:* `/lang <language> [user]`
 

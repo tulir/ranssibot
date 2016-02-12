@@ -122,9 +122,9 @@ mgmt.whitelist.permissions.remove.usage=*Usage:* `/whitelist permissions remove 
 
 mgmt.config.usage=*Usage:* `/config <save/load> [debug]`
 
-timetable.usage=*Käyttö:* `/timetable <ventit/neliöt/day offset> \[day offset]`
+timetable.usage=*Käyttö:* `/timetable <ventit/neliöt/day offset> [day offset]`
 posts.spam.usage=*Käyttö:* `/posts comment <id> <viesti>`
-posts.usage=*Käyttö:* `/posts <subscribe/unsubscribe/read/comment/latest> \[id] \[viesti]`
+posts.usage=*Käyttö:* `/posts <subscribe/unsubscribe/read/comment/latest> [id] [viesti]`
 laundry.usage=Käyttö: `/laundry <(un)subscribe/<day offset>/next/now> [nimi/nimet...]`
 lang.usage=*Käyttö:* `/lang <kieli> [käyttäjä]`
 
