@@ -104,11 +104,10 @@ func GetUser(identifier string) User {
 	return NilUser
 }
 
-// GetUsersWithSetting get all the users that have the given setting.
-func GetUsersWithSetting(setting string, values ...string) []User {
+// GetUsersWithSettingAndRun gets the users with the given setting and runs a function for them.
+func GetUsersWithSettingAndRun(run func(u User), setting string, values ...string) {
 	// Make the setting key lowercase
 	setting = strings.ToLower(setting)
-	var users []User
 	// Loop through the whitelist
 	for _, user := range config.Whitelist {
 		// Check if the current user in the loop has the given setting.
@@ -118,14 +117,24 @@ func GetUsersWithSetting(setting string, values ...string) []User {
 			if len(values) > 0 {
 				for _, valc := range values {
 					if strings.EqualFold(valc, val) {
-						users = append(users, user)
+						run(user)
 					}
 				}
 			} else {
-				users = append(users, user)
+				run(user)
 			}
 		}
 	}
+}
+
+// GetUsersWithSetting get all the users that have the given setting.
+func GetUsersWithSetting(setting string, values ...string) []User {
+	// Make the setting key lowercase
+	setting = strings.ToLower(setting)
+	var users []User
+	GetUsersWithSettingAndRun(func(u User) {
+		users = append(users, u)
+	}, setting, values...)
 	// Return the list of accepted users.
 	return users
 }
