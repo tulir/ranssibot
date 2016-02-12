@@ -63,7 +63,7 @@ func save() {
 		log.Errorf("[Config] Failed to save: %[1]s", err)
 		return
 	}
-	err = ioutil.WriteFile(ConfigFile, data, 0700)
+	err = ioutil.WriteFile(ConfigFile, data, 0600)
 	if err != nil {
 		log.Errorf("[Config] Failed to save: %[1]s", err)
 		return
