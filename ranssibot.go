@@ -25,6 +25,13 @@ const VersionLong = "0.1 Beta 5"
 // Version is the computer-readable form of the version.
 const Version = "0.1.0-B5"
 
+const (
+	onoffspamSetting     = "onoff-notifications"
+	onoffValueDebugOnly  = "debug-only"
+	onoffValueNormalOnly = "normal-only"
+	onoffValueBoth       = "true"
+)
+
 var startedAt time.Time
 var hostname string
 
@@ -117,13 +124,12 @@ func Shutdown(by string) {
 }
 
 func onoffspam(msg string) {
+	sendMsg := func(user config.User) {
+		bot.SendMessage(user, msg, util.Markdown)
+	}
 	if *debug {
-		for _, user := range config.GetUsersWithSetting("onoff-notifications", "debug-only", "true") {
-			bot.SendMessage(user, msg, util.Markdown)
-		}
+		config.GetUsersWithSettingAndRun(sendMsg, onoffspamSetting, onoffValueDebugOnly, onoffValueBoth)
 	} else {
-		for _, user := range config.GetUsersWithSetting("onoff-notifications", "normal-only", "true") {
-			bot.SendMessage(user, msg, util.Markdown)
-		}
+		config.GetUsersWithSettingAndRun(sendMsg, onoffspamSetting, onoffValueNormalOnly, onoffValueBoth)
 	}
 }

@@ -52,9 +52,9 @@ func Loop(bot *telebot.Bot, noNotifAtInit bool) {
 			log.Infof("[Posts] New post detected: %s (ID %d)", topic, readNow)
 
 			if !noNotifAtInit {
-				for _, user := range config.GetUsersWithSetting(subSetting, "true") {
-					bot.SendMessage(user, lang.Translatef(user, "posts.new", topic, readNow), util.Markdown)
-				}
+				config.GetUsersWithSettingAndRun(func(u config.User) {
+					bot.SendMessage(u, lang.Translatef(u, "posts.new", topic, readNow), util.Markdown)
+				}, subSetting)
 			}
 
 			config.GetConfig().LastReadPost = readNow
