@@ -8,7 +8,7 @@ before_script:
   - "go get -u github.com/SlyMarbo/rss"
   - "go get -u github.com/tdewolff/minify"
   - "go get -u github.com/tdewolff/minify/html"
-  - "ln -s /builds/Tulir293/ranssibot /go/src/maunium.net/go/ranssibot"
+  - "ln -s /builds/pvl/ranssibot /go/src/maunium.net/go/ranssibot"
 
 build:
   script:
