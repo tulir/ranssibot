@@ -21,5 +21,4 @@ build:
     paths:
     - ranssibot
     - ranssibot.exe
-    - config.json
     - LICENSE
