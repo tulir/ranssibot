@@ -22,3 +22,4 @@ build:
     - ranssibot
     - ranssibot.exe
     - config.json
+    - LICENSE
