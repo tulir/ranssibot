@@ -1,0 +1,24 @@
+image: golang:1.6
+
+before_script:
+  - "go get -u maunium.net/go/maulogger"
+  - "go get -u github.com/tucnak/telebot"
+  - "go get -u github.com/ogier/pflag"
+  - "go get -u golang.org/x/net/html"
+  - "go get -u github.com/SlyMarbo/rss"
+  - "go get -u github.com/tdewolff/minify"
+  - "go get -u github.com/tdewolff/minify/html"
+  - "ln -s /builds/Tulir293/ranssibot /go/src/maunium.net/go/ranssibot"
+
+build:
+  script:
+    - "env GOOS=linux GOARCH=amd64 go build -o ranssibot"
+    - "env GOOS=windows GOARCH=amd64 go build -o ranssibot.exe"
+  stage: build
+  tags:
+    - golang
+  artifacts:
+    paths:
+    - ranssibot
+    - ranssibot.exe
+    - config.json
