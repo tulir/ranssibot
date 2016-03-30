@@ -34,6 +34,10 @@ func handleNews(bot *telebot.Bot, message telebot.Message, args []string) {
 	if util.Timestamp()-lastupdate > 1500 {
 		updateNews()
 	}
+	if news == nil {
+		bot.SendMessage(message.Chat, lang.Translatef(sender, "posts.newserror"), util.Markdown)
+		return
+	}
 	var buffer bytes.Buffer
 	for _, item := range news.Items {
 		buffer.WriteString(lang.Translatef(sender, "posts.latest.entry", item.Title, item.Link, item.Summary, item.Date.Format("15:04:05 02.01.2006")))

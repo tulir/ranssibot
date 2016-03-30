@@ -28,16 +28,25 @@ func init() {
 	var err error
 	news, err = rss.Fetch("http://ranssi.paivola.fi/rss.php")
 	if err != nil {
-		//panic(err)
+		log.Errorf("[Posts] Failed to load front-page posts: %s", err)
 	}
 	lastupdate = util.Timestamp()
 }
 
 func updateNews() {
-	err := news.Update()
-	if err != nil {
-		log.Errorf("[Posts] Failed to update front-page posts: %s", err)
+	if news != nil {
+		err := news.Update()
+		if err != nil {
+			log.Errorf("[Posts] Failed to update front-page posts: %s", err)
+		}
+	} else {
+		var err error
+		news, err = rss.Fetch("http://ranssi.paivola.fi/rss.php")
+		if err != nil {
+			log.Errorf("[Posts] Failed to update front-page posts: %s", err)
+		}
 	}
+	lastupdate = util.Timestamp()
 }
 
 // Loop is an infinite loop that checks for new Ranssi posts

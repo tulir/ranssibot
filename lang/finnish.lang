@@ -58,6 +58,8 @@ posts.spam.nospamlist=Ranssi-ilmoitus ID:llä %[1]d ei sisällä pitsalistaa!
 posts.spam.sent=Lähetettiin seuraava kommentti Ranssi-ilmoitukseen, jonka ID on %[1]d: \
 %[2]s
 
+posts.newserror=There was an error retrieving the front-page posts.
+
 food.menu=*Päivän ruoat:* \
 Aamupala: %[1]s \
 Lounas: %[2]s \

@@ -58,6 +58,8 @@ posts.spam.nospamlist=The ranssi post with the ID %[1]d does not include a pizza
 posts.spam.sent=Sent the following comment to the Ranssi post with the ID %[1]d: \
 %[2]s
 
+posts.newserror=There was an error retrieving the front-page posts.
+
 food.menu=*Today's Menu:* \
 Breakfast: %[1]s \
 Lunch: %[2]s \
