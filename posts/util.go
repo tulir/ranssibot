@@ -28,7 +28,7 @@ func init() {
 	var err error
 	news, err = rss.Fetch("http://ranssi.paivola.fi/rss.php")
 	if err != nil {
-		panic(err)
+		//panic(err)
 	}
 	lastupdate = util.Timestamp()
 }
