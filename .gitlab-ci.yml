@@ -12,13 +12,15 @@ before_script:
 
 build:
   script:
-    - "env GOOS=linux GOARCH=amd64 go build -o ranssibot"
-    - "env GOOS=windows GOARCH=amd64 go build -o ranssibot.exe"
+    - "env GOOS=linux GOARCH=amd64 go build -o ranssibot_amd64"
+    - "env GOOS=linux GOARCH=arm go build -o ranssibot_arm"
+    - "env GOOS=windows GOARCH=amd64 go build -o ranssibot_amd64.exe"
   stage: build
   tags:
     - golang
   artifacts:
     paths:
-    - ranssibot
-    - ranssibot.exe
+    - ranssibot_amd64
+    - ranssibot_arm
+    - ranssibot_amd64.exe
     - LICENSE
